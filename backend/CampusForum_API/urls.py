@@ -19,6 +19,7 @@ from CampusForum_API.views import bootstrap
 from CampusForum_API.views import users
 from CampusForum_API.views import auth
 from CampusForum_API.views import posts
+from CampusForum_API.views import user_admin
 
 urlpatterns = [
     #Version
@@ -33,6 +34,9 @@ urlpatterns = [
         path('logout/', auth.Logout.as_view()),
     #Posts
         path('posts/', posts.PostsView.as_view()),
-        path('posts/<int:pk>/', posts.PostDetailView.as_view())
+        path('posts/<int:pk>/', posts.PostDetailView.as_view()),
+    #Admin Users
+        path('admin/users/', user_admin.AdminUsersView.as_view()),
+        path('admin/users/<int:pk>/', user_admin.AdminUserDetailView.as_view())
 ]
 
