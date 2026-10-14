@@ -1,0 +1,1276 @@
+// =====================================================
+// landing-screen.component.scss
+// CampusForum — BUAP · FCC 2026
+//
+// ✅ Usa var(--nombre) de src/styles.scss (global :root)
+//    Las CSS variables globales SÍ funcionan en componentes.
+//    Solo las definidas DENTRO del componente fallan.
+//
+// Paleta:
+//   Primario:    #6984A9 (azul grisáceo institucional)
+//   Secundario:  #A0D585 (verde académico)
+//   Fondo:       #eff2f7
+//   Texto:       #2c2c2c
+// =====================================================
+
+
+// =====================================================
+// 1. VARIABLES SCSS LOCALES (complementan el :root global)
+//    Estas son solo para cálculos y valores que no
+//    necesitan ser globales.
+// =====================================================
+
+// Colores extra que no están en :root
+$azul-oscuro:   #1a2535;
+$azul-medio:    #4f678a;
+$verde-oscuro:  #7fb85e;
+$verde-claro:   #c3e8a6;
+$ambar:         #f59e0b;
+$morado:        #8B5CF6;
+$morado-fondo:  #F5F3FF;
+
+// Breakpoints
+$bp-sm:  480px;
+$bp-md:  768px;
+$bp-lg:  1024px;
+$bp-xl:  1280px;
+
+
+// =====================================================
+// 2. ANIMACIONES
+// =====================================================
+
+@keyframes aparecerDesdeAbajo {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// Búho flotando suavemente
+@keyframes flotar {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-16px); }
+}
+
+// Tarjetas de notificación flotantes
+@keyframes flotarTarjeta {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+// Pulso del punto verde "en vivo"
+@keyframes pulsarPunto {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(1.6); }
+}
+
+// Blobs de fondo
+@keyframes moverBlob {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  33%       { transform: scale(1.05) translate(20px, -15px); }
+  66%       { transform: scale(0.95) translate(-10px, 10px); }
+}
+
+// ── Clase fade-in para scroll reveal ──
+// El IntersectionObserver del .ts agrega la clase 'visible'
+// cuando el elemento entra al viewport.
+.fade-in {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+
+  @for $i from 1 through 8 {
+    &:nth-child(#{$i}) {
+      transition-delay: #{($i - 1) * 90}ms;
+    }
+  }
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Sin animaciones para quienes lo prefieren (accesibilidad)
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .fade-in { opacity: 1; transform: none; transition: none; }
+}
+
+
+// =====================================================
+// 3. RESET DEL HOST
+// =====================================================
+
+:host {
+  display: block;
+  // La fuente y el color vienen del body en styles.scss
+}
+
+* { box-sizing: border-box; }
+a { text-decoration: none; color: inherit; }
+ul, ol { list-style: none; margin: 0; padding: 0; }
+
+
+// =====================================================
+// 4. BOTONES
+// =====================================================
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  border: 2px solid transparent;
+  white-space: nowrap;
+  transition: var(--transition);
+
+  // Elevación suave en hover para indicar interactividad
+  &:hover  { transform: translateY(-2px); }
+  &:active { transform: translateY(0); }
+  &:focus-visible {
+    outline: 3px solid var(--primary-light);
+    outline-offset: 3px;
+  }
+
+  // Azul sólido — acción principal
+  &--primario {
+    background: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(105, 132, 169, 0.40);
+
+    &:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 8px 24px rgba(105, 132, 169, 0.50);
+    }
+  }
+
+  // Verde — acción secundaria
+  &--secundario {
+    background: var(--secondary-color);
+    color: $azul-oscuro;
+    box-shadow: 0 4px 14px rgba(160, 213, 133, 0.40);
+
+    &:hover {
+      background: $verde-oscuro;
+      color: #fff;
+    }
+  }
+
+  // Sin relleno
+  &--fantasma {
+    background: transparent;
+    color: var(--primary-color);
+
+    &:hover { background: rgba(105, 132, 169, 0.08); }
+  }
+
+  // Solo borde azul
+  &--contorno {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+
+    &:hover {
+      background: rgba(105, 132, 169, 0.08);
+      box-shadow: var(--shadow);
+    }
+  }
+
+  // Blanco (para fondos oscuros)
+  &--blanco {
+    background: #fff;
+    color: var(--primary-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+
+    &:hover { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18); }
+  }
+
+  // Borde blanco (para fondos oscuros)
+  &--contorno-blanco {
+    background: transparent;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.50);
+
+    &:hover { background: rgba(255, 255, 255, 0.12); }
+  }
+
+  // Tamaño grande
+  &--grande {
+    padding: 14px 28px;
+    font-size: 0.95rem;
+  }
+}
+
+
+// =====================================================
+// 5. AVATAR
+// =====================================================
+
+.autor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-light);
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 0.70rem;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+
+    &--azul   { background: var(--primary-color); }
+    &--verde  { background: var(--secondary-color); color: $azul-oscuro; }
+    &--ambar  { background: $ambar; }
+    &--morado { background: $morado; }
+  }
+
+  &__nombre { color: var(--text-color); }
+}
+
+
+// =====================================================
+// 6. ENCABEZADOS DE SECCIÓN (reutilizables)
+// =====================================================
+
+.contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.encabezado-seccion {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.chip-seccion {
+  display: inline-block;
+  background: rgba(105, 132, 169, 0.10);
+  color: var(--primary-dark);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(105, 132, 169, 0.20);
+  margin-bottom: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.titulo-seccion {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 14px;
+  line-height: 1.2;
+}
+
+.subtitulo-seccion {
+  font-size: 0.98rem;
+  color: var(--text-light);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+
+// =====================================================
+// 7. NAVBAR
+// =====================================================
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(239, 242, 247, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+
+  &__contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  &__marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    transition: var(--transition);
+
+    &:hover { opacity: 0.85; }
+  }
+
+  &__logo-icono {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  &__logo-texto {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--text-color);
+    letter-spacing: -0.01em;
+
+    strong {
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+  }
+
+  // ── Hamburguesa (móvil) ──
+  &__hamburguesa {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: var(--transition);
+
+    span {
+      display: block;
+      width: 24px;
+      height: 2.5px;
+      background: var(--primary-color);
+      border-radius: 999px;
+      transition: var(--transition);
+    }
+
+    &:hover { background: rgba(105, 132, 169, 0.10); }
+
+    &--activo {
+      span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+      span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+      span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+    }
+  }
+
+  // ── Menú (mobile: desplegable) ──
+  &__nav {
+    position: absolute;
+    top: 66px;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    padding: 16px 20px;
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+
+    &--abierto { display: flex; }
+  }
+
+  &__enlaces {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__enlace {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.93rem;
+    color: var(--text-light);
+    transition: var(--transition);
+
+    &:hover,
+    &--activo {
+      background: rgba(105, 132, 169, 0.10);
+      color: var(--primary-color);
+    }
+
+    &--activo { font-weight: 700; }
+  }
+
+  &__acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-color);
+
+    .btn { justify-content: center; }
+  }
+}
+
+
+// =====================================================
+// 8. HERO
+// =====================================================
+
+.hero {
+  position: relative;
+  background: linear-gradient(160deg, #dde4ef 0%, var(--background-color) 50%, #e8f4dc 100%);
+  overflow: hidden;
+  padding: 72px 0 80px;
+  min-height: calc(100svh - 85px);
+  display: flex;
+  align-items: center;
+
+  // ── Blobs de fondo ──
+  // Dan profundidad al hero sin saturar la paleta
+  &__decoracion {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  &__blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+
+    &--1 {
+      width: 500px;
+      height: 500px;
+      background: rgba(105, 132, 169, 0.18);
+      top: -150px;
+      right: -100px;
+      animation: moverBlob 18s ease-in-out infinite;
+    }
+
+    &--2 {
+      width: 400px;
+      height: 400px;
+      background: rgba(160, 213, 133, 0.20);
+      bottom: -120px;
+      left: -80px;
+      animation: moverBlob 14s ease-in-out infinite reverse;
+    }
+
+    &--3 {
+      width: 280px;
+      height: 280px;
+      background: rgba(105, 132, 169, 0.10);
+      top: 40%;
+      left: 40%;
+      animation: moverBlob 22s ease-in-out infinite;
+    }
+  }
+
+  &__contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__texto { flex: 1; }
+
+  // ── Chip "Plataforma oficial" ──
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(105, 132, 169, 0.12);
+    border: 1px solid rgba(105, 132, 169, 0.25);
+    color: var(--primary-dark);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+
+  &__chip-punto {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    animation: pulsarPunto 2.5s ease-in-out infinite;
+  }
+
+  // ── Título ──
+  &__titulo {
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.12;
+    color: var(--text-color);
+    margin: 0 0 20px;
+    letter-spacing: -0.02em;
+  }
+
+  // La palabra en verde destaca el beneficio clave
+  &__titulo-acento {
+    color: $verde-oscuro;
+    position: relative;
+
+    // Subrayado decorativo ondulado
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--secondary-color), $verde-claro);
+      border-radius: 999px;
+    }
+  }
+
+  &__descripcion {
+    font-size: 1.03rem;
+    color: var(--text-light);
+    line-height: 1.75;
+    max-width: 480px;
+    margin: 0 0 32px;
+  }
+
+  &__botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  // ── Stats ──
+  &__stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    span {
+      font-size: 0.76rem;
+      color: var(--text-light);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+  }
+
+  &__stat-sep {
+    width: 1px;
+    height: 32px;
+    background: var(--border-color);
+  }
+
+  // ── Columna de la mascota ──
+  &__mascota-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+}
+
+// Búho flotando
+.mascota-wrap {
+  width: 260px;
+  filter: drop-shadow(0 16px 32px rgba(105, 132, 169, 0.30));
+
+  .mascota-svg { width: 100%; height: auto; }
+}
+
+// Tarjetas flotantes decorativas del hero
+.tarjeta-flotante {
+  position: absolute;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+
+  &--a {
+    top: 10px;
+    left: -10px;
+  }
+
+  &--b {
+    bottom: 20px;
+    right: -10px;
+  }
+
+  &__icono {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+
+    &--verde { background: rgba(160, 213, 133, 0.20); color: $verde-oscuro; }
+    &--azul  { background: rgba(105, 132, 169, 0.15); color: var(--primary-color); }
+  }
+
+  &__texto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__titulo {
+    font-weight: 700;
+    color: var(--text-color);
+    font-size: 0.80rem;
+  }
+
+  &__sub {
+    color: var(--text-light);
+    font-size: 0.72rem;
+  }
+}
+
+
+// =====================================================
+// 9. SECCIÓN POSTS RECIENTES
+// =====================================================
+
+.seccion-posts {
+  background: #fff;
+  padding: 80px 0;
+
+  &__cta { text-align: center; margin-top: 32px; }
+}
+
+.grilla-posts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+// ── Tarjeta de Post ──
+.tarjeta-post {
+  background: #fff;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+
+  // El translateY en hover crea jerarquía visual clara:
+  // el usuario entiende que puede hacer click
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 36px rgba(105, 132, 169, 0.18);
+    border-color: var(--primary-light);
+  }
+
+  // Tarjeta destacada con acento de color
+  &--destacado {
+    border-left: 4px solid var(--primary-color);
+    background: linear-gradient(135deg, rgba(105, 132, 169, 0.05) 0%, #fff 60%);
+  }
+
+  &__tope {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__fecha {
+    font-size: 0.76rem;
+    color: var(--text-light);
+    margin-left: auto;
+  }
+
+  &__pin {
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+
+  &__titulo {
+    font-size: 0.98rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text-color);
+    margin: 0;
+
+    a {
+      color: inherit;
+      transition: var(--transition);
+
+      &:hover { color: var(--primary-color); }
+      &:focus-visible {
+        outline: 2px solid var(--primary-light);
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
+    }
+  }
+
+  &__extracto {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  &__pie {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+  }
+
+  &__contadores {
+    display: flex;
+    gap: 12px;
+    font-size: 0.80rem;
+    color: var(--text-light);
+    font-weight: 600;
+  }
+}
+
+// Etiquetas de categoría en las tarjetas
+.etiqueta-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+
+  &--prog {
+    background: rgba(105, 132, 169, 0.12);
+    color: var(--primary-dark);
+  }
+
+  &--ia {
+    background: rgba(160, 213, 133, 0.20);
+    color: $verde-oscuro;
+  }
+
+  &--mat {
+    background: rgba(245, 158, 11, 0.12);
+    color: #92400e;
+  }
+
+  &--fis {
+    background: $morado-fondo;
+    color: $morado;
+  }
+}
+
+
+// =====================================================
+// 10. SECCIÓN CATEGORÍAS
+// =====================================================
+
+.seccion-categorias {
+  background: var(--background-color);
+  padding: 80px 0;
+}
+
+.grilla-cats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+// ── Tarjeta de Categoría ──
+.tarjeta-cat {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 26px;
+  background: #fff;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: var(--transition);
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(105, 132, 169, 0.16);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--primary-light);
+    outline-offset: 3px;
+  }
+
+  &__icono-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    transition: var(--transition);
+  }
+
+  // El icono se escala y rota levemente en hover —
+  // genera sorpresa positiva y hace la UI más "viva"
+  &:hover &__icono-wrap { transform: scale(1.12) rotate(-4deg); }
+
+  &__nombre {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0;
+  }
+
+  &__desc {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    line-height: 1.65;
+    flex: 1;
+    margin: 0;
+  }
+
+  &__pie {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+  }
+
+  &__conteo {
+    font-size: 0.80rem;
+    font-weight: 700;
+  }
+
+  &__flecha {
+    font-size: 1.1rem;
+    transition: var(--transition);
+    opacity: 0.4;
+  }
+
+  &:hover &__flecha { transform: translateX(5px); opacity: 1; }
+
+  // ── Colores por categoría ──
+  &--fis {
+    &:hover { border-color: $morado; }
+    .tarjeta-cat__icono-wrap { background: $morado-fondo; color: $morado; }
+    .tarjeta-cat__conteo     { color: $morado; }
+    .tarjeta-cat__flecha     { color: $morado; }
+  }
+
+  &--prog {
+    &:hover { border-color: var(--primary-color); }
+    .tarjeta-cat__icono-wrap { background: rgba(105, 132, 169, 0.10); color: var(--primary-color); }
+    .tarjeta-cat__conteo     { color: var(--primary-color); }
+    .tarjeta-cat__flecha     { color: var(--primary-color); }
+  }
+
+  &--mat {
+    &:hover { border-color: $ambar; }
+    .tarjeta-cat__icono-wrap { background: rgba(245, 158, 11, 0.10); color: $ambar; }
+    .tarjeta-cat__conteo     { color: $ambar; }
+    .tarjeta-cat__flecha     { color: $ambar; }
+  }
+
+  &--ia {
+    &:hover { border-color: var(--secondary-color); }
+    .tarjeta-cat__icono-wrap { background: rgba(160, 213, 133, 0.15); color: $verde-oscuro; }
+    .tarjeta-cat__conteo     { color: $verde-oscuro; }
+    .tarjeta-cat__flecha     { color: $verde-oscuro; }
+  }
+}
+
+
+// =====================================================
+// 11. BANNER CTA
+// =====================================================
+
+.banner-cta {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+
+  // Decoración sutil de fondo
+  &::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    left: -60px;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: rgba(160, 213, 133, 0.12);
+    pointer-events: none;
+  }
+
+  &__contenedor {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__emoji {
+    font-size: 2.5rem;
+    margin: 0 0 16px;
+  }
+
+  &__titulo {
+    font-size: clamp(1.75rem, 4vw, 2.4rem);
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 16px;
+    line-height: 1.2;
+  }
+
+  &__texto {
+    font-size: 0.98rem;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.7;
+    margin: 0 0 32px;
+  }
+
+  &__botones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+}
+
+
+// =====================================================
+// 12. FOOTER
+// =====================================================
+
+.pie {
+  background: $azul-oscuro;
+  color: rgba(255, 255, 255, 0.60);
+
+  &__contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  &__marca {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  // El logo en el footer tiene texto blanco
+  &__logo-texto {
+    color: #fff !important;
+
+    strong { color: var(--secondary-color) !important; }
+  }
+
+  &__eslogan {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    max-width: 280px;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  &__nav-grupo {
+    ul { display: flex; flex-direction: column; gap: 8px; }
+  }
+
+  &__nav-titulo {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+    margin: 0 0 12px;
+  }
+
+  &__enlace {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.55);
+    transition: var(--transition);
+
+    &:hover { color: #fff; }
+    &:focus-visible {
+      outline: 2px solid var(--primary-light);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+
+  &__barra {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 20px 0;
+  }
+
+  &__barra-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+
+    p {
+      font-size: 0.80rem;
+      color: rgba(255, 255, 255, 0.35);
+      margin: 0;
+      line-height: 1.6;
+
+      strong { color: rgba(255, 255, 255, 0.65); }
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      span { color: rgba(255, 255, 255, 0.20); }
+    }
+  }
+
+  &__enlace-legal {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.35);
+    transition: var(--transition);
+
+    &:hover { color: rgba(255, 255, 255, 0.80); }
+  }
+}
+
+
+// =====================================================
+// 13. MEDIA QUERIES — Mobile First
+// =====================================================
+
+// ── 480px+ Smartphones grandes ──
+@media (min-width: #{$bp-sm}) {
+  .grilla-posts { grid-template-columns: repeat(2, 1fr); }
+  .grilla-cats  { grid-template-columns: repeat(2, 1fr); }
+  .mascota-wrap { width: 290px; }
+}
+
+// ── 768px+ Tablet ──
+@media (min-width: #{$bp-md}) {
+
+  // Navbar horizontal
+  .navbar {
+    &__hamburguesa { display: none; }
+
+    &__nav {
+      position: static;
+      display: flex !important;
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+      padding: 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+
+    &__enlaces {
+      flex-direction: row;
+      gap: 0;
+    }
+
+    &__enlace { padding: 8px 12px; }
+
+    &__acciones {
+      flex-direction: row;
+      padding: 0;
+      border: none;
+      gap: 8px;
+    }
+  }
+
+  // Hero en dos columnas
+  .hero {
+    min-height: auto;
+    padding: 80px 0;
+
+    &__contenedor {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    &__texto {
+      flex: 1;
+      padding-right: 32px;
+    }
+
+    &__mascota-col { flex: 0 0 auto; }
+  }
+
+  // Footer horizontal
+  .pie {
+    &__contenedor {
+      flex-direction: row;
+      gap: 48px;
+    }
+
+    &__marca { flex: 0 0 220px; }
+
+    &__nav {
+      flex: 1;
+      flex-direction: row;
+      gap: 32px;
+    }
+
+    &__nav-grupo { flex: 1; }
+
+    &__barra-inner {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+}
+
+// ── 1024px+ Laptop ──
+@media (min-width: #{$bp-lg}) {
+
+  .hero {
+    min-height: 100svh;
+
+    &__mascota-col { min-width: 360px; }
+  }
+
+  .mascota-wrap { width: 340px; }
+
+  .grilla-cats { grid-template-columns: repeat(4, 1fr); }
+
+  .grilla-posts {
+    grid-template-columns: repeat(2, 1fr);
+
+    .tarjeta-post--destacado { grid-column: span 2; }
+  }
+
+  .tarjeta-flotante {
+    &--a { left: -30px; }
+    &--b { right: -30px; }
+  }
+}
+
+// ── 1280px+ Desktop ──
+@media (min-width: #{$bp-xl}) {
+
+  .mascota-wrap { width: 390px; }
+
+  .grilla-posts {
+    grid-template-columns: repeat(4, 1fr);
+
+    .tarjeta-post--destacado { grid-column: span 2; }
+  }
+}
+
+.drawer-container {
+  height: 100vh;
+}
+
+.hero_drawer {
+  width: 280px; /* o el que uses */
+}
+.drawer-container {
+  display: contents;
+}
+
+main#contenido-principal {
+  overflow-x: hidden;
+}
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+main#contenido-principal {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 767px) {
+  .hero {
+    min-height: calc(100svh - 72px);
+  }
+}

@@ -1,0 +1,68 @@
+<h2 mat-dialog-title class="modal-title">
+  <mat-icon>gavel</mat-icon>
+  Resolver reporte
+</h2>
+
+<mat-dialog-content class="modal-content">
+  <div class="modal-chip-row">
+    <span class="modal-chip">{{ data.targetType }}</span>
+  </div>
+
+  <div class="modal-box">
+    <strong>{{ data.contenidoResumen }}</strong>
+    <p><strong>Autor:</strong> {{ data.autorContenido }}</p>
+    <p><strong>Motivo del reporte:</strong> {{ data.motivo }}</p>
+  </div>
+
+  <div class="decision-grid">
+    <button
+      mat-stroked-button
+      type="button"
+      class="decision-btn"
+      [class.is-active]="selectedDecision === 'APROBADO'"
+      (click)="choose('APROBADO')"
+    >
+      <mat-icon>check_circle</mat-icon>
+      Aprobar
+    </button>
+
+    <button
+      mat-stroked-button
+      type="button"
+      class="decision-btn"
+      [class.is-active]="selectedDecision === 'RECHAZADO'"
+      (click)="choose('RECHAZADO')"
+    >
+      <mat-icon>cancel</mat-icon>
+      Rechazar
+    </button>
+
+    <button
+      mat-stroked-button
+      type="button"
+      class="decision-btn"
+      [class.is-active]="selectedDecision === 'ARCHIVADO'"
+      (click)="choose('ARCHIVADO')"
+    >
+      <mat-icon>archive</mat-icon>
+      Archivar
+    </button>
+  </div>
+
+  <label class="modal-label">Nota interna (opcional)</label>
+  <textarea
+    class="modal-textarea"
+    [(ngModel)]="note"
+    rows="4"
+    placeholder="Puedes agregar una nota para el historial de moderación"
+  ></textarea>
+
+  @if (error) {
+    <div class="modal-error">{{ error }}</div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" (click)="cancel()">Cancelar</button>
+  <button mat-flat-button type="button" color="primary" (click)="submit()">Confirmar acción</button>
+</mat-dialog-actions>

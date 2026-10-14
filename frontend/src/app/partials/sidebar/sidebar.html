@@ -1,0 +1,29 @@
+<aside class="left-sidebar">
+  <nav class="left-sidebar__nav">
+    @if (canSeeDashboard) {
+      <button mat-button type="button" (click)="goTo('/dashboard')">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </button>
+    }
+
+    <button mat-button type="button" (click)="goTo('/posts')">
+      <mat-icon>article</mat-icon>
+      <span>Publicaciones</span>
+    </button>
+
+    @if (canSeeCategories) {
+      <button mat-button type="button" (click)="goTo('/categories')">
+        <mat-icon>category</mat-icon>
+        <span>Categorías</span>
+      </button>
+    }
+
+    @if (canSeeReports) {
+      <button mat-button type="button" (click)="goTo('/reports')">
+        <mat-icon>report</mat-icon>
+        <span>Reportes</span>
+      </button>
+    }
+  </nav>
+</aside>

@@ -1,0 +1,30 @@
+<h2 mat-dialog-title class="modal-title">
+  <mat-icon>flag</mat-icon>
+  Reportar comentario
+</h2>
+
+<mat-dialog-content class="modal-content">
+  <div class="modal-box">
+    <strong>{{ data.autor }}</strong>
+    <p>{{ data.contenido }}</p>
+  </div>
+
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Motivo del reporte</mat-label>
+    <textarea
+      matInput
+      rows="5"
+      [(ngModel)]="motivo"
+      placeholder="Describe el motivo del reporte"
+    ></textarea>
+  </mat-form-field>
+
+  @if (error) {
+    <div class="modal-error">{{ error }}</div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" (click)="cancel()">Cancelar</button>
+  <button mat-flat-button type="button" color="primary" (click)="submit()">Enviar reporte</button>
+</mat-dialog-actions>

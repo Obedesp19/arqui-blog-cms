@@ -1,0 +1,226 @@
+<app-navbar
+  [mode]="mode"
+  [userRole]="userRole"
+  [isLogin]="isLogin"
+></app-navbar>
+
+<main id="contenido-principal">
+  <section class="hero" aria-labelledby="titulo-hero">
+    <div class="hero__decoracion" aria-hidden="true">
+      <div class="hero__blob hero__blob--1"></div>
+      <div class="hero__blob hero__blob--2"></div>
+      <div class="hero__blob hero__blob--3"></div>
+    </div>
+
+    <div class="hero__contenedor">
+      <div class="hero__texto fade-in">
+        <div class="hero__chip">
+          <span class="hero__chip-punto" aria-hidden="true"></span>
+          Plataforma oficial · BUAP · FCC
+        </div>
+
+        <h1 id="titulo-hero" class="hero__titulo">
+          El espacio académico<br>
+          donde <span class="hero__titulo-acento">aprender</span><br>
+          es colectivo.
+        </h1>
+
+        <p class="hero__descripcion">
+          Comparte dudas, discute ideas y accede a recursos académicos
+          junto a estudiantes y profesores de la Facultad de Ciencias
+          de la Computación de la BUAP.
+        </p>
+
+        <div class="hero__botones">
+          <a class="btn btn--primario btn--grande" routerLink="/registro">Únete gratis</a>
+          <a class="btn btn--secundario btn--grande" routerLink="/registro">Explorar publicaciones</a>
+        </div>
+
+        <div class="hero__stats" aria-label="Estadísticas de la plataforma">
+          <div class="hero__stat">
+            <strong>2,400+</strong>
+            <span>Estudiantes</span>
+          </div>
+          <div class="hero__stat-sep" aria-hidden="true"></div>
+          <div class="hero__stat">
+            <strong>180+</strong>
+            <span>Profesores</span>
+          </div>
+          <div class="hero__stat-sep" aria-hidden="true"></div>
+          <div class="hero__stat">
+            <strong>12,000+</strong>
+            <span>Posts</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__mascota-col fade-in" aria-hidden="true">
+        <div class="tarjeta-flotante tarjeta-flotante--a">
+          <div class="tarjeta-flotante__icono tarjeta-flotante__icono--verde">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+              <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div class="tarjeta-flotante__texto">
+            <span class="tarjeta-flotante__titulo">Nuevo en #ia-generativa</span>
+            <span class="tarjeta-flotante__sub">Hace 2 minutos</span>
+          </div>
+        </div>
+
+        <div class="mascota-wrap">
+          <svg class="mascota-svg" viewBox="0 0 240 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="120" cy="268" rx="55" ry="10" fill="#6984A9" opacity="0.15"/>
+            <ellipse cx="120" cy="175" rx="64" ry="72" fill="#6984A9"/>
+            <ellipse cx="120" cy="183" rx="40" ry="52" fill="#eff2f7"/>
+            <circle cx="120" cy="92" r="60" fill="#6984A9"/>
+            <polygon points="82,48 70,8 96,44" fill="#4f678a"/>
+            <polygon points="158,48 170,8 144,44" fill="#4f678a"/>
+            <circle cx="96" cy="90" r="23" fill="#eff2f7"/>
+            <circle cx="144" cy="90" r="23" fill="#eff2f7"/>
+            <circle cx="96" cy="90" r="15" fill="#4f678a"/>
+            <circle cx="144" cy="90" r="15" fill="#4f678a"/>
+            <circle cx="98" cy="88" r="8" fill="#1a2535"/>
+            <circle cx="146" cy="88" r="8" fill="#1a2535"/>
+            <circle cx="102" cy="84" r="3.5" fill="white" opacity="0.95"/>
+            <circle cx="150" cy="84" r="3.5" fill="white" opacity="0.95"/>
+            <polygon points="120,104 108,118 132,118" fill="#f59e0b"/>
+            <ellipse cx="62" cy="190" rx="24" ry="48" fill="#4f678a" transform="rotate(-14 62 190)"/>
+            <ellipse cx="178" cy="190" rx="24" ry="48" fill="#4f678a" transform="rotate(14 178 190)"/>
+            <rect x="72" y="190" width="76" height="58" rx="7" fill="#4f678a"/>
+            <rect x="76" y="194" width="34" height="50" rx="4" fill="#eff2f7"/>
+            <rect x="114" y="194" width="30" height="50" rx="4" fill="#dce5f0"/>
+            <line x1="80" y1="204" x2="104" y2="204" stroke="#A0D585" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="80" y1="212" x2="96" y2="212" stroke="#6984A9" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="80" y1="220" x2="102" y2="220" stroke="#A0D585" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="80" y1="228" x2="88" y2="228" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="80" y1="236" x2="100" y2="236" stroke="#6984A9" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="100" y="240" width="11" height="20" rx="4" fill="#f59e0b"/>
+            <rect x="129" y="240" width="11" height="20" rx="4" fill="#f59e0b"/>
+            <rect x="68" y="38" width="104" height="11" rx="3" fill="#1a2535"/>
+            <rect x="103" y="27" width="34" height="13" rx="3" fill="#1a2535"/>
+            <line x1="172" y1="44" x2="190" y2="66" stroke="#A0D585" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="190" cy="68" r="6" fill="#A0D585"/>
+          </svg>
+        </div>
+
+        <div class="tarjeta-flotante tarjeta-flotante--b">
+          <div class="tarjeta-flotante__icono tarjeta-flotante__icono--azul">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+              <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+            </svg>
+          </div>
+          <div class="tarjeta-flotante__texto">
+            <span class="tarjeta-flotante__titulo">97 respuestas</span>
+            <span class="tarjeta-flotante__sub">Redes Neuronales · Prof. Pérez</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion-posts" aria-labelledby="titulo-posts">
+    <div class="contenedor">
+      <header class="encabezado-seccion fade-in">
+        <p class="chip-seccion">Actividad reciente</p>
+        <h2 id="titulo-posts" class="titulo-seccion">Posts destacados</h2>
+        <p class="subtitulo-seccion">
+          Las conversaciones más activas de la comunidad académica.
+        </p>
+      </header>
+
+      <div class="grilla-posts" role="feed" aria-label="Posts recientes">
+        @for (post of postsRecientes; track post.id) {
+          <article class="tarjeta-post fade-in" [class.tarjeta-post--destacado]="post.destacado">
+            <div class="tarjeta-post__tope">
+              <span class="etiqueta-cat" [class]="post.claseCat">
+                {{ post.categoriaTexto }}
+              </span>
+
+              @if (post.destacado) {
+                <span class="tarjeta-post__pin">📌 Fijado</span>
+              }
+
+              <time class="tarjeta-post__fecha">{{ post.fecha }}</time>
+            </div>
+
+            <h3 class="tarjeta-post__titulo">
+              <a [routerLink]="['/posts', post.id]">{{ post.titulo }}</a>
+            </h3>
+
+            <p class="tarjeta-post__extracto">{{ post.contenido }}</p>
+
+            <footer class="tarjeta-post__pie">
+              <div class="autor">
+                <div class="autor__avatar" [class]="post.claseAvatar">
+                  {{ post.iniciales }}
+                </div>
+                <span class="autor__nombre">{{ post.autor }}</span>
+              </div>
+
+              <div class="tarjeta-post__contadores">
+                <span>💬 {{ post.comentarios }}</span>
+                <span>👁 {{ post.vistas }}</span>
+              </div>
+            </footer>
+          </article>
+        }
+      </div>
+
+      <div class="seccion-posts__cta fade-in">
+        <a class="btn btn--contorno" routerLink="/posts">Ver todos los posts →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion-categorias" aria-labelledby="titulo-cats">
+    <div class="contenedor">
+      <header class="encabezado-seccion fade-in">
+        <p class="chip-seccion">Conocimiento organizado</p>
+        <h2 id="titulo-cats" class="titulo-seccion">Categorías académicas</h2>
+        <p class="subtitulo-seccion">
+          Navega por área y encuentra exactamente lo que necesitas.
+        </p>
+      </header>
+
+      <div class="grilla-cats" role="list">
+        @for (categoria of categoriasAcademicas; track categoria.id) {
+          <a
+            class="tarjeta-cat fade-in"
+            [ngClass]="getClaseCategoriaCard(categoria.nombre)"
+            routerLink="/posts"
+            role="listitem"
+          >
+            <div class="tarjeta-cat__icono-wrap">
+              <svg viewBox="0 0 48 48" fill="none" width="34" height="34">
+                <rect x="4" y="8" width="40" height="32" rx="5" stroke="currentColor" stroke-width="2.5"/>
+                <path d="M16 18L10 24L16 30M32 18L38 24L32 30M22 32L26 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <h3 class="tarjeta-cat__nombre">{{ categoria.nombre }}</h3>
+            <p class="tarjeta-cat__desc">{{ categoria.descripcion }}</p>
+
+            <div class="tarjeta-cat__pie">
+              <span class="tarjeta-cat__conteo">Ver publicaciones</span>
+              <span class="tarjeta-cat__flecha">→</span>
+            </div>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+    <section class="banner-cta fade-in" aria-labelledby="titulo-cta">
+    <div class="banner-cta__contenedor">
+      <h2 id="titulo-cta" class="banner-cta__titulo">¿Listo para unirte a la comunidad?</h2>
+      <p class="banner-cta__texto">
+        Regístrate con tu correo institucional BUAP y empieza a aprender junto a miles de compañeros.
+      </p>
+      <div class="banner-cta__botones">
+        <button class="btn btn--blanco btn--grande" routerLink="/registro">Crear mi cuenta</button>
+        <button class="btn btn--contorno-blanco btn--grande" routerLink="/login">Ya tengo cuenta</button>
+      </div>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
+</main>

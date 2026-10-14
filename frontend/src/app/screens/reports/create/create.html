@@ -1,0 +1,103 @@
+<section class="reports-create">
+  <app-navbar
+    mode="private"
+    [userRole]="userRole"
+    (toggleSidebar)="toggleSidebar()"
+  ></app-navbar>
+
+  <mat-drawer-container class="reports-create__drawer-container" autosize>
+    <mat-drawer
+      class="reports-create__drawer"
+      mode="over"
+      position="start"
+      [opened]="drawerOpen"
+      (closedStart)="drawerOpen = false"
+    >
+      <app-sidebar
+        [userRole]="userRole"
+        (closeSidebar)="closeSidebar()"
+      ></app-sidebar>
+    </mat-drawer>
+
+    <mat-drawer-content class="reports-create__content">
+      <div class="reports-create__main">
+        <main class="reports-create__body">
+          <section class="reports-create__hero">
+            <div class="reports-create__hero-copy">
+              <h1 class="reports-create__title">Crear reporte</h1>
+              <p class="reports-create__subtitle">Reporta una publicación o comentario para revisión</p>
+            </div>
+
+            <button mat-stroked-button type="button" (click)="goBack()">
+              <mat-icon>arrow_back</mat-icon>
+              Volver
+            </button>
+          </section>
+
+          <section class="reports-create__form-section">
+            <mat-card class="reports-create__card">
+              <mat-card-content>
+                <h2 class="reports-create__form-title">Formulario de reporte</h2>
+
+                <div class="reports-create__summary">
+                  <div class="reports-create__summary-item">
+                    <span class="reports-create__label">Tipo</span>
+                    <p class="reports-create__value">{{ tipo }}</p>
+                  </div>
+
+                  <div class="reports-create__summary-item">
+                    <span class="reports-create__label">Referencia</span>
+                    <p class="reports-create__value">#{{ referenciaId }}</p>
+                  </div>
+                </div>
+
+                <mat-form-field class="reports-create__field" appearance="outline">
+                  <mat-label>Motivo</mat-label>
+                  <mat-select [(ngModel)]="motivo">
+                    @for (item of motivosDisponibles; track item) {
+                      <mat-option [value]="item">
+                        {{ item }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                @if (errors.motivo) {
+                  <div class="reports-create__error">{{ errors.motivo }}</div>
+                }
+
+                <mat-form-field class="reports-create__field" appearance="outline">
+                  <mat-label>Descripción</mat-label>
+                  <textarea
+                    [(ngModel)]="descripcion"
+                    matInput
+                    rows="7"
+                    placeholder="Describe brevemente por qué estás reportando este contenido"
+                  ></textarea>
+                </mat-form-field>
+                @if (errors.descripcion) {
+                  <div class="reports-create__error">{{ errors.descripcion }}</div>
+                }
+
+                @if (errors.referenciaId) {
+                  <div class="reports-create__error">{{ errors.referenciaId }}</div>
+                }
+
+                <div class="reports-create__actions">
+                  <button mat-stroked-button type="button" (click)="goBack()">
+                    Cancelar
+                  </button>
+
+                  <button mat-flat-button type="button" (click)="submit()">
+                    Enviar reporte
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </section>
+        </main>
+
+        <app-footer></app-footer>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</section>

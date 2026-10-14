@@ -1,0 +1,127 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Montserrat,
+    density: 0,
+  ));
+}
+
+/* =========================================================
+   Fuentes principales
+   ========================================================= */
+
+// ============ Cuerpo de texto y títulos ============ 
+@font-face {
+  font-family: 'Montserrat';
+  src: url('assets/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('assets/fonts/Montserrat/Montserrat-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('assets/fonts/Montserrat/Montserrat-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('assets/fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* =========================================================
+   Base global
+   ========================================================= */
+
+:root {
+  /* =========================================================
+     Paleta de colores (Apegarse a toda la app con CSS variables)
+     ========================================================= */
+
+  /* Colores principales */
+  --primary-color: #6984A9;
+  --secondary-color: #A0D585;
+
+  /* Variaciones */
+  --primary-dark: #4f678a;
+  --primary-light: #8fa7c2;
+
+  --secondary-dark: #7fb85e;
+  --secondary-light: #c3e8a6;
+
+  /* Neutrales */
+  --background-color: #eff2f7;
+
+  --text-color: #2c2c2c;
+  --text-light: #6b7280;
+
+  --border-color: #e5e7eb;
+
+  /* Estados */
+  --success-color: #22c55e;
+  --error-color: #ef4444;
+  --warning-color: #f59e0b;
+  --info-color: #3b82f6;
+
+  /* Animaciones, sombras, radios */
+  --border-radius: 20px;
+  --transition: all 0.3s ease;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--background-color);
+  min-height: 100dvh; /* mejor comportamiento móvil */
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+}
+
+/* Títulos */
+h1 {
+  font-weight: 700;
+}
+
+h2 {
+  font-weight: 600;
+}
+
+h3, h4 {
+  font-weight: 600;
+}
+
+/* =========================================================
+   Feedback de error (global opcional)
+   ========================================================= */
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
+  color: #bb0404;
+  font-size: 0.875rem;
+}

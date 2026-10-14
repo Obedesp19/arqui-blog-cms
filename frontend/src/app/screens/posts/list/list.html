@@ -1,0 +1,325 @@
+<section class="posts-list">
+  <app-navbar
+    [mode]="isLogin ? 'private' : 'public'"
+    [userRole]="userRole"
+    [isLogin]="isLogin"
+    (toggleSidebar)="toggleSidebar()"
+  ></app-navbar>
+
+  @if (isLogin) {
+    <mat-drawer-container class="posts-list__drawer-container" autosize>
+      <mat-drawer
+        class="posts-list__drawer"
+        mode="over"
+        position="start"
+        [opened]="drawerOpen"
+        (closedStart)="drawerOpen = false"
+      >
+        <app-sidebar
+          [userRole]="userRole"
+          [isLogin]="isLogin"
+          (closeSidebar)="closeSidebar()"
+        ></app-sidebar>
+      </mat-drawer>
+
+      <mat-drawer-content class="posts-list__content">
+        <div class="posts-list__main">
+          <main class="posts-list__body">
+
+            <section class="posts-list__hero">
+              <div class="posts-list__hero-copy">
+                <span class="posts-list__eyebrow">CampusForum</span>
+                <h1 class="posts-list__title">Publicaciones</h1>
+                <p class="posts-list__subtitle">
+                  Explora publicaciones académicas, filtra por categoría y participa en la conversación.
+                </p>
+              </div>
+
+              <button
+                mat-flat-button
+                type="button"
+                class="posts-list__create-btn"
+                (click)="goCreatePost()"
+              >
+                <mat-icon>add</mat-icon>
+                Nueva publicación
+              </button>
+            </section>
+
+            <section class="posts-list__filters">
+              <mat-form-field appearance="outline" class="posts-list__field posts-list__field--search">
+                <mat-label>Buscar publicaciones</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="search"
+                  (ngModelChange)="onSearchChange()"
+                  placeholder="Buscar por título, contenido o autor"
+                  name="search"
+                >
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="posts-list__field posts-list__field--category">
+                <mat-label>Categoría</mat-label>
+                <mat-select
+                  [(ngModel)]="selectedCategory"
+                  (selectionChange)="onCategoryChange()"
+                  name="selectedCategory"
+                >
+                  @for (category of categories; track category) {
+                    <mat-option [value]="category">{{ category }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </section>
+
+            <section class="posts-list__summary">
+              <div class="posts-list__summary-chip">
+                {{ filteredPosts.length }} resultado{{ filteredPosts.length === 1 ? '' : 's' }}
+              </div>
+
+              <div class="posts-list__summary-chip">
+                Página {{ page }} de {{ totalPages }}
+              </div>
+            </section>
+
+            @if (paginatedPosts.length > 0) {
+              <section class="posts-list__grid">
+                @for (post of paginatedPosts; track post.id) {
+                  <mat-card class="posts-list__card">
+                    <mat-card-content>
+                      <div class="posts-list__card-top">
+                        <span class="posts-list__category">{{ post.categoria }}</span>
+                        <span class="posts-list__date">{{ post.fecha }}</span>
+                      </div>
+
+                      <h2 class="posts-list__card-title">{{ post.titulo }}</h2>
+
+                      <p class="posts-list__card-text">
+                        {{ post.contenido }}
+                      </p>
+
+                      <div class="posts-list__meta">
+                        <div class="posts-list__author">
+                          <span class="posts-list__avatar">
+                            {{ post.autor.charAt(0) }}
+                          </span>
+
+                          <div class="posts-list__author-copy">
+                            <span class="posts-list__meta-label">Autor</span>
+                            <strong>{{ post.autor }}</strong>
+                          </div>
+                        </div>
+
+                        <div class="posts-list__stats">
+                          <span class="posts-list__stat">
+                            <mat-icon>chat_bubble_outline</mat-icon>
+                            {{ post.comentarios }}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="posts-list__actions">
+                        <button
+                          mat-stroked-button
+                          type="button"
+                          (click)="goPostDetail(post.id)"
+                        >
+                          Ver detalle
+                        </button>
+
+                        @if (canEditPost(post)) {
+                          <button
+                            mat-stroked-button
+                            type="button"
+                            (click)="goEditPost(post.id)"
+                          >
+                            <mat-icon>edit</mat-icon>
+                            Editar
+                          </button>
+                        }
+
+                        <button
+                          mat-stroked-button
+                          type="button"
+                          (click)="reportarPost(post.id)"
+                        >
+                          <mat-icon>flag</mat-icon>
+                          Reportar
+                        </button>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                }
+              </section>
+
+              <section class="posts-list__pagination">
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="prevPage()"
+                  [disabled]="page === 1"
+                >
+                  <mat-icon>chevron_left</mat-icon>
+                  Anterior
+                </button>
+
+                <div class="posts-list__pagination-info">
+                  {{ page }} / {{ totalPages }}
+                </div>
+
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="nextPage()"
+                  [disabled]="page === totalPages"
+                >
+                  Siguiente
+                  <mat-icon>chevron_right</mat-icon>
+                </button>
+              </section>
+            } @else {
+              <section class="posts-list__empty">
+                <mat-card class="posts-list__empty-card">
+                  <mat-card-content>
+                    <mat-icon class="posts-list__empty-icon">forum</mat-icon>
+                    <h3>No se encontraron publicaciones</h3>
+                    <p>Prueba con otro texto de búsqueda o cambia la categoría.</p>
+                  </mat-card-content>
+                </mat-card>
+              </section>
+            }
+
+          </main>
+
+          <app-footer></app-footer>
+        </div>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  } @else {
+    <div class="posts-list__public">
+      <main class="posts-list__body">
+
+        <section class="posts-list__hero">
+          <div class="posts-list__hero-copy">
+            <span class="posts-list__eyebrow">CampusForum</span>
+            <h1 class="posts-list__title">Publicaciones</h1>
+            <p class="posts-list__subtitle">
+              Explora publicaciones académicas recientes. Inicia sesión para participar en la conversación.
+            </p>
+          </div>
+
+          <button
+            mat-flat-button
+            type="button"
+            class="posts-list__create-btn"
+            (click)="goLogin()"
+          >
+            Iniciar sesión
+          </button>
+        </section>
+
+        <section class="posts-list__filters">
+          <mat-form-field appearance="outline" class="posts-list__field posts-list__field--search">
+            <mat-label>Buscar publicaciones</mat-label>
+            <input
+              matInput
+              [(ngModel)]="search"
+              (ngModelChange)="onSearchChange()"
+              placeholder="Buscar por título, contenido o autor"
+              name="search"
+            >
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="posts-list__field posts-list__field--category">
+            <mat-label>Categoría</mat-label>
+            <mat-select
+              [(ngModel)]="selectedCategory"
+              (selectionChange)="onCategoryChange()"
+              name="selectedCategory"
+            >
+              @for (category of categories; track category) {
+                <mat-option [value]="category">{{ category }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </section>
+
+        <section class="posts-list__summary">
+          <div class="posts-list__summary-chip">
+            {{ filteredPosts.length }} publicación{{ filteredPosts.length === 1 ? '' : 'es' }}
+          </div>
+
+          <div class="posts-list__summary-chip">
+            Vista pública
+          </div>
+        </section>
+
+        @if (filteredPosts.length > 0) {
+          <section class="posts-list__grid">
+            @for (post of filteredPosts; track post.id) {
+              <mat-card class="posts-list__card">
+                <mat-card-content>
+                  <div class="posts-list__card-top">
+                    <span class="posts-list__category">{{ post.categoria }}</span>
+                    <span class="posts-list__date">{{ post.fecha }}</span>
+                  </div>
+
+                  <h2 class="posts-list__card-title">{{ post.titulo }}</h2>
+
+                  <p class="posts-list__card-text">
+                    {{ post.contenido }}
+                  </p>
+
+                  <div class="posts-list__meta">
+                    <div class="posts-list__author">
+                      <span class="posts-list__avatar">
+                        {{ post.autor.charAt(0) }}
+                      </span>
+
+                      <div class="posts-list__author-copy">
+                        <span class="posts-list__meta-label">Autor</span>
+                        <strong>{{ post.autor }}</strong>
+                      </div>
+                    </div>
+
+                    <div class="posts-list__stats">
+                      <span class="posts-list__stat">
+                        <mat-icon>chat_bubble_outline</mat-icon>
+                        {{ post.comentarios }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="posts-list__actions">
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      (click)="goLogin()"
+                    >
+                      Participar
+                    </button>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </section>
+        } @else {
+          <section class="posts-list__empty">
+            <mat-card class="posts-list__empty-card">
+              <mat-card-content>
+                <mat-icon class="posts-list__empty-icon">forum</mat-icon>
+                <h3>No se encontraron publicaciones</h3>
+                <p>Prueba con otro texto de búsqueda o cambia la categoría.</p>
+              </mat-card-content>
+            </mat-card>
+          </section>
+        }
+
+      </main>
+
+      <app-footer></app-footer>
+    </div>
+  }
+</section>

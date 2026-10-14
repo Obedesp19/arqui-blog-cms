@@ -1,0 +1,94 @@
+<section class="reports-list">
+  <app-navbar
+    mode="private"
+    [userRole]="userRole"
+    [isLogin]="isLogin"
+    (toggleSidebar)="toggleSidebar()"
+  ></app-navbar>
+
+  <mat-drawer-container class="reports-list__drawer-container" autosize>
+    <mat-drawer
+      class="reports-list__drawer"
+      mode="over"
+      position="start"
+      [opened]="drawerOpen"
+      (closedStart)="drawerOpen = false"
+    >
+      <app-sidebar
+        [userRole]="userRole"
+        [isLogin]="isLogin"
+        (closeSidebar)="closeSidebar()"
+      ></app-sidebar>
+    </mat-drawer>
+
+    <mat-drawer-content class="reports-list__content">
+      <div class="reports-list__main">
+        <main class="reports-list__body">
+          <section class="reports-list__hero">
+            <div>
+              <span class="reports-list__eyebrow">Moderación</span>
+              <h1 class="reports-list__title">Reportes</h1>
+              <p class="reports-list__subtitle">
+                Revisa publicaciones y comentarios reportados por la comunidad.
+              </p>
+            </div>
+          </section>
+
+          @if (reports.length > 0) {
+            <section class="reports-list__grid">
+              @for (report of reports; track report.id) {
+                <mat-card class="reports-list__card">
+                  <mat-card-content>
+                    <div class="reports-list__top">
+                      <span class="reports-list__type">{{ report.tipo }}</span>
+                      <span class="reports-list__status">{{ report.estado }}</span>
+                    </div>
+
+                    <h3 class="reports-list__summary">
+                      {{ report.descripcion || ('Reporte #' + report.id) }}
+                    </h3>
+
+                    <div class="reports-list__meta">
+                      <span><strong>Referencia:</strong> {{ report.referenciaId }}</span>
+                      <span><strong>Reportó:</strong> {{ report.reportadoPor }}</span>
+                      <span><strong>Fecha:</strong> {{ report.fecha }}</span>
+                    </div>
+
+                    <p class="reports-list__reason">
+                      <strong>Motivo:</strong> {{ report.motivo }}
+                    </p>
+
+                    @if (report.tipo === 'COMENTARIO' && report.postId > 0) {
+                      <p class="reports-list__reason">
+                        <strong>Post relacionado:</strong> {{ report.postId }}
+                      </p>
+                    }
+
+                    <div class="reports-list__actions">
+                      <button
+                        mat-flat-button
+                        color="primary"
+                        type="button"
+                        (click)="resolverReporte(report)"
+                      >
+                        Resolver reporte
+                      </button>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              }
+            </section>
+          } @else {
+            <mat-card class="reports-list__empty">
+              <mat-card-content>
+                No hay reportes registrados todavía.
+              </mat-card-content>
+            </mat-card>
+          }
+        </main>
+
+        <app-footer></app-footer>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</section>

@@ -1,0 +1,146 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(to bottom, #dfe6ee, #cfd8e3);
+}
+
+.login-card-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 2rem;
+  border-radius: 20px;
+  background: #f2f4f7;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-top: 60px;
+}
+
+.login-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  color: #1a2535;
+}
+
+.login-subtitle {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.input-full {
+  width: 100%;
+}
+
+.error {
+  color: #b32623;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  text-align: left;
+  padding-left: 4px;
+}
+
+.login-extra {
+  margin: 10px 0;
+}
+
+.link {
+  color: #4CAF50;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #388e3c;
+}
+
+.login-footer {
+  margin-top: 15px;
+}
+
+.mascota-login {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  z-index: 10;
+}
+
+.mascota-svg {
+  width: 100%;
+  transition: all 0.3s ease;
+  animation: float 3s ease-in-out infinite;
+}
+
+.back-home {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.home-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #4CAF50;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.home-link:hover {
+  color: #388e3c;
+  transform: scale(1.05);
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+//UX PENDIENTE
+
+//Responsivo
+
+@media (max-width: 600px) {
+
+  .login-card {
+    padding: 1.5rem;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+
+  .login-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .mascota-login {
+    width: 85px;
+    top: -70px;
+  }
+
+}
+
+@media (max-height: 700px) {
+  .mascota-login {
+    top: -40px;
+    width: 90px;
+  }
+}

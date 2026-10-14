@@ -1,0 +1,105 @@
+<section class="reports-detail">
+  <app-navbar
+    mode="private"
+    [userRole]="userRole"
+    (toggleSidebar)="toggleSidebar()"
+  ></app-navbar>
+
+  <mat-drawer-container class="reports-detail__drawer-container" autosize>
+    <mat-drawer
+      class="reports-detail__drawer"
+      mode="over"
+      position="start"
+      [opened]="drawerOpen"
+      (closedStart)="drawerOpen = false"
+    >
+      <app-sidebar
+        [userRole]="userRole"
+        (closeSidebar)="closeSidebar()"
+      ></app-sidebar>
+    </mat-drawer>
+
+    <mat-drawer-content class="reports-detail__content">
+      <div class="reports-detail__main">
+        <main class="reports-detail__body">
+          <section class="reports-detail__hero">
+            <div class="reports-detail__hero-copy">
+              <h1 class="reports-detail__title">Detalle del reporte</h1>
+              <p class="reports-detail__subtitle">Consulta la información completa del reporte</p>
+            </div>
+
+            <button mat-stroked-button type="button" (click)="goBack()">
+              <mat-icon>arrow_back</mat-icon>
+              Volver a reportes
+            </button>
+          </section>
+
+          @if (report) {
+            <section class="reports-detail__card-section">
+              <mat-card class="reports-detail__card">
+                <mat-card-content>
+                  <div class="reports-detail__header">
+                    <div class="reports-detail__header-copy">
+                      <h2 class="reports-detail__card-title">{{ report.motivo }}</h2>
+                      <p class="reports-detail__card-subtitle">
+                        Información general del reporte registrado
+                      </p>
+                    </div>
+
+                    <span
+                      class="reports-detail__status"
+                      [class.pending]="report.estado === 'PENDIENTE'"
+                      [class.approved]="report.estado === 'APROBADO'"
+                      [class.rejected]="report.estado === 'RECHAZADO'"
+                    >
+                      {{ report.estado }}
+                    </span>
+                  </div>
+
+                  <div class="reports-detail__grid">
+                    <div class="reports-detail__item">
+                      <span class="reports-detail__label">Tipo</span>
+                      <p class="reports-detail__value">{{ report.tipo }}</p>
+                    </div>
+
+                    <div class="reports-detail__item">
+                      <span class="reports-detail__label">Usuario reportado</span>
+                      <p class="reports-detail__value">{{ report.usuario }}</p>
+                    </div>
+
+                    <div class="reports-detail__item">
+                      <span class="reports-detail__label">Fecha</span>
+                      <p class="reports-detail__value">{{ report.fecha }}</p>
+                    </div>
+
+                    <div class="reports-detail__item">
+                      <span class="reports-detail__label">Motivo</span>
+                      <p class="reports-detail__value">{{ report.motivo }}</p>
+                    </div>
+                  </div>
+
+                  <div class="reports-detail__block">
+                    <span class="reports-detail__label">Descripción del reporte</span>
+                    <p class="reports-detail__text">
+                      {{ report.descripcion }}
+                    </p>
+                  </div>
+
+                  <div class="reports-detail__block">
+                    <span class="reports-detail__label">Contenido reportado</span>
+                    <div class="reports-detail__reported-box">
+                      {{ report.contenidoReportado }}
+                    </div>
+                  </div>
+
+                </mat-card-content>
+              </mat-card>
+            </section>
+          }
+        </main>
+
+        <app-footer></app-footer>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</section>

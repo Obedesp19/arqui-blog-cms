@@ -1,0 +1,87 @@
+<section class="categories-list">
+  <app-navbar
+    mode="private"
+    [userRole]="userRole"
+    [isLogin]="isLogin"
+    (toggleSidebar)="toggleSidebar()"
+  ></app-navbar>
+
+  <mat-drawer-container class="categories-list__drawer-container" autosize>
+    <mat-drawer
+      class="categories-list__drawer"
+      mode="over"
+      position="start"
+      [opened]="drawerOpen"
+      (closedStart)="drawerOpen = false"
+    >
+      <app-sidebar
+        [userRole]="userRole"
+        [isLogin]="isLogin"
+        (closeSidebar)="closeSidebar()"
+      ></app-sidebar>
+    </mat-drawer>
+
+    <mat-drawer-content class="categories-list__content">
+      <div class="categories-list__main">
+        <main class="categories-list__body">
+          <section class="categories-list__hero">
+            <div>
+              <span class="categories-list__eyebrow">Catálogo</span>
+              <h1 class="categories-list__title">Categorías</h1>
+              <p class="categories-list__subtitle">
+                Administra las categorías académicas usadas por las publicaciones.
+              </p>
+            </div>
+
+            <button mat-flat-button color="primary" type="button" (click)="goCreate()">
+              <mat-icon>add</mat-icon>
+              Nueva categoría
+            </button>
+          </section>
+
+          <section class="categories-list__filters">
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>Buscar</mat-label>
+              <input matInput [(ngModel)]="search" name="search" placeholder="Buscar por nombre o descripción">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full">
+              <mat-label>Estado</mat-label>
+              <mat-select [(ngModel)]="estado" name="estado">
+                <mat-option value="TODAS">Todas</mat-option>
+                <mat-option value="ACTIVO">Activas</mat-option>
+                <mat-option value="INACTIVO">Inactivas</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </section>
+
+          <section class="categories-list__grid">
+            @for (row of filteredRows; track row.id) {
+              <mat-card class="categories-list__card">
+                <mat-card-content>
+                  <div class="categories-list__top">
+                    <h3>{{ row.nombre }}</h3>
+                    <span class="categories-list__status" [class.is-inactive]="row.estado === 'INACTIVO'">
+                      {{ row.estado }}
+                    </span>
+                  </div>
+
+                  <p class="categories-list__desc">{{ row.descripcion }}</p>
+
+                  <div class="categories-list__actions">
+                    <button mat-stroked-button type="button" (click)="goEdit(row.id)">Editar</button>
+                    @if (row.estado === 'ACTIVO') {
+                      <button mat-stroked-button type="button" (click)="inactivate(row.id)">Inactivar</button>
+                    }
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </section>
+        </main>
+
+        <app-footer></app-footer>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</section>

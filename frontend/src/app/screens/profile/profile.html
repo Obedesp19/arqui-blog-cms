@@ -1,0 +1,213 @@
+<section class="profile">
+  <app-navbar
+    mode="private"
+    [userRole]="userRole"
+    [isLogin]="isLogin"
+    (toggleSidebar)="toggleSidebar()"
+  ></app-navbar>
+
+  <mat-drawer-container class="profile__drawer-container" autosize>
+    <mat-drawer
+      class="profile__drawer"
+      mode="over"
+      position="start"
+      [opened]="drawerOpen"
+      (closedStart)="drawerOpen = false"
+    >
+      <app-sidebar
+        [userRole]="userRole"
+        [isLogin]="isLogin"
+        (closeSidebar)="closeSidebar()"
+      ></app-sidebar>
+    </mat-drawer>
+
+    <mat-drawer-content class="profile__content">
+      <div class="profile__main">
+        <main class="profile__body">
+
+          <section class="profile__hero">
+            <div>
+              <span class="profile__eyebrow">Cuenta</span>
+              <h1 class="profile__title">Mi perfil</h1>
+              <p class="profile__subtitle">
+                Administra tus datos, avatar e insignias dentro de CampusForum.
+              </p>
+            </div>
+
+            <div class="profile__role-chip">
+              {{ userRole }}
+            </div>
+          </section>
+
+          <section class="profile__layout">
+
+            <mat-card class="profile__card profile__card--preview">
+              <mat-card-content>
+                <div class="profile__avatar-preview">
+                  <img
+                    [src]="form.avatar || 'assets/avatares/avatar-original.png'"
+                    (error)="onAvatarError()"
+                    alt="Avatar del usuario"
+                  >
+                </div>
+
+                <h2 class="profile__name">
+                  {{ form.firstName || 'Usuario' }} {{ form.lastName }}
+                </h2>
+
+                <p class="profile__email">
+                  {{ form.email || 'correo@institucion.edu.mx' }}
+                </p>
+
+                <div class="profile__badges">
+                  @if (userRole === 'ADMINISTRADOR') {
+                    <span class="profile__badge profile__badge--admin">
+                      <mat-icon>admin_panel_settings</mat-icon>
+                      Administrador
+                    </span>
+                  }
+
+                  @if (userRole === 'PROFESOR') {
+                    <span class="profile__badge profile__badge--profesor">
+                      <mat-icon>school</mat-icon>
+                      Docente
+                    </span>
+                  }
+
+                  @if (userRole === 'ESTUDIANTE') {
+                    <span class="profile__badge profile__badge--estudiante">
+                      <mat-icon>menu_book</mat-icon>
+                      Alumno
+                    </span>
+                  }
+
+                  <span class="profile__badge profile__badge--activo">
+                    <mat-icon>verified</mat-icon>
+                    Usuario activo
+                  </span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="profile__card profile__card--form">
+              <mat-card-content>
+                <h2 class="profile__section-title">Datos personales</h2>
+
+                <div class="profile__grid">
+                  <div>
+                    <mat-form-field appearance="outline" class="full">
+                      <mat-label>Nombre/s</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="form.firstName"
+                        name="firstName"
+                      >
+                    </mat-form-field>
+
+                    @if (errors.firstName) {
+                      <div class="error">{{ errors.firstName }}</div>
+                    }
+                  </div>
+
+                  <div>
+                    <mat-form-field appearance="outline" class="full">
+                      <mat-label>Apellido paterno</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="form.lastName"
+                        name="lastName"
+                      >
+                    </mat-form-field>
+
+                    @if (errors.lastName) {
+                      <div class="error">{{ errors.lastName }}</div>
+                    }
+                  </div>
+
+                  <div>
+                    <mat-form-field appearance="outline" class="full">
+                      <mat-label>Apellido materno</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="form.lastNameMother"
+                        name="lastNameMother"
+                      >
+                    </mat-form-field>
+
+                    @if (errors.lastNameMother) {
+                      <div class="error">{{ errors.lastNameMother }}</div>
+                    }
+                  </div>
+
+                  <div>
+                    <mat-form-field appearance="outline" class="full">
+                      <mat-label>Correo institucional</mat-label>
+                      <input
+                        matInput
+                        [(ngModel)]="form.email"
+                        name="email"
+                      >
+                    </mat-form-field>
+
+                    @if (errors.email) {
+                      <div class="error">{{ errors.email }}</div>
+                    }
+                  </div>
+
+                  <mat-form-field appearance="outline" class="full">
+                    <mat-label>Rol</mat-label>
+                    <input
+                      matInput
+                      [value]="form.role"
+                      disabled
+                    >
+                  </mat-form-field>
+                </div>
+
+                <h2 class="profile__section-title profile__section-title--avatar">
+                  Selecciona tu avatar
+                </h2>
+
+                <div class="profile__avatars">
+                  @for (avatar of avatars; track avatar) {
+                    <button
+                      type="button"
+                      class="profile__avatar-btn"
+                      [class.is-active]="form.avatar === avatar"
+                      (click)="selectAvatar(avatar)"
+                      aria-label="Seleccionar avatar"
+                    >
+                      <img [src]="avatar" alt="">
+                    </button>
+                  }
+                </div>
+
+                @if (successMessage) {
+                  <div class="profile__success">
+                    <mat-icon>check_circle</mat-icon>
+                    {{ successMessage }}
+                  </div>
+                }
+
+                <div class="profile__actions">
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    type="button"
+                    (click)="saveProfile()"
+                  >
+                    Guardar cambios
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+          </section>
+
+        </main>
+
+        <app-footer></app-footer>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</section>

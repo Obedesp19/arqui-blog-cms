@@ -1,0 +1,116 @@
+<section class="login-container">
+
+  <div class="login-card-wrapper">
+
+    <div class="mascota-login" [ngClass]="focusedField">
+
+      <svg class="mascota-svg" viewBox="0 0 240 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+        <ellipse cx="120" cy="268" rx="55" ry="10" fill="#6984A9" opacity="0.15"/>
+        <ellipse cx="120" cy="175" rx="64" ry="72" fill="#6984A9"/>
+        <ellipse cx="120" cy="183" rx="40" ry="52" fill="#eff2f7"/>
+        <circle cx="120" cy="92" r="60" fill="#6984A9"/>
+        <polygon points="82,48 70,8 96,44" fill="#4f678a"/>
+        <polygon points="158,48 170,8 144,44" fill="#4f678a"/>
+        <circle cx="96" cy="90" r="23" fill="#eff2f7"/>
+        <circle cx="144" cy="90" r="23" fill="#eff2f7"/>
+        <circle cx="96" cy="90" r="15" fill="#4f678a"/>
+        <circle cx="144" cy="90" r="15" fill="#4f678a"/>
+        <circle class="ojo" cx="98" cy="88" r="8" fill="#1a2535"/>
+        <circle class="ojo" cx="146" cy="88" r="8" fill="#1a2535"/>
+        <circle cx="102" cy="84" r="3.5" fill="white" opacity="0.95"/>
+        <circle cx="150" cy="84" r="3.5" fill="white" opacity="0.95"/>
+        <polygon points="120,104 108,118 132,118" fill="#f59e0b"/>
+        <ellipse cx="62" cy="190" rx="24" ry="48" fill="#4f678a" transform="rotate(-14 62 190)"/>
+        <ellipse cx="178" cy="190" rx="24" ry="48" fill="#4f678a" transform="rotate(14 178 190)"/>
+        <rect x="72" y="190" width="76" height="58" rx="7" fill="#4f678a"/>
+        <rect x="76" y="194" width="34" height="50" rx="4" fill="#eff2f7"/>
+        <rect x="114" y="194" width="30" height="50" rx="4" fill="#dce5f0"/>
+        <line x1="80" y1="204" x2="104" y2="204" stroke="#A0D585" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="80" y1="212" x2="96" y2="212" stroke="#6984A9" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="80" y1="220" x2="102" y2="220" stroke="#A0D585" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="80" y1="228" x2="88" y2="228" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="80" y1="236" x2="100" y2="236" stroke="#6984A9" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="100" y="240" width="11" height="20" rx="4" fill="#f59e0b"/>
+        <rect x="129" y="240" width="11" height="20" rx="4" fill="#f59e0b"/>
+        <rect x="68" y="38" width="104" height="11" rx="3" fill="#1a2535"/>
+        <rect x="103" y="27" width="34" height="13" rx="3" fill="#1a2535"/>
+        <line x1="172" y1="44" x2="190" y2="66" stroke="#A0D585" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="190" cy="68" r="6" fill="#A0D585"/>
+      </svg>
+
+    </div>
+
+    <div class="login-card">
+
+      <h1 class="login-title">Inicia sesión</h1>
+      <p class="login-subtitle">Accede a tu cuenta para continuar</p>
+
+      <mat-form-field appearance="outline" class="input-full">
+        <mat-label>Correo Electrónico</mat-label>
+        <input
+          [(ngModel)]="username"
+          type="email"
+          matInput
+          placeholder="ejemplo@correo.com"
+          name="username"
+          (focus)="setFocus('email')"
+          (blur)="setFocus('')"
+        >
+      </mat-form-field>
+
+      @if (errors.username) {
+        <div class="error">{{ errors.username }}</div>
+      }
+
+      <mat-form-field appearance="outline" class="input-full">
+        <mat-label>Contraseña</mat-label>
+
+        <input
+          [(ngModel)]="password"
+          [type]="inputType_1"
+          matInput
+          placeholder="Ingresa tu contraseña"
+          name="password"
+          (keyup.enter)="login()"
+          (focus)="setFocus('password')"
+          (blur)="setFocus('')"
+        >
+
+        <mat-icon matSuffix (click)="showPassword()" style="cursor: pointer;">
+          {{ hide_1 ? 'visibility_off' : 'visibility' }}
+        </mat-icon>
+      </mat-form-field>
+
+      @if (errors.password) {
+        <div class="error">{{ errors.password }}</div>
+      }
+
+      @if (errors.credentials) {
+        <div class="error">{{ errors.credentials }}</div>
+      }
+
+      <div class="login-extra">
+        <span class="link" (click)="recuperarPwd()">
+          ¿Olvidaste tu contraseña?
+        </span>
+      </div>
+
+      <button class="btn btn--primario btn--grande w-100" (click)="login()">
+        Ingresar
+      </button>
+
+      <p class="login-footer">
+        ¿No tienes cuenta?
+        <span class="link" (click)="goRegistro()">Regístrate</span>
+      </p>
+
+      <a routerLink="/landing" class="home-link">
+       <i class="bi bi-house-door-fill"></i> Inicio
+     </a>
+
+    </div>
+
+  </div>
+
+</section>

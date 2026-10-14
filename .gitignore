@@ -1,0 +1,27 @@
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+my.cnf
+**/my.cnf
+
+# Python y Django
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+staticfiles/
+
+# Angular y Node
+node_modules/
+dist/
+.angular/
+coverage/
+npm-debug.log*
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.idea/

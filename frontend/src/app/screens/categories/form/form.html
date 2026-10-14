@@ -1,0 +1,84 @@
+<section class="categories-form">
+  <app-navbar
+    mode="private"
+    [userRole]="userRole"
+    [isLogin]="isLogin"
+    (toggleSidebar)="toggleSidebar()"
+  ></app-navbar>
+
+  <mat-drawer-container class="categories-form__drawer-container" autosize>
+    <mat-drawer
+      class="categories-form__drawer"
+      mode="over"
+      position="start"
+      [opened]="drawerOpen"
+      (closedStart)="drawerOpen = false"
+    >
+      <app-sidebar
+        [userRole]="userRole"
+        [isLogin]="isLogin"
+        (closeSidebar)="closeSidebar()"
+      ></app-sidebar>
+    </mat-drawer>
+
+    <mat-drawer-content class="categories-form__content">
+      <div class="categories-form__main">
+        <main class="categories-form__body">
+          <section class="categories-form__hero">
+            <div>
+              <span class="categories-form__eyebrow">Catálogo</span>
+              <h1 class="categories-form__title">
+                {{ isEditMode ? 'Editar categoría' : 'Nueva categoría' }}
+              </h1>
+            </div>
+
+            <button mat-stroked-button type="button" (click)="goBack()">Volver</button>
+          </section>
+
+          <mat-card class="categories-form__card">
+            <mat-card-content>
+              <mat-form-field appearance="outline" class="full">
+                <mat-label>Nombre</mat-label>
+                <input matInput [(ngModel)]="form.nombre" name="nombre">
+              </mat-form-field>
+              @if (errors.nombre) {
+                <div class="error">{{ errors.nombre }}</div>
+              }
+
+              <mat-form-field appearance="outline" class="full">
+                <mat-label>Descripción</mat-label>
+                <textarea matInput rows="5" [(ngModel)]="form.descripcion" name="descripcion"></textarea>
+              </mat-form-field>
+              @if (errors.descripcion) {
+                <div class="error">{{ errors.descripcion }}</div>
+              }
+
+              <mat-form-field appearance="outline" class="full">
+                <mat-label>Estado</mat-label>
+                <mat-select [(ngModel)]="form.estado" name="estado">
+                  <mat-option value="ACTIVO">Activo</mat-option>
+                  <mat-option value="INACTIVO">Inactivo</mat-option>
+                </mat-select>
+              </mat-form-field>
+              @if (errors.estado) {
+                <div class="error">{{ errors.estado }}</div>
+              }
+
+              @if (errors.general) {
+                <div class="error">{{ errors.general }}</div>
+              }
+
+              <div class="categories-form__actions">
+                <button mat-flat-button color="primary" type="button" (click)="save()">
+                  {{ isEditMode ? 'Guardar cambios' : 'Crear categoría' }}
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </main>
+
+        <app-footer></app-footer>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</section>

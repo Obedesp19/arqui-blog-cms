@@ -1,0 +1,127 @@
+<section class="posts-edit">
+  <app-navbar
+    mode="private"
+    [userRole]="userRole"
+    (toggleSidebar)="toggleSidebar()"
+  ></app-navbar>
+
+  <mat-drawer-container class="posts-edit__drawer-container" autosize>
+    <mat-drawer
+      class="posts-edit__drawer"
+      mode="over"
+      position="start"
+      [opened]="drawerOpen"
+      (closedStart)="drawerOpen = false"
+    >
+      <app-sidebar
+        [userRole]="userRole"
+        (closeSidebar)="closeSidebar()"
+      ></app-sidebar>
+    </mat-drawer>
+
+    <mat-drawer-content class="posts-edit__content">
+      <div class="posts-edit__main">
+        <main class="posts-edit__body">
+          <section class="posts-edit__hero">
+            <div class="posts-edit__hero-copy">
+              <h1 class="posts-edit__title">Editar publicación</h1>
+              <p class="posts-edit__subtitle">Actualiza la información de la publicación</p>
+            </div>
+
+            <button mat-stroked-button type="button" (click)="goBack()">
+              <mat-icon>arrow_back</mat-icon>
+              Volver a publicaciones
+            </button>
+          </section>
+
+          @if (canEditPost) {
+            <section class="posts-edit__form-section">
+              <mat-card class="posts-edit__card">
+                <mat-card-content>
+                  <h2 class="posts-edit__form-title">Formulario de edición</h2>
+
+                  <mat-form-field class="posts-edit__field" appearance="outline">
+                    <mat-label>Título</mat-label>
+                    <input
+                      [(ngModel)]="titulo"
+                      type="text"
+                      matInput
+                      placeholder="Escribe el título del post"
+                    >
+                  </mat-form-field>
+                  @if (errors.titulo) {
+                    <div class="posts-edit__error">{{ errors.titulo }}</div>
+                  }
+
+                  <mat-form-field class="posts-edit__field" appearance="outline">
+                    <mat-label>Categoría</mat-label>
+                    <mat-select [(ngModel)]="categoriaId">
+                      @for (category of categories; track category.id) {
+                        <mat-option [value]="category.id">
+                          {{ category.nombre }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  @if (errors.categoriaId) {
+                    <div class="posts-edit__error">{{ errors.categoriaId }}</div>
+                  }
+
+                  <mat-form-field class="posts-edit__field" appearance="outline">
+                    <mat-label>Contenido</mat-label>
+                    <textarea
+                      [(ngModel)]="contenido"
+                      matInput
+                      rows="8"
+                      placeholder="Escribe el contenido de tu publicación"
+                    ></textarea>
+                  </mat-form-field>
+                  @if (errors.contenido) {
+                    <div class="posts-edit__error">{{ errors.contenido }}</div>
+                  }
+
+                  <mat-form-field class="posts-edit__field" appearance="outline">
+                    <mat-label>Etiquetas</mat-label>
+                    <input
+                      [(ngModel)]="etiquetas"
+                      type="text"
+                      matInput
+                      placeholder="Ejemplo: angular, frontend, rutas"
+                    >
+                  </mat-form-field>
+                  @if (errors.etiquetas) {
+                    <div class="posts-edit__error">{{ errors.etiquetas }}</div>
+                  }
+
+                  <mat-form-field class="posts-edit__field" appearance="outline">
+                    <mat-label>Estado</mat-label>
+                    <mat-select [(ngModel)]="estado">
+                      <mat-option value="PUBLICADO">Publicado</mat-option>
+                      <mat-option value="BORRADOR">Borrador</mat-option>
+                      <mat-option value="ARCHIVADO">Archivado</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  @if (errors.estado) {
+                    <div class="posts-edit__error">{{ errors.estado }}</div>
+                  }
+
+                  <div class="posts-edit__actions">
+                    <button mat-stroked-button type="button" (click)="goBack()">
+                      Cancelar
+                    </button>
+
+                    <button mat-flat-button type="button" (click)="guardarCambios()">
+                      Guardar cambios
+                    </button>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </section>
+          }
+        </main>
+
+        <app-footer></app-footer>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</section>

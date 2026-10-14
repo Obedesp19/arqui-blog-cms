@@ -1,0 +1,162 @@
+<section class="posts-form">
+
+  <app-navbar
+    mode="private"
+    [userRole]="userRole"
+    [isLogin]="isLogin"
+    (toggleSidebar)="toggleSidebar()"
+  ></app-navbar>
+
+  <mat-drawer-container class="posts-form__drawer-container" autosize>
+
+    <mat-drawer
+      class="posts-form__drawer"
+      mode="over"
+      position="start"
+      [opened]="drawerOpen"
+      (closedStart)="drawerOpen = false"
+    >
+      <app-sidebar
+        [userRole]="userRole"
+        [isLogin]="isLogin"
+        (closeSidebar)="closeSidebar()"
+      ></app-sidebar>
+    </mat-drawer>
+
+    <mat-drawer-content class="posts-form__content">
+
+      <div class="posts-form__main">
+
+        <main class="posts-form__body">
+
+          <section class="posts-form__hero">
+            <div>
+              <span class="posts-form__eyebrow">Publicaciones</span>
+
+              <h1 class="posts-form__title">
+                {{ isEditMode ? 'Editar publicación' : 'Nueva publicación' }}
+              </h1>
+
+              <p class="posts-form__subtitle">
+                Comparte ideas, preguntas y conocimiento con la comunidad.
+              </p>
+            </div>
+
+            <button mat-stroked-button type="button" (click)="goBack()">
+              <mat-icon>arrow_back</mat-icon>
+              Volver
+            </button>
+          </section>
+
+          <mat-card class="posts-form__card">
+            <mat-card-content>
+
+              <div class="posts-form__grid">
+
+                <mat-form-field appearance="outline" class="full">
+                  <mat-label>Título</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="post.titulo"
+                    name="titulo"
+                    maxlength="120"
+                    placeholder="Escribe el título de tu publicación"
+                  >
+                </mat-form-field>
+
+                @if (errors.titulo) {
+                  <div class="error">{{ errors.titulo }}</div>
+                }
+
+                <mat-form-field appearance="outline" class="full">
+                  <mat-label>Categoría</mat-label>
+
+                  <mat-select
+                    [(ngModel)]="post.categoriaId"
+                    name="categoriaId"
+                  >
+                    @for (item of categorias; track item.id) {
+                      <mat-option [value]="item.id">
+                        {{ item.nombre }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                @if (errors.categoriaId) {
+                  <div class="error">{{ errors.categoriaId }}</div>
+                }
+
+                <mat-form-field appearance="outline" class="full">
+                  <mat-label>Etiquetas (opcional)</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="post.etiquetas"
+                    name="etiquetas"
+                    placeholder="angular, mysql, backend"
+                  >
+                </mat-form-field>
+
+                @if (errors.etiquetas) {
+                  <div class="error">{{ errors.etiquetas }}</div>
+                }
+
+                <mat-form-field appearance="outline" class="full">
+                  <mat-label>Estado</mat-label>
+
+                  <mat-select
+                    [(ngModel)]="post.estado"
+                    name="estado"
+                  >
+                    <mat-option value="PUBLICADO">Publicado</mat-option>
+                    <mat-option value="BORRADOR">Borrador</mat-option>
+                    <mat-option value="ARCHIVADO">Archivado</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                @if (errors.estado) {
+                  <div class="error">{{ errors.estado }}</div>
+                }
+
+                <mat-form-field appearance="outline" class="full">
+                  <mat-label>Contenido</mat-label>
+
+                  <textarea
+                    matInput
+                    rows="10"
+                    [(ngModel)]="post.contenido"
+                    name="contenido"
+                    placeholder="Escribe el contenido de la publicación"
+                  ></textarea>
+                </mat-form-field>
+
+                @if (errors.contenido) {
+                  <div class="error">{{ errors.contenido }}</div>
+                }
+
+              </div>
+
+              <div class="posts-form__actions">
+                <button mat-button type="button" (click)="limpiar()">
+                  Limpiar
+                </button>
+
+                <button mat-flat-button color="primary" type="button" (click)="guardar()">
+                  {{ isEditMode ? 'Guardar cambios' : 'Publicar' }}
+                </button>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+
+        </main>
+
+        <app-footer></app-footer>
+
+      </div>
+
+    </mat-drawer-content>
+
+  </mat-drawer-container>
+
+</section>

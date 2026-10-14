@@ -1,0 +1,99 @@
+<section class="posts-create">
+  <app-navbar mode="private" [userRole]="userRole" (toggleSidebar)="toggleSidebar()"></app-navbar>
+
+  <mat-drawer-container class="posts-create__drawer-container" autosize>
+    <mat-drawer class="posts-create__drawer" mode="over" position="start" [opened]="drawerOpen"
+      (closedStart)="drawerOpen = false">
+      <app-sidebar [userRole]="userRole" (closeSidebar)="closeSidebar()"></app-sidebar>
+    </mat-drawer>
+
+    <mat-drawer-content class="posts-create__content">
+      <div class="posts-create__main">
+        <main class="posts-create__body">
+          <section class="posts-create__hero">
+            <div class="posts-create__hero-copy">
+              <h1 class="posts-create__title">Nueva publicación</h1>
+              <p class="posts-create__subtitle">Crea contenido académico para la comunidad</p>
+            </div>
+
+            <button mat-stroked-button type="button" (click)="goBack()">
+              <mat-icon>arrow_back</mat-icon>
+              Volver a publicaciones
+            </button>
+          </section>
+
+          @if (canCreatePost) {
+          <section class="posts-create__form-section">
+            <mat-card class="posts-create__card">
+              <mat-card-content>
+                <h2 class="posts-create__form-title">Formulario de publicación</h2>
+
+                <mat-form-field class="posts-create__field" appearance="outline">
+                  <mat-label>Título</mat-label>
+                  <input [(ngModel)]="titulo" type="text" matInput placeholder="Escribe el título del post">
+                </mat-form-field>
+                @if (errors.titulo) {
+                <div class="posts-create__error">{{ errors.titulo }}</div>
+                }
+
+                <mat-form-field class="posts-create__field" appearance="outline">
+                  <mat-label>Categoría</mat-label>
+                  <mat-select [(ngModel)]="categoriaId">
+                    @for (category of categories; track category.id) {
+                    <mat-option [value]="category.id">
+                      {{ category.nombre }}
+                    </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                @if (errors.categoriaId) {
+                <div class="posts-create__error">{{ errors.categoriaId }}</div>
+                }
+
+                <mat-form-field class="posts-create__field" appearance="outline">
+                  <mat-label>Contenido</mat-label>
+                  <textarea [(ngModel)]="contenido" matInput rows="8"
+                    placeholder="Escribe el contenido de tu publicación"></textarea>
+                </mat-form-field>
+                @if (errors.contenido) {
+                <div class="posts-create__error">{{ errors.contenido }}</div>
+                }
+
+                <mat-form-field class="posts-create__field" appearance="outline">
+                  <mat-label>Etiquetas</mat-label>
+                  <input [(ngModel)]="etiquetas" type="text" matInput placeholder="Ejemplo: angular, frontend, rutas">
+                </mat-form-field>
+                @if (errors.etiquetas) {
+                <div class="posts-create__error">{{ errors.etiquetas }}</div>
+                }
+
+                <mat-form-field class="posts-create__field" appearance="outline">
+                  <mat-label>Estado</mat-label>
+                  <mat-select [(ngModel)]="estado" name="estado" placeholder="Selecciona un estado">
+                    <mat-option value="PUBLICADO">Publicado</mat-option>
+                    <mat-option value="BORRADOR">Borrador</mat-option>
+                    <mat-option value="ARCHIVADO">Archivado</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                @if (errors.estado) {
+                <div class="posts-create__error">{{ errors.estado }}</div>
+                }
+
+                <div class="posts-create__actions">
+
+                  <button mat-flat-button type="button" (click)="guardar()">
+                    Guardar publicación
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </section>
+          }
+        </main>
+
+        <app-footer></app-footer>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</section>
