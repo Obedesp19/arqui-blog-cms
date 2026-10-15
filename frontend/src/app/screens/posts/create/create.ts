@@ -7,7 +7,7 @@ import { PostsService } from '../../../services/posts-service';
 import { PostForm } from '../../../services/posts-service';
 import { Sidebar } from '../../../partials/sidebar/sidebar';
 
-type UserRole = 'ESTUDIANTE' | 'PROFESOR' | 'ADMINISTRADOR';
+type UserRole = 'LECTOR' | 'AUTOR' | 'EDITOR' | 'ADMINISTRADOR';
 
 interface CategoryItem {
   id: number;
@@ -28,7 +28,7 @@ interface CategoryItem {
 })
 export class PostsCreate implements OnInit {
   public drawerOpen = false;
-  public userRole: UserRole = 'ESTUDIANTE';
+  public userRole: UserRole = 'LECTOR';
 
   public titulo: string = '';
   public contenido: string = '';
@@ -55,8 +55,8 @@ export class PostsCreate implements OnInit {
     const savedRole = localStorage.getItem('userRole') as UserRole | null;
 
     if (
-      savedRole === 'ESTUDIANTE' ||
-      savedRole === 'PROFESOR' ||
+      savedRole === 'LECTOR' ||
+      savedRole === 'EDITOR' ||
       savedRole === 'ADMINISTRADOR'
     ) {
       this.userRole = savedRole;
@@ -160,8 +160,8 @@ export class PostsCreate implements OnInit {
      ========================= */
   public get canCreatePost(): boolean {
     return (
-      this.userRole === 'ESTUDIANTE' ||
-      this.userRole === 'PROFESOR' ||
+      this.userRole === 'LECTOR' ||
+      this.userRole === 'EDITOR' ||
       this.userRole === 'ADMINISTRADOR'
     );
   }

@@ -34,7 +34,7 @@ import { ReportCommentModal } from '../../../modals/report-comment-modal/report-
 export class PostsDetail implements OnInit {
   public drawerOpen: boolean = false;
   public isLogin: boolean = false;
-  public userRole: UserRole = 'ESTUDIANTE';
+  public userRole: UserRole = 'LECTOR';
   public currentUserName: string = '';
 
   public postId: number = 0;
@@ -265,7 +265,7 @@ this.reportsService.createReport(
   }
 
   public get canManagePosts(): boolean {
-    return this.userRole === 'PROFESOR' || this.userRole === 'ADMINISTRADOR';
+    return this.userRole === 'EDITOR' || this.userRole === 'ADMINISTRADOR';
   }
 
   public get canReportContent(): boolean {
@@ -274,7 +274,7 @@ this.reportsService.createReport(
 
   private syncAuthState(): void {
     this.isLogin = this.authService.isAuthenticated();
-    this.userRole = this.authService.getUserRole() ?? 'ESTUDIANTE';
+    this.userRole = this.authService.getUserRole() ?? 'LECTOR';
     this.currentUserName = this.authService.getUserName();
   }
 

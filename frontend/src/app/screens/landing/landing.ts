@@ -8,7 +8,7 @@ import { PostsService, PostListItem } from '../../services/posts-service';
 import { CategoriesService } from '../../services/categorias-service';
 import { CategoryItem } from '../../shared/interfaces/categories.interface';
 
-type UserRole = 'ESTUDIANTE' | 'PROFESOR' | 'ADMINISTRADOR';
+type UserRole = 'LECTOR' | 'AUTOR' | 'EDITOR' | 'ADMINISTRADOR';
 type NavbarMode = 'public' | 'private';
 
 interface LandingPost extends PostListItem {
@@ -34,7 +34,7 @@ interface LandingPost extends PostListItem {
   styleUrl: './landing.scss',
 })
 export class Landing implements OnInit, AfterViewInit {
-  @Input() userRole: UserRole = 'ESTUDIANTE';
+  @Input() userRole: UserRole = 'LECTOR';
   @Input() mode: NavbarMode = 'public';
   @Input() isLogin: boolean = false;
 

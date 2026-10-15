@@ -29,7 +29,7 @@ export class PostsForm implements OnInit {
 
   public drawerOpen: boolean = false;
   public isLogin: boolean = false;
-  public userRole: UserRole = 'ESTUDIANTE';
+  public userRole: UserRole = 'LECTOR';
   public currentUserName: string = '';
 
   public isEditMode: boolean = false;
@@ -182,7 +182,7 @@ export class PostsForm implements OnInit {
 
   private syncAuthState(): void {
     this.isLogin = this.authService.isAuthenticated();
-    this.userRole = this.authService.getUserRole() ?? 'ESTUDIANTE';
+    this.userRole = this.authService.getUserRole() ?? 'LECTOR';
     this.currentUserName = this.authService.getUserName();
   }
 }

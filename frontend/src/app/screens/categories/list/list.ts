@@ -20,7 +20,7 @@ import { UserRole } from '../../../models/auth-user.model';
 export class CategoriesList implements OnInit {
   public drawerOpen = false;
   public isLogin = false;
-  public userRole: UserRole = 'ESTUDIANTE';
+  public userRole: UserRole = 'LECTOR';
 
   public search = '';
   public estado = 'TODAS';
@@ -34,7 +34,7 @@ export class CategoriesList implements OnInit {
 
   ngOnInit(): void {
     this.isLogin = this.authService.isAuthenticated();
-    this.userRole = this.authService.getUserRole() ?? 'ESTUDIANTE';
+    this.userRole = this.authService.getUserRole() ?? 'LECTOR';
     this.loadRows();
   }
 

@@ -31,7 +31,6 @@ export class Registro {
     email: '',
     password: '',
     confirmPassword: '',
-    rol: '' as '' | 'estudiante' | 'profesor',
   };
 
   public errors = {
@@ -40,7 +39,6 @@ export class Registro {
     email: '',
     password: '',
     confirmPassword: '',
-    rol: '',
     general: '',
   };
 
@@ -136,7 +134,6 @@ export class Registro {
         last_name: this.user.apellidos.trim(),
         email: this.user.email.trim(),
         password: this.user.password.trim(),
-        role: this.user.rol,
       })
       .subscribe((result) => {
         this.isLoading = false;
@@ -204,11 +201,6 @@ export class Registro {
       isValid = false;
     }
 
-    if (!this.user.rol) {
-      this.errors.rol = 'Selecciona un rol.';
-      isValid = false;
-    }
-
     return isValid;
   }
 
@@ -219,7 +211,6 @@ export class Registro {
       email: '',
       password: '',
       confirmPassword: '',
-      rol: '',
       general: '',
     };
   }

@@ -13,7 +13,7 @@ import { UserRole } from '../../models/auth-user.model';
   styleUrl: './sidebar.scss'
 })
 export class Sidebar {
-  @Input() userRole: UserRole = 'ESTUDIANTE';
+  @Input() userRole: UserRole = 'LECTOR';
   @Input() isLogin: boolean = false;
 
   @Output() closeSidebar = new EventEmitter<void>();
@@ -28,11 +28,11 @@ export class Sidebar {
   }
 
   public get canSeeCategories(): boolean {
-    return this.userRole === 'PROFESOR' || this.userRole === 'ADMINISTRADOR';
+    return this.userRole === 'EDITOR' || this.userRole === 'ADMINISTRADOR';
   }
 
   public get canSeeReports(): boolean {
-    return this.userRole === 'PROFESOR' || this.userRole === 'ADMINISTRADOR';
+    return this.userRole === 'EDITOR' || this.userRole === 'ADMINISTRADOR';
   }
 
   public get canSeeDashboard(): boolean {

@@ -26,7 +26,7 @@ import { ReportPostModal } from '../../../modals/report-post-modal/report-post-m
 export class PostsList implements OnInit {
   public drawerOpen: boolean = false;
   public isLogin: boolean = false;
-  public userRole: UserRole = 'ESTUDIANTE';
+  public userRole: UserRole = 'LECTOR';
   public currentUserName: string = '';
 
   public search: string = '';
@@ -182,7 +182,7 @@ export class PostsList implements OnInit {
   }
 
   public get canManagePosts(): boolean {
-    return this.userRole === 'PROFESOR' || this.userRole === 'ADMINISTRADOR';
+    return this.userRole === 'EDITOR' || this.userRole === 'ADMINISTRADOR';
   }
 
   public get canCreatePost(): boolean {
@@ -199,7 +199,7 @@ export class PostsList implements OnInit {
 
   private syncAuthState(): void {
     this.isLogin = this.authService.isAuthenticated();
-    this.userRole = this.authService.getUserRole() ?? 'ESTUDIANTE';
+    this.userRole = this.authService.getUserRole() ?? 'LECTOR';
     this.currentUserName = this.authService.getUserName();
   }
 

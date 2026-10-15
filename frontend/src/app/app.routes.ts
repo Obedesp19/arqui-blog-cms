@@ -58,15 +58,21 @@ export const routes: Routes = [
     component: PostsList,
   },
   {
-    path: 'posts/form',
-    component: PostsForm,
-    canActivate: [AuthGuard],
+  path: 'posts/form',
+  component: PostsForm,
+  canActivate: [RoleGuard],
+  data: {
+    roles: ['AUTOR', 'EDITOR', 'ADMINISTRADOR'],
   },
-  {
-    path: 'posts/form/:id',
-    component: PostsForm,
-    canActivate: [AuthGuard],
+},
+{
+  path: 'posts/form/:id',
+  component: PostsForm,
+  canActivate: [RoleGuard],
+  data: {
+    roles: ['AUTOR', 'EDITOR', 'ADMINISTRADOR'],
   },
+},
   {
     path: 'posts/:id',
     component: PostsDetail,
@@ -78,7 +84,7 @@ export const routes: Routes = [
     component: CategoriesList,
     canActivate: [AuthGuard, RoleGuard],
     data: {
-      roles: ['PROFESOR', 'ADMINISTRADOR'],
+      roles: ['EDITOR', 'ADMINISTRADOR'],
     },
   },
   {
@@ -86,7 +92,7 @@ export const routes: Routes = [
     component: CategoriesForm,
     canActivate: [AuthGuard, RoleGuard],
     data: {
-      roles: ['PROFESOR', 'ADMINISTRADOR'],
+      roles: ['EDITOR', 'ADMINISTRADOR'],
     },
   },
   {
@@ -94,7 +100,7 @@ export const routes: Routes = [
     component: CategoriesForm,
     canActivate: [AuthGuard, RoleGuard],
     data: {
-      roles: ['PROFESOR', 'ADMINISTRADOR'],
+      roles: ['EDITOR', 'ADMINISTRADOR'],
     },
   },
 
@@ -104,7 +110,7 @@ export const routes: Routes = [
     component: ReportsList,
     canActivate: [AuthGuard, RoleGuard],
     data: {
-      roles: ['PROFESOR', 'ADMINISTRADOR'],
+      roles: ['EDITOR', 'ADMINISTRADOR'],
     },
   },
 

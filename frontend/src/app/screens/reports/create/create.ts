@@ -6,7 +6,7 @@ import { Footer } from '../../../partials/footer/footer';
 import { ReportesService, ReporteForm } from '../../../services/reportes-service';
 import { Sidebar } from "../../../partials/sidebar/sidebar";
 
-type UserRole = 'ESTUDIANTE' | 'PROFESOR' | 'ADMINISTRADOR';
+type UserRole = 'LECTOR' | 'AUTOR' | 'EDITOR' | 'ADMINISTRADOR';
 type ReportTargetType = 'POST' | 'COMENTARIO';
 
 @Component({
@@ -24,7 +24,7 @@ type ReportTargetType = 'POST' | 'COMENTARIO';
 })
 export class ReportsCreate implements OnInit {
   public drawerOpen = false;
-  public userRole: UserRole = 'ESTUDIANTE';
+  public userRole: UserRole = 'LECTOR';
 
   public tipo: ReportTargetType = 'POST';
   public referenciaId: number = 0;
@@ -60,8 +60,8 @@ export class ReportsCreate implements OnInit {
     const savedRole = localStorage.getItem('userRole') as UserRole | null;
 
     if (
-      savedRole === 'ESTUDIANTE' ||
-      savedRole === 'PROFESOR' ||
+      savedRole === 'LECTOR' ||
+      savedRole === 'EDITOR' ||
       savedRole === 'ADMINISTRADOR'
     ) {
       this.userRole = savedRole;

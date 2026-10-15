@@ -5,7 +5,7 @@ import { Navbar } from '../../../partials/navbar/navbar';
 import { Footer } from '../../../partials/footer/footer';
 import { Sidebar } from '../../../partials/sidebar/sidebar';
 
-type UserRole = 'ESTUDIANTE' | 'PROFESOR' | 'ADMINISTRADOR';
+type UserRole = 'LECTOR' | 'AUTOR' | 'EDITOR' | 'ADMINISTRADOR';
 type ReportStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
 type ReportType = 'POST' | 'COMENTARIO';
 
@@ -81,8 +81,8 @@ export class ReportsDetail implements OnInit {
     const savedRole = localStorage.getItem('userRole') as UserRole | null;
 
     if (
-      savedRole === 'ESTUDIANTE' ||
-      savedRole === 'PROFESOR' ||
+      savedRole === 'LECTOR' ||
+      savedRole === 'EDITOR' ||
       savedRole === 'ADMINISTRADOR'
     ) {
       this.userRole = savedRole;
@@ -124,7 +124,7 @@ export class ReportsDetail implements OnInit {
 
   public get canManageReports(): boolean {
     return (
-      this.userRole === 'PROFESOR' ||
+      this.userRole === 'EDITOR' ||
       this.userRole === 'ADMINISTRADOR'
     );
   }

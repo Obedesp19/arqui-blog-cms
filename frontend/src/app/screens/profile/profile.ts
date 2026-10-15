@@ -37,14 +37,14 @@ interface ProfileErrors {
 export class Profile implements OnInit {
   public drawerOpen: boolean = false;
   public isLogin: boolean = false;
-  public userRole: UserRole = 'ESTUDIANTE';
+  public userRole: UserRole = 'LECTOR';
 
   public form: ProfileForm = {
     firstName: '',
     lastName: '',
     lastNameMother: '',
     email: '',
-    role: 'ESTUDIANTE',
+    role: 'LECTOR',
     avatar: 'assets/images/avatares/avatar-gorra-lentes.png',
   };
 
@@ -66,7 +66,7 @@ export class Profile implements OnInit {
 
   ngOnInit(): void {
     this.isLogin = this.authService.isAuthenticated();
-    this.userRole = this.authService.getUserRole() ?? 'ESTUDIANTE';
+    this.userRole = this.authService.getUserRole() ?? 'LECTOR';
 
     this.form = {
       firstName: this.authService.getUserFirstName(),

@@ -27,7 +27,7 @@ import { ModerationActionModal } from '../../../modals/moderation-action-modal/m
 export class ReportsList implements OnInit {
   public drawerOpen: boolean = false;
   public isLogin: boolean = false;
-  public userRole: UserRole = 'ESTUDIANTE';
+  public userRole: UserRole = 'LECTOR';
   public reports: ReportItem[] = [];
 
   constructor(
@@ -38,7 +38,7 @@ export class ReportsList implements OnInit {
 
   ngOnInit(): void {
     this.isLogin = this.authService.isAuthenticated();
-    this.userRole = this.authService.getUserRole() ?? 'ESTUDIANTE';
+    this.userRole = this.authService.getUserRole() ?? 'LECTOR';
     this.loadReports();
   }
 

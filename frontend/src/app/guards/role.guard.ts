@@ -1,38 +1,29 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
+import { map } from 'rxjs';
+
 import { AuthService } from '../services/auth.service';
 import { UserRole } from '../models/auth-user.model';
 
-function getAllowedRoles(route: ActivatedRouteSnapshot): UserRole[] {
-  return (route.data?.['roles'] ?? []) as UserRole[];
-}
-
 export const RoleGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+  const auth = inject(AuthService);
   const router = inject(Router);
 
-  if (!authService.isAuthenticated()) {
-    return router.createUrlTree(['/login'], {
-      queryParams: { redirectTo: state.url },
-    });
-  }
+  return auth.refreshSession().pipe(
+    map((valid) => {
+      if (!valid) {
+        return router.createUrlTree(['/login'], {
+          queryParams: {
+            redirectTo: state.url,
+          },
+        });
+      }
 
-  const allowedRoles = getAllowedRoles(route);
-  const currentRole = authService.getUserRole();
+      const roles = (route.data['roles'] ?? []) as UserRole[];
 
-  if (!currentRole) {
-    return router.createUrlTree(['/login'], {
-      queryParams: { redirectTo: state.url },
-    });
-  }
-
-  if (allowedRoles.length === 0) {
-    return true;
-  }
-
-  if (allowedRoles.includes(currentRole)) {
-    return true;
-  }
-
-  return router.createUrlTree(['/dashboard']);
+      return roles.length > 0 && auth.hasRole(roles)
+        ? true
+        : router.createUrlTree(['/dashboard']);
+    }),
+  );
 };

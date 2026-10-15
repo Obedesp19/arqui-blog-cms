@@ -20,7 +20,7 @@ import { UserRole } from '../../../models/auth-user.model';
 export class CategoriesForm implements OnInit {
   public drawerOpen = false;
   public isLogin = false;
-  public userRole: UserRole = 'ESTUDIANTE';
+  public userRole: UserRole = 'LECTOR';
 
   public isEditMode = false;
   public categoryId: number | null = null;
@@ -39,7 +39,7 @@ export class CategoriesForm implements OnInit {
 
   ngOnInit(): void {
     this.isLogin = this.authService.isAuthenticated();
-    this.userRole = this.authService.getUserRole() ?? 'ESTUDIANTE';
+    this.userRole = this.authService.getUserRole() ?? 'LECTOR';
 
     const idParam = this.route.snapshot.paramMap.get('id');
     if (!idParam) {

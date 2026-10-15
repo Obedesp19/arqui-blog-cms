@@ -75,23 +75,11 @@
       <div class="error">{{ errors.confirmPassword }}</div>
     }
 
-    <div class="roles">
-      <mat-radio-group [(ngModel)]="user.rol" class="roles-group" name="rol">
+    <p>Tu cuenta se creará con el rol LECTOR.</p>
 
-        <div class="rol-card">
-          <mat-radio-button value="estudiante">Estudiante</mat-radio-button>
-        </div>
-
-        <div class="rol-card">
-          <mat-radio-button value="profesor">Profesor</mat-radio-button>
-        </div>
-
-      </mat-radio-group>
-    </div>
-
-    @if (errors.rol) {
-      <div class="error">{{ errors.rol }}</div>
-    }
+@if (errors.general) {
+  <div class="error">{{ errors.general }}</div>
+}
 
     <button class="btn-registro" (click)="registrar()">
       Registrarse

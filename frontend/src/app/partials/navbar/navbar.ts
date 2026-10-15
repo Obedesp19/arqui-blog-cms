@@ -18,7 +18,7 @@ type NavbarMode = 'public' | 'private';
 })
 export class Navbar {
   @Input() mode: NavbarMode = 'public';
-  @Input() userRole: UserRole = 'ESTUDIANTE';
+  @Input() userRole: UserRole = 'LECTOR';
   @Input() isLogin: boolean = false;
 
   @Output() toggleSidebar = new EventEmitter<void>();
@@ -32,10 +32,16 @@ export class Navbar {
     this.toggleSidebar.emit();
   }
 
-  public logout(): void {
-    this.authService.logout();
+public logout(): void {
+  this.authService.logout().subscribe((result) => {
+    if (!result.ok) {
+      alert(result.error);
+      return;
+    }
+
     this.router.navigate(['/login']);
-  }
+  });
+}
 
   public goToInicio(): void {
     if (this.mode === 'private') {

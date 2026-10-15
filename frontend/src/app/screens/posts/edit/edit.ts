@@ -7,7 +7,7 @@ import { PostsService } from '../../../services/posts-service';
 import { PostForm } from '../../../services/posts-service';
 import { Sidebar } from "../../../partials/sidebar/sidebar";
 
-type UserRole = 'ESTUDIANTE' | 'PROFESOR' | 'ADMINISTRADOR';
+type UserRole = 'LECTOR' | 'AUTOR' | 'EDITOR' | 'ADMINISTRADOR';
 
 interface CategoryItem {
   id: number;
@@ -59,8 +59,8 @@ export class PostsEdit implements OnInit {
     const savedRole = localStorage.getItem('userRole') as UserRole | null;
 
     if (
-      savedRole === 'ESTUDIANTE' ||
-      savedRole === 'PROFESOR' ||
+      savedRole === 'LECTOR' ||
+      savedRole === 'EDITOR' ||
       savedRole === 'ADMINISTRADOR'
     ) {
       this.userRole = savedRole;
@@ -212,7 +212,7 @@ export class PostsEdit implements OnInit {
      ========================= */
   public get canEditPost(): boolean {
     return (
-      this.userRole === 'PROFESOR' ||
+      this.userRole === 'EDITOR' ||
       this.userRole === 'ADMINISTRADOR'
     );
   }

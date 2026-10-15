@@ -25,7 +25,7 @@ import { UserRole } from '../../models/auth-user.model';
 export class Dashboard implements OnInit {
   public drawerOpen: boolean = false;
   public isLogin: boolean = false;
-  public userRole: UserRole = 'ESTUDIANTE';
+  public userRole: UserRole = 'LECTOR';
   public currentUserName: string = '';
 
   public totalPosts: number = 0;
@@ -72,12 +72,12 @@ export class Dashboard implements OnInit {
   }
 
   public get isModerator(): boolean {
-    return this.userRole === 'PROFESOR' || this.userRole === 'ADMINISTRADOR';
+    return this.userRole === 'EDITOR' || this.userRole === 'ADMINISTRADOR';
   }
 
   private syncAuthState(): void {
     this.isLogin = this.authService.isAuthenticated();
-    this.userRole = this.authService.getUserRole() ?? 'ESTUDIANTE';
+    this.userRole = this.authService.getUserRole() ?? 'LECTOR';
     this.currentUserName = this.authService.getUserName();
   }
 
