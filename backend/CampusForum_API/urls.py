@@ -20,6 +20,10 @@ from CampusForum_API.views import users
 from CampusForum_API.views import auth
 from CampusForum_API.views import posts
 from CampusForum_API.views import user_admin
+from CampusForum_API.views.posts import (
+    WorkspacePostsView,
+    WorkspacePostDetailView,
+)
 
 urlpatterns = [
     #Version
@@ -35,6 +39,17 @@ urlpatterns = [
     #Posts
         path('posts/', posts.PostsView.as_view()),
         path('posts/<int:pk>/', posts.PostDetailView.as_view()),
+    #Workspace Posts
+    path(
+    "workspace/posts/",
+    WorkspacePostsView.as_view(),
+    name="workspace-posts",
+    ),
+    path(
+    "workspace/posts/<int:pk>/",
+    WorkspacePostDetailView.as_view(),
+    name="workspace-post-detail",
+    ),
     #Admin Users
         path('admin/users/', user_admin.AdminUsersView.as_view()),
         path('admin/users/<int:pk>/', user_admin.AdminUserDetailView.as_view())

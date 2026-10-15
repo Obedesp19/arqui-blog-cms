@@ -66,7 +66,7 @@ class Post(models.Model):
     estado = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='PUBLICADO'
+        default='BORRADOR'
     )
 
     creation = models.DateTimeField(auto_now_add=True)
