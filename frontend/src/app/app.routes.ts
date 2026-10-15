@@ -113,6 +113,24 @@ export const routes: Routes = [
       roles: ['EDITOR', 'ADMINISTRADOR'],
     },
   },
+  {
+  path: 'workspace/posts',
+  component: PostsList,
+  canActivate: [RoleGuard],
+  data: {
+    workspace: true,
+    roles: ['AUTOR', 'EDITOR', 'ADMINISTRADOR'],
+  },
+},
+{
+  path: 'workspace/posts/:id',
+  component: PostsDetail,
+  canActivate: [RoleGuard],
+  data: {
+    workspace: true,
+    roles: ['AUTOR', 'EDITOR', 'ADMINISTRADOR'],
+  },
+},
 
   {
     path: '**',

@@ -12,6 +12,24 @@
       <span>Publicaciones</span>
     </button>
 
+    @if (
+  isLogin &&
+  (
+    userRole === 'AUTOR' ||
+    userRole === 'EDITOR' ||
+    userRole === 'ADMINISTRADOR'
+  )
+) {
+  <button
+    mat-button
+    type="button"
+    (click)="goTo('/workspace/posts')"
+  >
+    <mat-icon>edit_note</mat-icon>
+    <span>Espacio de trabajo</span>
+  </button>
+}
+
     @if (canSeeCategories) {
       <button mat-button type="button" (click)="goTo('/categories')">
         <mat-icon>category</mat-icon>
