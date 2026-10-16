@@ -184,7 +184,6 @@ export class UsuariosService {
 
   public registrarUser(user: RegistroUser): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    console.log(user);
     return this.http
       .post<any>(`${environment.url_api}/users/`, user, { headers })
       .pipe(

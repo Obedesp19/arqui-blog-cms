@@ -18,6 +18,8 @@ import { CategoriesForm } from './screens/categories/form/form';
 
 import { ReportsList } from './screens/reports/list/list';
 
+import { AdminUsers } from './screens/admin/users/users';
+
 export const routes: Routes = [
   {
     path: '',
@@ -129,6 +131,15 @@ export const routes: Routes = [
   data: {
     workspace: true,
     roles: ['AUTOR', 'EDITOR', 'ADMINISTRADOR'],
+  },
+},
+
+{
+  path: 'admin/users',
+  component: AdminUsers,
+  canActivate: [RoleGuard],
+  data: {
+    roles: ['ADMINISTRADOR'],
   },
 },
 

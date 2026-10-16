@@ -1,0 +1,181 @@
+<app-navbar
+  mode="private"
+  [isLogin]="auth.isAuthenticated()"
+  [userRole]="auth.getUserRole() ?? 'LECTOR'"
+  (toggleSidebar)="drawerOpen = !drawerOpen"
+></app-navbar>
+
+<mat-drawer-container class="users-layout" autosize>
+  <mat-drawer
+    mode="over"
+    [opened]="drawerOpen && auth.isAuthenticated()"
+    (closedStart)="drawerOpen = false"
+  >
+    <app-sidebar
+      [isLogin]="auth.isAuthenticated()"
+      [userRole]="auth.getUserRole() ?? 'LECTOR'"
+      (closeSidebar)="drawerOpen = false"
+    ></app-sidebar>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <main class="users-page">
+      <header>
+        <h1>Administrar usuarios</h1>
+        <p>Asigna roles y administra el acceso de las cuentas.</p>
+        <a routerLink="/dashboard">Volver al dashboard</a>
+      </header>
+
+      @if (error) {
+        <p class="message error" role="alert">{{ error }}</p>
+
+        @if (!auth.isAuthenticated()) {
+          <a
+            routerLink="/login"
+            [queryParams]="{ redirectTo: '/admin/users' }"
+          >
+            Iniciar sesión
+          </a>
+        }
+      }
+
+      @if (success) {
+        <p class="message success" role="status">{{ success }}</p>
+      }
+
+      @if (auth.isAdmin()) {
+        <div class="toolbar">
+          <button
+            type="button"
+            (click)="loadPage(page)"
+            [disabled]="busy"
+          >
+            Recargar lista
+          </button>
+
+          <span>{{ count }} usuario(s) · Página {{ page }}</span>
+        </div>
+
+        <p>
+          Los cambios se aplican al pulsar Guardar cambios.
+          La cuenta modificada deberá iniciar sesión nuevamente.
+        </p>
+
+        @if (loading) {
+          <p role="status">Cargando usuarios...</p>
+        } @else {
+          <div class="table-container">
+            <table>
+              <caption>Usuarios del CMS</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Rol guardado</th>
+                  <th scope="col">Asignar rol</th>
+                  <th scope="col">Cuenta activa</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (user of rows; track user.id) {
+                  <tr>
+                    <td>
+                      <strong>
+                        {{ user.first_name }} {{ user.last_name }}
+                      </strong>
+                      <div>{{ user.email }}</div>
+                      <small>ID: {{ user.id }}</small>
+                    </td>
+
+                    <td>
+                      {{ user.roles.join(', ') || 'Sin rol CMS' }}
+                    </td>
+
+                    <td>
+                      <select
+                        [(ngModel)]="user.selectedRole"
+                        [disabled]="busy || isProtected(user)"
+                        [attr.aria-label]="'Rol de ' + user.email"
+                      >
+                        <option value="" disabled>
+                          Selecciona un rol
+                        </option>
+
+                        @for (role of roles; track role) {
+                          <option [value]="role">{{ role }}</option>
+                        }
+                      </select>
+                    </td>
+
+                    <td>
+                      <label>
+                        <input
+                          type="checkbox"
+                          [(ngModel)]="user.selectedActive"
+                          [disabled]="busy || isProtected(user)"
+                        />
+                        Activa
+                      </label>
+
+                      <small class="saved-state">
+                        Guardado:
+                        {{ user.is_active ? 'Activa' : 'Inactiva' }}
+                      </small>
+                    </td>
+
+                    <td>
+                      @if (user.id === auth.getUserId()) {
+                        <span>Tu cuenta está protegida.</span>
+                      } @else if (user.is_superuser) {
+                        <span>Cuenta técnica protegida.</span>
+                      } @else {
+                        <button
+                          type="button"
+                          (click)="save(user)"
+                          [disabled]="busy || !hasChanges(user)"
+                        >
+                          {{
+                            savingId === user.id
+                              ? 'Guardando...'
+                              : 'Guardar cambios'
+                          }}
+                        </button>
+                      }
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="5">
+                      No hay usuarios para mostrar.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+        <nav class="pagination" aria-label="Páginas de usuarios">
+          <button
+            type="button"
+            (click)="loadPage(page - 1)"
+            [disabled]="busy || !hasPrevious"
+          >
+            Anterior
+          </button>
+
+          <span>Página {{ page }}</span>
+
+          <button
+            type="button"
+            (click)="loadPage(page + 1)"
+            [disabled]="busy || !hasNext"
+          >
+            Siguiente
+          </button>
+        </nav>
+      }
+    </main>
+  </mat-drawer-content>
+</mat-drawer-container>
