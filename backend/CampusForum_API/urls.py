@@ -20,6 +20,7 @@ from CampusForum_API.views import users
 from CampusForum_API.views import auth
 from CampusForum_API.views import posts
 from CampusForum_API.views import categories
+from CampusForum_API.views import editorial
 from CampusForum_API.views import user_admin
 from CampusForum_API.views.posts import (
     WorkspacePostsView,
@@ -76,6 +77,12 @@ urlpatterns = [
         "workspace/categories/<int:pk>/",
         categories.WorkspaceCategoryDetailView.as_view(),
         name="workspace-category-detail",
+    ),
+    # Editorial workflow
+    path(
+        "workspace/posts/<int:pk>/transition/",
+        editorial.PostEditorialActionView.as_view(),
+        name="post-editorial-transition",
     ),
 ]
 

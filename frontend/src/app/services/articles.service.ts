@@ -3,14 +3,39 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 
+export type ArticleStatus =
+  | 'BORRADOR'
+  | 'PENDIENTE_REVISION'
+  | 'PUBLICADO'
+  | 'ARCHIVADO';
+
+export type EditorialAction =
+  | 'ENVIAR_REVISION'
+  | 'DEVOLVER'
+  | 'PUBLICAR'
+  | 'ARCHIVAR'
+  | 'RECUPERAR';
+
+export interface EditorialOption {
+  action: EditorialAction;
+  label: string;
+}
+
 export interface Article {
   id: number;
   title: string;
   content: string;
   etiquetas: string;
-  estado: 'BORRADOR' | 'PUBLICADO' | 'OCULTO';
-  author: { id: number; first_name: string; last_name: string };
-  categoria: { id: number; nombre: string } | null;
+  estado: ArticleStatus;
+  author: {
+    id: number;
+    first_name: string;
+    last_name: string;
+  };
+  categoria: {
+    id: number;
+    nombre: string;
+  } | null;
   creation: string;
   update: string;
 }
@@ -37,6 +62,7 @@ export class ArticlesService {
 
   list(workspace: boolean, page: number) {
     const path = workspace ? 'workspace/posts' : 'posts';
+
     return this.http.get<ArticlePage>(`${this.base}/${path}/`, {
       params: { page: String(page) },
     });
@@ -44,23 +70,45 @@ export class ArticlesService {
 
   get(id: number, workspace: boolean) {
     const path = workspace ? 'workspace/posts' : 'posts';
-    return this.http.get<Article>(`${this.base}/${path}/${id}/`);
+
+    return this.http.get<Article>(
+      `${this.base}/${path}/${id}/`,
+    );
   }
 
   create(input: ArticleInput) {
-    return this.http.post<Article>(`${this.base}/posts/`, this.payload(input));
+    return this.http.post<Article>(
+      `${this.base}/posts/`,
+      this.payload(input),
+    );
   }
 
   update(id: number, input: ArticleInput) {
-    return this.http.patch<Article>(`${this.base}/posts/${id}/`, this.payload(input));
+    return this.http.patch<Article>(
+      `${this.base}/posts/${id}/`,
+      this.payload(input),
+    );
   }
 
   delete(id: number) {
-    return this.http.delete<void>(`${this.base}/posts/${id}/`);
+    return this.http.delete<void>(
+      `${this.base}/posts/${id}/`,
+    );
+  }
+
+  transition(id: number, action: EditorialAction) {
+    return this.http.post<Article>(
+      `${this.base}/workspace/posts/${id}/transition/`,
+      { action },
+    );
   }
 
   canCreate(): boolean {
-    return this.auth.hasRole(['AUTOR', 'EDITOR', 'ADMINISTRADOR']);
+    return this.auth.hasRole([
+      'AUTOR',
+      'EDITOR',
+      'ADMINISTRADOR',
+    ]);
   }
 
   canEdit(post: Article): boolean {
@@ -72,6 +120,63 @@ export class ArticlesService {
       this.auth.hasRole(['AUTOR']) &&
       post.author.id === this.auth.getUserId() &&
       post.estado === 'BORRADOR'
+    );
+  }
+
+  canTransition(
+    post: Article,
+    action: EditorialAction,
+  ): boolean {
+    if (action === 'ENVIAR_REVISION') {
+      return post.estado === 'BORRADOR' && this.canManage(post);
+    }
+
+    if (!this.auth.hasRole(['EDITOR', 'ADMINISTRADOR'])) {
+      return false;
+    }
+
+    switch (action) {
+      case 'DEVOLVER':
+      case 'PUBLICAR':
+        return post.estado === 'PENDIENTE_REVISION';
+
+      case 'ARCHIVAR':
+        return post.estado === 'PUBLICADO';
+
+      case 'RECUPERAR':
+        return post.estado === 'ARCHIVADO';
+
+      default:
+        return false;
+    }
+  }
+
+  editorialActions(post: Article): EditorialOption[] {
+    const options: EditorialOption[] = [
+      {
+        action: 'ENVIAR_REVISION',
+        label: 'Enviar a revisión',
+      },
+      {
+        action: 'DEVOLVER',
+        label: 'Devolver a borrador',
+      },
+      {
+        action: 'PUBLICAR',
+        label: 'Publicar artículo',
+      },
+      {
+        action: 'ARCHIVAR',
+        label: 'Archivar artículo',
+      },
+      {
+        action: 'RECUPERAR',
+        label: 'Recuperar como borrador',
+      },
+    ];
+
+    return options.filter(option =>
+      this.canTransition(post, option.action),
     );
   }
 
@@ -93,15 +198,41 @@ export class ArticlesService {
 }
 
 export function articleError(error: unknown): string {
-  if (!(error instanceof HttpErrorResponse)) return 'No se pudo completar la operación.';
-  if (error.status === 0) return 'No se pudo conectar con el servidor.';
-  if (error.status === 401) return 'Tu sesión terminó. Inicia sesión nuevamente.';
-  if (error.status === 403) return 'No tienes permiso para realizar esta acción.';
-  if (error.status === 404) return 'El artículo o la página no existe, o no tienes acceso.';
-  if (error.status === 400 && error.error && typeof error.error === 'object') {
-    const messages = Object.values(error.error).flat()
-      .filter((value): value is string => typeof value === 'string');
-    if (messages.length) return messages.join(' ');
+  if (!(error instanceof HttpErrorResponse)) {
+    return 'No se pudo completar la operación.';
   }
+
+  if (error.status === 0) {
+    return 'No se pudo conectar con el servidor.';
+  }
+
+  if (error.status === 401) {
+    return 'Tu sesión terminó. Inicia sesión nuevamente.';
+  }
+
+  if (error.status === 403) {
+    return 'No tienes permiso para realizar esta acción.';
+  }
+
+  if (error.status === 404) {
+    return 'El artículo o la página no existe, o no tienes acceso.';
+  }
+
+  if (
+    error.status === 400 &&
+    error.error &&
+    typeof error.error === 'object'
+  ) {
+    const messages = Object.values(error.error)
+      .flat()
+      .filter(
+        (value): value is string => typeof value === 'string',
+      );
+
+    if (messages.length) {
+      return messages.join(' ');
+    }
+  }
+
   return 'No se pudo completar la operación. Intenta nuevamente.';
 }

@@ -50,9 +50,10 @@ class Category(models.Model):
 class Post(models.Model):
 
     STATUS_CHOICES = [
-        ('PUBLICADO', 'Publicado'),
-        ('OCULTO', 'Oculto'),
-        ('BORRADOR', 'Borrador'),
+        ("BORRADOR", "Borrador"),
+        ("PENDIENTE_REVISION", "Pendiente de revisión"),
+        ("PUBLICADO", "Publicado"),
+        ("ARCHIVADO", "Archivado"),
     ]
 
     id = models.BigAutoField(primary_key=True)
