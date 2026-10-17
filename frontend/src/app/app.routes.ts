@@ -20,6 +20,8 @@ import { ReportsList } from './screens/reports/list/list';
 
 import { AdminUsers } from './screens/admin/users/users';
 
+import { CommentsModeration } from './screens/comments/moderation/moderation';
+
 export const routes: Routes = [
   {
     path: '',
@@ -142,6 +144,15 @@ export const routes: Routes = [
     roles: ['ADMINISTRADOR'],
   },
 },
+
+  {
+    path: 'workspace/comments',
+    component: CommentsModeration,
+    canActivate: [RoleGuard],
+    data: {
+      roles: ['EDITOR', 'ADMINISTRADOR'],
+    },
+  },
 
   {
     path: '**',

@@ -180,7 +180,13 @@
                   </section>
                 }
               </mat-card-content>
-            </mat-card>
+                        </mat-card>
+
+            @if (article.estado === 'PUBLICADO') {
+              <app-post-comments
+                [postId]="article.id"
+              ></app-post-comments>
+            }
           }
         </main>
 

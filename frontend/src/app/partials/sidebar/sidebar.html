@@ -54,5 +54,19 @@
     <span>Administrar usuarios</span>
   </button>
 }
+
+    @if (
+      isLogin &&
+      (userRole === 'EDITOR' || userRole === 'ADMINISTRADOR')
+    ) {
+      <button
+        mat-button
+        type="button"
+        (click)="goTo('/workspace/comments')"
+      >
+        <mat-icon>forum</mat-icon>
+        <span>Moderar comentarios</span>
+      </button>
+    }
   </nav>
 </aside>

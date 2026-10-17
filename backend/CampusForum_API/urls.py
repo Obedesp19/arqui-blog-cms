@@ -21,6 +21,7 @@ from CampusForum_API.views import auth
 from CampusForum_API.views import posts
 from CampusForum_API.views import categories
 from CampusForum_API.views import editorial
+from CampusForum_API.views import comments
 from CampusForum_API.views import user_admin
 from CampusForum_API.views.posts import (
     WorkspacePostsView,
@@ -83,6 +84,22 @@ urlpatterns = [
         "workspace/posts/<int:pk>/transition/",
         editorial.PostEditorialActionView.as_view(),
         name="post-editorial-transition",
+    ),
+    # Comments
+    path(
+        "posts/<int:pk>/comments/",
+        comments.PostCommentsView.as_view(),
+        name="post-comments",
+    ),
+    path(
+        "workspace/comments/",
+        comments.WorkspaceCommentsView.as_view(),
+        name="workspace-comments",
+    ),
+    path(
+        "workspace/comments/<int:pk>/moderate/",
+        comments.CommentModerationView.as_view(),
+        name="comment-moderation",
     ),
 ]
 

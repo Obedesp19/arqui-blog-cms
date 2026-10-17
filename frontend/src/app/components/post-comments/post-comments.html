@@ -1,0 +1,129 @@
+<section aria-label="Comentarios del artículo">
+  <h2>Comentarios</h2>
+
+  <p>Los comentarios se publican después de su aprobación.</p>
+
+  @if (auth.isAuthenticated()) {
+    @if (canComment) {
+      <form (ngSubmit)="enviar()">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Escribe tu comentario</mat-label>
+
+          <textarea
+            matInput
+            name="commentContent"
+            [(ngModel)]="content"
+            rows="4"
+            maxlength="2000"
+            required
+            [disabled]="sending"
+          ></textarea>
+
+          <mat-hint>
+            Máximo 2000 caracteres. Se enviará a moderación.
+          </mat-hint>
+        </mat-form-field>
+
+        <p>
+          <button
+            mat-flat-button
+            type="submit"
+            [disabled]="busy || !content.trim()"
+          >
+            {{ sending ? 'Enviando...' : 'Enviar comentario' }}
+          </button>
+        </p>
+      </form>
+    } @else {
+      <p>Tu cuenta no tiene permiso para comentar.</p>
+    }
+  } @else {
+    <p>
+      <a
+        mat-button
+        routerLink="/login"
+        [queryParams]="{ redirectTo: '/posts/' + postId }"
+      >
+        Inicia sesión para comentar
+      </a>
+    </p>
+  }
+
+  @if (submitError) {
+    <p role="alert">{{ submitError }}</p>
+  }
+
+  @if (success) {
+    <p role="status">{{ success }}</p>
+  }
+
+  @if (loading) {
+    <p role="status">Cargando comentarios...</p>
+  }
+
+  @if (listError) {
+    <p role="alert">{{ listError }}</p>
+
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="loadPage(page)"
+      [disabled]="busy"
+    >
+      Reintentar
+    </button>
+  }
+
+  @if (result; as data) {
+    <p>{{ data.count }} comentario(s) aprobado(s)</p>
+
+    @for (comment of data.results; track comment.id) {
+      <article>
+        <p>
+          <strong>
+            {{ comment.author.first_name }}
+            {{ comment.author.last_name }}
+          </strong>
+          · {{ comment.creation | date:'short' }}
+        </p>
+
+        <p style="white-space: pre-wrap; overflow-wrap: anywhere;">{{ comment.content }}</p>
+
+        <hr>
+      </article>
+    } @empty {
+      <p>Todavía no hay comentarios aprobados.</p>
+    }
+
+    <div>
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="loadPage(page - 1)"
+        [disabled]="busy || !data.previous"
+      >
+        Anterior
+      </button>
+
+      <span>Página {{ page }}</span>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="loadPage(page + 1)"
+        [disabled]="busy || !data.next"
+      >
+        Siguiente
+      </button>
+
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="loadPage(page)"
+        [disabled]="busy"
+      >
+        Actualizar comentarios
+      </button>
+    </div>
+  }
+</section>

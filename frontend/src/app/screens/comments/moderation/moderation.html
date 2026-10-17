@@ -1,0 +1,170 @@
+<section>
+  <app-navbar
+    mode="private"
+    [isLogin]="auth.isAuthenticated()"
+    [userRole]="auth.getUserRole() ?? 'LECTOR'"
+    (toggleSidebar)="drawerOpen = !drawerOpen"
+  ></app-navbar>
+
+  <mat-drawer-container autosize>
+    <mat-drawer
+      mode="over"
+      [opened]="drawerOpen"
+      (closedStart)="drawerOpen = false"
+    >
+      <app-sidebar
+        [isLogin]="auth.isAuthenticated()"
+        [userRole]="auth.getUserRole() ?? 'LECTOR'"
+        (closeSidebar)="drawerOpen = false"
+      ></app-sidebar>
+    </mat-drawer>
+
+    <mat-drawer-content>
+      <main style="padding: 1.5rem;">
+        <h1>Moderación de comentarios</h1>
+
+        <p>
+          Revisa los comentarios pendientes antes de publicarlos.
+        </p>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+
+          <mat-select
+            name="estado"
+            [(ngModel)]="estado"
+            (selectionChange)="loadPage(1)"
+            [disabled]="busy"
+          >
+            <mat-option value="PENDIENTE">Pendientes</mat-option>
+            <mat-option value="APROBADO">Aprobados</mat-option>
+            <mat-option value="RECHAZADO">Rechazados</mat-option>
+            <mat-option value="TODOS">Todos</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="loadPage(1)"
+          [disabled]="busy"
+        >
+          Actualizar lista
+        </button>
+
+        @if (loading) {
+          <p role="status">Cargando comentarios...</p>
+        }
+
+        @if (error) {
+          <p role="alert">{{ error }}</p>
+        }
+
+        @if (success) {
+          <p role="status">{{ success }}</p>
+        }
+
+        @if (result; as data) {
+          <p>
+            {{ data.count }} comentario(s) · Página {{ page }}
+          </p>
+
+          @for (comment of data.results; track comment.id) {
+            <mat-card style="margin-bottom: 1rem;">
+              <mat-card-content>
+                <h2>{{ comment.post.title }}</h2>
+
+                <p>
+                  Artículo: {{ comment.post.estado }}
+                  · Comentario: {{ comment.estado }}
+                </p>
+
+                <p>
+                  <strong>
+                    {{ comment.author.first_name }}
+                    {{ comment.author.last_name }}
+                  </strong>
+                  · {{ comment.creation | date:'short' }}
+                </p>
+
+                <p style="white-space: pre-wrap; overflow-wrap: anywhere;">{{ comment.content }}</p>
+
+                <a
+                  mat-button
+                  [routerLink]="['/workspace/posts', comment.post.id]"
+                >
+                  Abrir artículo
+                </a>
+
+                @if (comment.estado === 'PENDIENTE' && canManage) {
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    (click)="moderate(comment, 'APROBAR')"
+                    [disabled]="busy || comment.post.estado !== 'PUBLICADO'"
+                  >
+                    Aprobar
+                  </button>
+
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    (click)="moderate(comment, 'RECHAZAR')"
+                    [disabled]="busy"
+                  >
+                    Rechazar
+                  </button>
+
+                  @if (comment.post.estado !== 'PUBLICADO') {
+                    <p>
+                      La aprobación requiere que el artículo esté publicado.
+                    </p>
+                  }
+                }
+
+                @if (savingId === comment.id) {
+                  <p role="status">Guardando decisión...</p>
+                }
+
+                @if (comment.moderated_by; as moderator) {
+                  <p>
+                    Moderado por:
+                    {{ moderator.first_name }}
+                    {{ moderator.last_name }}
+                    · {{ comment.moderated_at | date:'short' }}
+                  </p>
+                }
+              </mat-card-content>
+            </mat-card>
+          } @empty {
+            <p>No hay comentarios para este filtro.</p>
+          }
+
+          <div>
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="loadPage(page - 1)"
+              [disabled]="busy || !data.previous"
+            >
+              Anterior
+            </button>
+
+            <span>Página {{ page }}</span>
+
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="loadPage(page + 1)"
+              [disabled]="busy || !data.next"
+            >
+              Siguiente
+            </button>
+          </div>
+        }
+      </main>
+
+      <app-footer></app-footer>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</section>

@@ -93,4 +93,66 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+class Comment(models.Model):
+    STATUS_CHOICES = [
+        ("PENDIENTE", "Pendiente de moderación"),
+        ("APROBADO", "Aprobado"),
+        ("RECHAZADO", "Rechazado"),
+    ]
+
+    id = models.BigAutoField(primary_key=True)
+
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
+
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="blog_comments",
+    )
+
+    content = models.TextField(max_length=2000)
+
+    estado = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="PENDIENTE",
+    )
+
+    moderated_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="moderated_blog_comments",
+    )
+
+    moderated_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    creation = models.DateTimeField(auto_now_add=True)
+
+    update = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["creation", "id"]
+        indexes = [
+            models.Index(
+                fields=["post", "estado", "creation"],
+                name="comment_post_state_created",
+            ),
+            models.Index(
+                fields=["estado", "creation"],
+                name="comment_state_created",
+            ),
+        ]
+
+    def __str__(self):
+        return f"Comentario {self.pk} del artículo {self.post_id}"
     

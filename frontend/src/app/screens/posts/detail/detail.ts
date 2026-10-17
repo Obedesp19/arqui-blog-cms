@@ -1,3 +1,4 @@
+import { PostComments } from '../../../components/post-comments/post-comments';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -26,8 +27,14 @@ import {
 @Component({
   selector: 'app-posts-detail',
   standalone: true,
-  imports: [...SHARED_IMPORTS, RouterLink, Navbar, Sidebar, Footer],
-  templateUrl: './detail.html',
+  imports: [
+    ...SHARED_IMPORTS,
+    RouterLink,
+    Navbar,
+    Sidebar,
+    Footer,
+    PostComments,
+  ],  templateUrl: './detail.html',
   styleUrls: ['./detail.scss'],
 })
 export class PostsDetail implements OnInit {
