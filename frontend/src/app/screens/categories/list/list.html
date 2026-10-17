@@ -1,23 +1,22 @@
 <section class="categories-list">
   <app-navbar
     mode="private"
-    [userRole]="userRole"
-    [isLogin]="isLogin"
-    (toggleSidebar)="toggleSidebar()"
+    [userRole]="auth.getUserRole() ?? 'LECTOR'"
+    [isLogin]="auth.isAuthenticated()"
+    (toggleSidebar)="drawerOpen = !drawerOpen"
   ></app-navbar>
 
   <mat-drawer-container class="categories-list__drawer-container" autosize>
     <mat-drawer
       class="categories-list__drawer"
       mode="over"
-      position="start"
-      [opened]="drawerOpen"
+      [opened]="drawerOpen && auth.isAuthenticated()"
       (closedStart)="drawerOpen = false"
     >
       <app-sidebar
-        [userRole]="userRole"
-        [isLogin]="isLogin"
-        (closeSidebar)="closeSidebar()"
+        [userRole]="auth.getUserRole() ?? 'LECTOR'"
+        [isLogin]="auth.isAuthenticated()"
+        (closeSidebar)="drawerOpen = false"
       ></app-sidebar>
     </mat-drawer>
 
@@ -29,55 +28,127 @@
               <span class="categories-list__eyebrow">Catálogo</span>
               <h1 class="categories-list__title">Categorías</h1>
               <p class="categories-list__subtitle">
-                Administra las categorías académicas usadas por las publicaciones.
+                Administra las categorías guardadas en el CMS.
               </p>
             </div>
 
-            <button mat-flat-button color="primary" type="button" (click)="goCreate()">
-              <mat-icon>add</mat-icon>
-              Nueva categoría
-            </button>
-          </section>
-
-          <section class="categories-list__filters">
-            <mat-form-field appearance="outline" class="full">
-              <mat-label>Buscar</mat-label>
-              <input matInput [(ngModel)]="search" name="search" placeholder="Buscar por nombre o descripción">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="full">
-              <mat-label>Estado</mat-label>
-              <mat-select [(ngModel)]="estado" name="estado">
-                <mat-option value="TODAS">Todas</mat-option>
-                <mat-option value="ACTIVO">Activas</mat-option>
-                <mat-option value="INACTIVO">Inactivas</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </section>
-
-          <section class="categories-list__grid">
-            @for (row of filteredRows; track row.id) {
-              <mat-card class="categories-list__card">
-                <mat-card-content>
-                  <div class="categories-list__top">
-                    <h3>{{ row.nombre }}</h3>
-                    <span class="categories-list__status" [class.is-inactive]="row.estado === 'INACTIVO'">
-                      {{ row.estado }}
-                    </span>
-                  </div>
-
-                  <p class="categories-list__desc">{{ row.descripcion }}</p>
-
-                  <div class="categories-list__actions">
-                    <button mat-stroked-button type="button" (click)="goEdit(row.id)">Editar</button>
-                    @if (row.estado === 'ACTIVO') {
-                      <button mat-stroked-button type="button" (click)="inactivate(row.id)">Inactivar</button>
-                    }
-                  </div>
-                </mat-card-content>
-              </mat-card>
+            @if (canManage) {
+              <a
+                mat-flat-button
+                color="primary"
+                routerLink="/categories/create"
+              >
+                Nueva categoría
+              </a>
             }
           </section>
+
+          @if (error) {
+            <p role="alert">{{ error }}</p>
+          }
+
+          @if (success) {
+            <p role="status">{{ success }}</p>
+          }
+
+          @if (!auth.isAuthenticated()) {
+            <a
+              mat-button
+              routerLink="/login"
+              [queryParams]="{ redirectTo: '/categories' }"
+            >
+              Iniciar sesión
+            </a>
+          }
+
+          @if (canManage) {
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="loadPage(page)"
+              [disabled]="busy"
+            >
+              Recargar lista
+            </button>
+
+            @if (loading) {
+              <p role="status">Cargando categorías...</p>
+            }
+
+            @if (result; as data) {
+              <p>{{ data.count }} categoría(s) · Página {{ page }}</p>
+
+              <section class="categories-list__grid">
+                @for (row of data.results; track row.id) {
+                  <mat-card class="categories-list__card">
+                    <mat-card-content>
+                      <div class="categories-list__top">
+                        <h3>{{ row.nombre }}</h3>
+                        <span
+                          class="categories-list__status"
+                          [class.is-inactive]="row.estado === 'INACTIVO'"
+                        >
+                          {{ row.estado }}
+                        </span>
+                      </div>
+
+                      <p class="categories-list__desc">
+                        {{ row.descripcion || 'Sin descripción' }}
+                      </p>
+
+                      <div class="categories-list__actions">
+                        <a
+                          mat-stroked-button
+                          [routerLink]="['/categories', row.id, 'edit']"
+                        >
+                          Editar
+                        </a>
+
+                        <button
+                          mat-stroked-button
+                          type="button"
+                          (click)="changeStatus(row)"
+                          [disabled]="busy"
+                        >
+                          {{
+                            savingId === row.id
+                              ? 'Guardando...'
+                              : row.estado === 'ACTIVO'
+                                ? 'Desactivar'
+                                : 'Reactivar'
+                          }}
+                        </button>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                } @empty {
+                  <p>No hay categorías para mostrar.</p>
+                }
+              </section>
+
+              <div class="categories-list__actions">
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="loadPage(page - 1)"
+                  [disabled]="busy || !data.previous"
+                >
+                  Anterior
+                </button>
+
+                <span>Página {{ page }}</span>
+
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="loadPage(page + 1)"
+                  [disabled]="busy || !data.next"
+                >
+                  Siguiente
+                </button>
+              </div>
+            }
+          }
         </main>
 
         <app-footer></app-footer>

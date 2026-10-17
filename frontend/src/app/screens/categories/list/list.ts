@@ -1,81 +1,132 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { SHARED_IMPORTS } from '../../../shared/shared_imports';
 import { Navbar } from '../../../partials/navbar/navbar';
 import { Sidebar } from '../../../partials/sidebar/sidebar';
 import { Footer } from '../../../partials/footer/footer';
 import { AuthService } from '../../../services/auth.service';
-import {CategoriesService} from '../../../services/categorias-service';
-import { CategoryItem } from '../../../shared/interfaces/categories.interface';
-import { UserRole } from '../../../models/auth-user.model';
-
+import {
+  CategoriesApiService,
+  CategoryPage,
+  categoryErrors,
+} from '../../../services/categories-api.service';
+import {
+  CategoryItem,
+  CategoryStatus,
+} from '../../../shared/interfaces/categories.interface';
 
 @Component({
   selector: 'app-categories-list',
   standalone: true,
-  imports: [...SHARED_IMPORTS, Navbar, Sidebar, Footer],
+  imports: [...SHARED_IMPORTS, RouterLink, Navbar, Sidebar, Footer],
   templateUrl: './list.html',
   styleUrls: ['./list.scss'],
 })
 export class CategoriesList implements OnInit {
+  public readonly auth = inject(AuthService);
+
+  private readonly api = inject(CategoriesApiService);
+  private readonly destroyRef = inject(DestroyRef);
+
   public drawerOpen = false;
-  public isLogin = false;
-  public userRole: UserRole = 'LECTOR';
+  public loading = false;
+  public savingId: number | null = null;
+  public error = '';
+  public success = '';
+  public page = 1;
+  public result: CategoryPage | null = null;
 
-  public search = '';
-  public estado = 'TODAS';
-  public rows: CategoryItem[] = [];
-
-  constructor(
-    private readonly router: Router,
-    private readonly authService: AuthService,
-    private readonly categoriesService: CategoriesService,
-  ) {}
-
-  ngOnInit(): void {
-    this.isLogin = this.authService.isAuthenticated();
-    this.userRole = this.authService.getUserRole() ?? 'LECTOR';
-    this.loadRows();
+  public get busy(): boolean {
+    return this.loading || this.savingId !== null;
   }
 
-  public toggleSidebar(): void {
-    this.drawerOpen = !this.drawerOpen;
+  public get canManage(): boolean {
+    return this.auth.hasRole(['EDITOR', 'ADMINISTRADOR']);
   }
 
-  public closeSidebar(): void {
-    this.drawerOpen = false;
+  public ngOnInit(): void {
+    this.loadPage(1);
   }
 
-  public goCreate(): void {
-    this.router.navigate(['/categories/create']);
+  public loadPage(page: number): void {
+    if (this.busy || !Number.isInteger(page) || page < 1) {
+      return;
+    }
+
+    this.loading = true;
+    this.error = '';
+    this.success = '';
+    this.result = null;
+
+    this.api.list(page)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loading = false;
+        }),
+      )
+      .subscribe({
+        next: (result) => {
+          this.result = result;
+          this.page = page;
+        },
+        error: (error: unknown) => {
+          this.error = this.errorMessage(error);
+        },
+      });
   }
 
-  public goEdit(id: number): void {
-    this.router.navigate(['/categories', id, 'edit']);
+  public changeStatus(category: CategoryItem): void {
+    if (this.busy || !this.canManage) {
+      return;
+    }
+
+    const estado: CategoryStatus =
+      category.estado === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO';
+
+    const action = estado === 'ACTIVO' ? 'reactivar' : 'desactivar';
+
+    if (!window.confirm(`¿Quieres ${action} "${category.nombre}"?`)) {
+      return;
+    }
+
+    this.savingId = category.id;
+    this.error = '';
+    this.success = '';
+
+    this.api.setStatus(category.id, estado)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.savingId = null;
+        }),
+      )
+      .subscribe({
+        next: (updated) => {
+          if (this.result) {
+            this.result = {
+              ...this.result,
+              results: this.result.results.map((item) =>
+                item.id === updated.id ? updated : item,
+              ),
+            };
+          }
+
+          this.success =
+            `La categoría "${updated.nombre}" quedó ${updated.estado}.`;
+        },
+        error: (error: unknown) => {
+          this.error = this.errorMessage(error);
+        },
+      });
   }
 
-  public inactivate(id: number): void {
-    this.categoriesService.inactivateCategory(id);
-    this.loadRows();
-  }
-
-  public get filteredRows(): CategoryItem[] {
-    const q = this.search.trim().toLowerCase();
-
-    return this.rows.filter(row => {
-      const matchesSearch =
-        !q ||
-        row.nombre.toLowerCase().includes(q) ||
-        row.descripcion.toLowerCase().includes(q);
-
-      const matchesEstado =
-        this.estado === 'TODAS' || row.estado === this.estado;
-
-      return matchesSearch && matchesEstado;
-    });
-  }
-
-  private loadRows(): void {
-    this.rows = this.categoriesService.getAllCategories(true);
+  private errorMessage(error: unknown): string {
+    return Object.values(categoryErrors(error))
+      .filter(Boolean)
+      .join(' ');
   }
 }

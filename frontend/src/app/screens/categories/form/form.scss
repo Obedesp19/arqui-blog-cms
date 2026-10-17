@@ -142,4 +142,11 @@ textarea {
   .categories-form__actions button {
     width: 100%;
   }
+
+  fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 }

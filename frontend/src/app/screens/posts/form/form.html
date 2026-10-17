@@ -33,6 +33,65 @@
                 <form (ngSubmit)="guardar()">
                   <div class="posts-form__grid">
                     <mat-form-field appearance="outline" class="full">
+  <mat-label>Categoría (opcional)</mat-label>
+
+  <mat-select
+    name="categoria"
+    [(ngModel)]="categoryId"
+    [disabled]="saving || categoriesLoading || !categoriesReady"
+  >
+    <mat-option [value]="null">Sin categoría</mat-option>
+
+    @if (categoriesReady) {
+      @if (original?.categoria; as current) {
+        @if (!hasActiveCategory(current.id)) {
+          <mat-option [value]="current.id">
+            {{ current.nombre }} — categoría actual fuera del catálogo activo
+          </mat-option>
+        }
+      }
+
+      @for (category of categories; track category.id) {
+        <mat-option [value]="category.id">
+          {{ category.nombre }}
+        </mat-option>
+      }
+    }
+  </mat-select>
+</mat-form-field>
+
+@if (categoriesLoading) {
+  <p role="status">Cargando categorías...</p>
+}
+
+@if (categoriesError) {
+  <p role="alert">{{ categoriesError }}</p>
+}
+
+<button
+  mat-stroked-button
+  type="button"
+  (click)="loadCategories()"
+  [disabled]="saving || categoriesLoading"
+>
+  Actualizar categorías
+</button>
+
+@if (categoriesReady) {
+  @if (original?.categoria; as current) {
+    @if (!hasActiveCategory(current.id)) {
+      <p>
+        Puedes conservar la categoría actual aunque haya sido desactivada,
+        cambiarla por una activa o elegir Sin categoría.
+      </p>
+    }
+  }
+
+  @if (categories.length === 0) {
+    <p>No hay categorías activas disponibles.</p>
+  }
+}
+                    <mat-form-field appearance="outline" class="full">
                       <mat-label>Título</mat-label>
                       <input matInput name="title" [(ngModel)]="title" maxlength="255" required [disabled]="saving">
                     </mat-form-field>
@@ -45,12 +104,15 @@
                       <input matInput name="etiquetas" [(ngModel)]="etiquetas" maxlength="255" [disabled]="saving">
                     </mat-form-field>
                   </div>
-                  <p>Categoría: {{ original?.categoria?.nombre ?? 'Sin categoría' }}</p>
                   <p>Estado: BORRADOR</p>
                   <div class="posts-form__actions">
-                    <button mat-flat-button type="submit" [disabled]="saving || !api.canCreate()">
-                      {{ saving ? 'Guardando...' : 'Guardar borrador' }}
-                    </button>
+                    <button
+  mat-flat-button
+  type="submit"
+  [disabled]="saving || categoriesLoading || !categoriesReady || !api.canCreate()"
+>
+  {{ saving ? 'Guardando...' : 'Guardar borrador' }}
+</button>
                   </div>
                 </form>
               </mat-card-content>
