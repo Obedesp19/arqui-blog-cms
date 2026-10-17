@@ -17,6 +17,33 @@ class PostCategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ("id", "nombre")
 
+class PostListSerializer(serializers.ModelSerializer):
+    author = PostAuthorSerializer(read_only=True)
+    categoria = PostCategorySerializer(read_only=True)
+    excerpt = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = (
+            "id",
+            "title",
+            "excerpt",
+            "categoria",
+            "etiquetas",
+            "estado",
+            "author",
+            "creation",
+            "update",
+        )
+        read_only_fields = fields
+
+    def get_excerpt(self, post):
+        value = post.excerpt_source
+
+        if len(value) > 180:
+            return value[:180] + "…"
+
+        return value
 
 class PostReadSerializer(serializers.ModelSerializer):
     author = PostAuthorSerializer(read_only=True)

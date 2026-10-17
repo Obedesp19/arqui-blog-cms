@@ -1,34 +1,54 @@
+from django.db.models.functions import Substr
+
 from CampusForum_API.models import Category, Post
 
 
 class PostRepository:
-    def public_posts(self):
+    def list_queryset(self, queryset):
         return (
-            Post.objects
-            .filter(estado="PUBLICADO")
+            queryset
             .select_related("author", "categoria")
+            .annotate(
+                excerpt_source=Substr("content", 1, 181),
+            )
+            .defer("content")
             .order_by("-creation", "-id")
         )
 
-    def public_post(self, pk):
-        return self.public_posts().filter(pk=pk).first()
+    def public_posts(self):
+        return self.list_queryset(
+            Post.objects.filter(estado="PUBLICADO")
+        )
 
-    def workspace_posts(self, user_id, can_manage):
+    def public_post(self, pk):
+        return (
+            Post.objects
+            .filter(
+                pk=pk,
+                estado="PUBLICADO",
+            )
+            .select_related("author", "categoria")
+            .first()
+        )
+
+    def workspace_queryset(self, user_id, can_manage):
         queryset = Post.objects.all()
 
         if not can_manage:
             queryset = queryset.filter(author_id=user_id)
 
-        return (
-            queryset
-            .select_related("author", "categoria")
-            .order_by("-creation", "-id")
+        return queryset
+
+    def workspace_posts(self, user_id, can_manage):
+        return self.list_queryset(
+            self.workspace_queryset(user_id, can_manage)
         )
 
     def workspace_post(self, pk, user_id, can_manage):
         return (
-            self.workspace_posts(user_id, can_manage)
+            self.workspace_queryset(user_id, can_manage)
             .filter(pk=pk)
+            .select_related("author", "categoria")
             .first()
         )
 

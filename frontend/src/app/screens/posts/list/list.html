@@ -49,8 +49,7 @@
                       <span>{{ post.estado }}</span>
                     </div>
                     <h2 class="posts-list__card-title">{{ post.title }}</h2>
-                    <p class="posts-list__card-text">{{ post.content | slice:0:180 }}{{ post.content.length > 180 ? '…' : '' }}</p>
-                    <p>{{ post.author.first_name }} {{ post.author.last_name }} · {{ post.creation | date:'short' }}</p>
+<p class="posts-list__card-text">{{ post.excerpt }}</p>                    <p>{{ post.author.first_name }} {{ post.author.last_name }} · {{ post.creation | date:'short' }}</p>
                     <div class="posts-list__actions">
                       <a mat-stroked-button [routerLink]="[workspace ? '/workspace/posts' : '/posts', post.id]">Ver artículo</a>
                       @if (api.canEdit(post)) {

@@ -40,6 +40,12 @@ export interface Article {
   update: string;
 }
 
+export interface ArticleListItem extends Omit<Article, 'content'> {
+  excerpt: string;
+}
+
+export type ArticlePermissions = Pick<Article, 'estado' | 'author'>;
+
 export interface ArticleInput {
   title: string;
   content: string;
@@ -51,7 +57,7 @@ export interface ArticlePage {
   count: number;
   next: string | null;
   previous: string | null;
-  results: Article[];
+  results: ArticleListItem[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -111,7 +117,7 @@ export class ArticlesService {
     ]);
   }
 
-  canEdit(post: Article): boolean {
+  canEdit(post: ArticlePermissions): boolean {
     return post.estado === 'BORRADOR' && this.canManage(post);
   }
 
@@ -180,7 +186,7 @@ export class ArticlesService {
     );
   }
 
-  private canManage(post: Article): boolean {
+  private canManage(post: ArticlePermissions): boolean {
     return this.auth.hasRole(['EDITOR', 'ADMINISTRADOR']) || (
       this.auth.hasRole(['AUTOR']) &&
       post.author.id === this.auth.getUserId()

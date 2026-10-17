@@ -1,3 +1,8 @@
+from CampusForum_API.post_serializers import (
+    PostListSerializer,
+    PostReadSerializer,
+    PostWriteSerializer,
+)
 from rest_framework import permissions, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -26,7 +31,7 @@ def paginated_posts(queryset, request, view):
     )
 
     return paginator.get_paginated_response(
-        PostReadSerializer(page, many=True).data
+        PostListSerializer(page, many=True).data
     )
 
 
