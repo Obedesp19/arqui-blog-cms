@@ -38,7 +38,7 @@ class PostService:
 
         return post
 
-    def validate_data(self, data):
+    def validate_data(self, data, post=None):
         allowed_fields = {
             "title",
             "content",
@@ -52,14 +52,36 @@ class PostService:
                 "desde esta operación."
             )
 
-        category_id = data.get("categoria_id")
+        if "categoria_id" not in data:
+            return
 
-        if (
-            category_id is not None
-            and not self.repository.category_exists(category_id)
-        ):
+        category_id = data["categoria_id"]
+
+        if category_id is None:
+            return
+
+        category = self.repository.category_for_assignment(
+            category_id
+        )
+
+        if category is None:
             raise ValidationError({
                 "categoria_id": "La categoría no existe."
+            })
+
+        keeps_current_category = (
+            post is not None
+            and post.categoria_id == category_id
+        )
+
+        if (
+            category.estado != "ACTIVO"
+            and not keeps_current_category
+        ):
+            raise ValidationError({
+                "categoria_id": (
+                    "No puedes asignar una categoría inactiva."
+                )
             })
 
     def public_list(self):
@@ -114,7 +136,7 @@ class PostService:
                 "Los otros estados requieren el flujo editorial."
             )
 
-        self.validate_data(data)
+        self.validate_data(data, post=post)
         changes = dict(data)
 
         if not partial:

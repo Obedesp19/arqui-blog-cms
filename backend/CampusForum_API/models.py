@@ -20,16 +20,33 @@ class Profiles(models.Model):
 #Creamos un modelo para representar las publicaciones en el foro
 
 class Category(models.Model):
+    STATUS_CHOICES = [
+        ("ACTIVO", "Activo"),
+        ("INACTIVO", "Inactivo"),
+    ]
 
     id = models.BigAutoField(primary_key=True)
 
     nombre = models.CharField(
         max_length=100,
-        unique=True
+        unique=True,
+    )
+
+    descripcion = models.CharField(
+        max_length=240,
+        blank=True,
+        default="",
+    )
+
+    estado = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default="ACTIVO",
     )
 
     def __str__(self):
-        return self.nombre    
+        return self.nombre
+   
 class Post(models.Model):
 
     STATUS_CHOICES = [

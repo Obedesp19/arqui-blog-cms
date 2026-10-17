@@ -40,8 +40,13 @@ class PostRepository:
 
         return queryset.first()
 
-    def category_exists(self, category_id):
-        return Category.objects.filter(pk=category_id).exists()
+    def category_for_assignment(self, category_id):
+        return (
+            Category.objects
+            .select_for_update()
+            .filter(pk=category_id)
+            .first()
+        )
 
     def create(self, author, data):
         return Post.objects.create(

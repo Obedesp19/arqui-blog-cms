@@ -19,6 +19,7 @@ from CampusForum_API.views import bootstrap
 from CampusForum_API.views import users
 from CampusForum_API.views import auth
 from CampusForum_API.views import posts
+from CampusForum_API.views import categories
 from CampusForum_API.views import user_admin
 from CampusForum_API.views.posts import (
     WorkspacePostsView,
@@ -52,6 +53,29 @@ urlpatterns = [
     ),
     #Admin Users
         path('admin/users/', user_admin.AdminUsersView.as_view()),
-        path('admin/users/<int:pk>/', user_admin.AdminUserDetailView.as_view())
+        path('admin/users/<int:pk>/', user_admin.AdminUserDetailView.as_view(),),
+    # Categories
+    path(
+        "categories/",
+        categories.CategoriesView.as_view(),
+        name="categories",
+    ),
+    path(
+        "categories/<int:pk>/",
+        categories.CategoryDetailView.as_view(),
+        name="category-detail",
+    ),
+
+    # Workspace categories
+    path(
+        "workspace/categories/",
+        categories.WorkspaceCategoriesView.as_view(),
+        name="workspace-categories",
+    ),
+    path(
+        "workspace/categories/<int:pk>/",
+        categories.WorkspaceCategoryDetailView.as_view(),
+        name="workspace-category-detail",
+    ),
 ]
 
