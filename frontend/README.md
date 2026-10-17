@@ -1,59 +1,113 @@
-# CampusforumFrontend
+# CampusForum — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.13.
+Aplicación Angular del CMS CampusForum, desarrollada para el proyecto
+Plataforma Web de Blogs / CMS Ligero de Arquitectura de Software.
 
-## Development server
+## Tecnologías
 
-To start a local development server, run:
+- Angular 20 y Angular Material.
+- TypeScript y RxJS.
+- Bootstrap.
+- Marked y DOMPurify para renderizar Markdown y HTML básico sanitizado.
 
-```bash
-ng serve
-```
+Entorno utilizado durante las verificaciones:
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js 22.23.3.
+- npm 10.9.9.
+- Angular CLI 20.3.13.
 
-## Code scaffolding
+## Instalación y ejecución local
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Desde la carpeta `frontend`:
 
 ```bash
-ng generate --help
+npm ci
+npm start
 ```
 
-## Building
+Abrir http://localhost:4200.
 
-To build the project run:
+El backend debe estar ejecutándose por separado. La dirección de la API
+se configura en los archivos de entorno de Angular, dentro de
+`src/environments/`.
+
+## Funcionalidades
+
+- Registro de cuentas con rol inicial LECTOR.
+- Inicio y cierre de sesión.
+- Navegación y acciones según los roles LECTOR, AUTOR, EDITOR y ADMINISTRADOR.
+- Consulta pública de artículos publicados y comentarios aprobados.
+- Espacio de trabajo para crear, editar y eliminar artículos según los permisos.
+- Asignación de categorías y etiquetas.
+- Escritura en Markdown y HTML básico con vista previa sanitizada.
+- Flujo editorial: borrador, pendiente de revisión, publicado y archivado.
+- Envío de comentarios sujetos a moderación previa.
+- Administración de categorías y moderación para editores y administradores.
+- Administración de usuarios exclusiva para administradores.
+- Listados paginados de artículos con extractos.
+
+## Rutas principales
+
+| Ruta | Uso |
+| --- | --- |
+| `/posts` | Artículos publicados |
+| `/posts/:id` | Detalle público de un artículo publicado |
+| `/login` | Inicio de sesión |
+| `/registro` | Registro de cuentas |
+| `/workspace/posts` | Espacio de trabajo de artículos |
+| `/workspace/posts/:id` | Detalle privado de un artículo |
+| `/posts/form` | Crear un borrador |
+| `/posts/form/:id` | Editar un borrador |
+| `/categories` | Administración de categorías |
+| `/workspace/comments` | Moderación de comentarios |
+
+Las rutas privadas requieren una sesión válida y los permisos correspondientes.
+El backend verifica los permisos en cada operación.
+
+## Organización
+
+- `src/app/screens/`: pantallas y plantillas.
+- `src/app/components/`: componentes reutilizables.
+- `src/app/services/`: comunicación con la API y servicios de la aplicación.
+- `src/app/guards/`: controles de acceso a rutas.
+- `src/app/interceptors/`: tratamiento de solicitudes HTTP.
+- `src/app/models/`: modelos de autenticación.
+- `src/app/shared/`: interfaces e importaciones compartidas.
+
+La presentación se implementa en Angular. Las reglas de negocio y el acceso
+a la base de datos corresponden al backend.
+
+## Compilación
+
+Desarrollo:
 
 ```bash
-ng build
+npm run build -- --configuration development
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Producción:
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
+La salida se genera en `dist/campusforum-frontend/`.
 
-For end-to-end (e2e) testing, run:
+La compilación de producción fue verificada. Actualmente emite advertencias
+por el tamaño inicial de la aplicación y los estilos de la pantalla de inicio.
+Los presupuestos se ajustaron al tamaño actual; la reducción de peso sigue pendiente.
 
-```bash
-ng e2e
-```
+## Verificación
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Se realizaron pruebas manuales de autenticación, permisos por rol,
+artículos, categorías, flujo editorial, comentarios y moderación.
 
-## Additional Resources
+El proyecto incluye el comando `npm test` para ejecutar las pruebas
+configuradas con Karma. Estas instrucciones no implican que exista una
+suite automatizada completa para todos los requisitos.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Pendientes
+
+- Mejorar el diseño visual.
+- Reducir el peso de la carga inicial y revisar los estilos.
+- Consolidar pruebas automatizadas de regresión.
