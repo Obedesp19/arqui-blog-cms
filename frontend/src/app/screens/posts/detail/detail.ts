@@ -1,3 +1,4 @@
+import { MarkdownContent } from '../../../components/markdown-content/markdown-content';
 import { PostComments } from '../../../components/post-comments/post-comments';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -27,14 +28,16 @@ import {
 @Component({
   selector: 'app-posts-detail',
   standalone: true,
-  imports: [
+    imports: [
     ...SHARED_IMPORTS,
     RouterLink,
     Navbar,
     Sidebar,
     Footer,
     PostComments,
-  ],  templateUrl: './detail.html',
+    MarkdownContent,
+  ],
+  templateUrl: './detail.html',
   styleUrls: ['./detail.scss'],
 })
 export class PostsDetail implements OnInit {

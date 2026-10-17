@@ -96,9 +96,50 @@
                       <input matInput name="title" [(ngModel)]="title" maxlength="255" required [disabled]="saving">
                     </mat-form-field>
                     <mat-form-field appearance="outline" class="full">
-                      <mat-label>Contenido</mat-label>
-                      <textarea matInput name="content" [(ngModel)]="content" rows="12" required [disabled]="saving"></textarea>
-                    </mat-form-field>
+  <mat-label>Contenido en Markdown o HTML básico</mat-label>
+
+  <textarea
+    matInput
+    name="content"
+    [(ngModel)]="content"
+    rows="12"
+    required
+    [disabled]="saving"
+  ></textarea>
+
+  <mat-hint>
+    Puedes usar encabezados, negritas, listas, enlaces y bloques de código.
+  </mat-hint>
+</mat-form-field>
+
+<div class="full">
+  <p>
+    Separa los párrafos con una línea en blanco.
+  </p>
+
+  <button
+    mat-stroked-button
+    type="button"
+    (click)="previewOpen = !previewOpen"
+    [attr.aria-expanded]="previewOpen"
+  >
+    {{ previewOpen ? 'Ocultar vista previa' : 'Mostrar vista previa' }}
+  </button>
+
+  @if (previewOpen) {
+    <section aria-label="Vista previa del contenido">
+      <h2>Vista previa</h2>
+
+      @if (content.trim()) {
+        <app-markdown-content
+          [content]="content"
+        ></app-markdown-content>
+      } @else {
+        <p>Escribe contenido para ver su presentación.</p>
+      }
+    </section>
+  }
+</div>
 <mat-form-field appearance="outline" class="full">
   <mat-label>Etiquetas (opcional)</mat-label>
 

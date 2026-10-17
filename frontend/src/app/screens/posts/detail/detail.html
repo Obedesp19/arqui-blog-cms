@@ -36,8 +36,7 @@
           </section>
 
           @if (loading) {
-            <p role="status">Cargando artículo...</p>
-          }
+            <p role="status">Cargando artículo...</p>}
 
           @if (error) {
             <p role="alert">{{ error }}</p>
@@ -156,10 +155,11 @@
                   </section>
                 }
 
-                <div
-                  class="posts-detail__content-block"
-                  style="white-space: pre-wrap; overflow-wrap: anywhere;"
-                >{{ article.content }}</div>
+<div class="posts-detail__content-block">
+  <app-markdown-content
+    [content]="article.content"
+  ></app-markdown-content>
+</div>
 
                 @if (article.etiquetas.trim()) {
                   <section aria-label="Etiquetas del artículo">

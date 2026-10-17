@@ -1,3 +1,4 @@
+import { MarkdownContent } from '../../../components/markdown-content/markdown-content';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -28,8 +29,14 @@ import {
 @Component({
   selector: 'app-posts-form',
   standalone: true,
-  imports: [...SHARED_IMPORTS, RouterLink, Navbar, Sidebar, Footer],
-  templateUrl: './form.html',
+  imports: [
+    ...SHARED_IMPORTS,
+    RouterLink,
+    Navbar,
+    Sidebar,
+    Footer,
+    MarkdownContent,
+  ],  templateUrl: './form.html',
   styleUrls: ['./form.scss'],
 })
 export class PostsForm implements OnInit {
@@ -53,6 +60,7 @@ export class PostsForm implements OnInit {
   title = '';
   content = '';
   etiquetas = '';
+  previewOpen = false;
 
   categoryId: number | null = null;
   categories: CategoryItem[] = [];
@@ -74,6 +82,7 @@ export class PostsForm implements OnInit {
         this.title = '';
         this.content = '';
         this.etiquetas = '';
+        this.previewOpen = false;
 
         const raw = params.get('id');
         this.postId = raw === null ? null : Number(raw);
