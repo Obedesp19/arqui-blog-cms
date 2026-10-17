@@ -99,10 +99,22 @@
                       <mat-label>Contenido</mat-label>
                       <textarea matInput name="content" [(ngModel)]="content" rows="12" required [disabled]="saving"></textarea>
                     </mat-form-field>
-                    <mat-form-field appearance="outline" class="full">
-                      <mat-label>Etiquetas (opcional)</mat-label>
-                      <input matInput name="etiquetas" [(ngModel)]="etiquetas" maxlength="255" [disabled]="saving">
-                    </mat-form-field>
+<mat-form-field appearance="outline" class="full">
+  <mat-label>Etiquetas (opcional)</mat-label>
+
+  <input
+    matInput
+    name="etiquetas"
+    [(ngModel)]="etiquetas"
+    maxlength="255"
+    placeholder="Python, Django, Bases de datos"
+    [disabled]="saving"
+  >
+
+  <mat-hint>
+    Sepáralas con comas. Los duplicados se eliminan al guardar.
+  </mat-hint>
+</mat-form-field>
                   </div>
                   <p>Estado: BORRADOR</p>
                   <div class="posts-form__actions">

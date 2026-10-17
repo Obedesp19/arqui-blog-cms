@@ -72,3 +72,30 @@ class PostWriteSerializer(serializers.Serializer):
             )
 
         return value
+
+    def validate_etiquetas(self, value):
+        normalized = []
+        seen = set()
+
+        for fragment in value.split(","):
+            label = " ".join(fragment.split())
+
+            if not label:
+                continue
+
+            key = label.casefold()
+
+            if key in seen:
+                continue
+
+            seen.add(key)
+            normalized.append(label)
+
+        result = ", ".join(normalized)
+
+        if len(result) > 255:
+            raise serializers.ValidationError(
+                "Las etiquetas no pueden superar los 255 caracteres."
+            )
+
+        return result

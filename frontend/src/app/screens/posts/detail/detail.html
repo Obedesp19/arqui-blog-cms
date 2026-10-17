@@ -43,8 +43,19 @@
                   }
                 </div>
                 <div class="posts-detail__content-block" style="white-space: pre-wrap; overflow-wrap: anywhere;">{{ article.content }}</div>
-                @if (article.etiquetas) { <p>Etiquetas: {{ article.etiquetas }}</p> }
-              </mat-card-content>
+@if (article.etiquetas.trim()) {
+  <section aria-label="Etiquetas del artículo">
+    <h2 class="posts-detail__tags-title">Etiquetas</h2>
+
+    <ul class="posts-detail__tags">
+      @for (tag of article.etiquetas.split(','); track $index) {
+        @if (tag.trim()) {
+          <li class="posts-detail__tag">{{ tag.trim() }}</li>
+        }
+      }
+    </ul>
+  </section>
+}              </mat-card-content>
             </mat-card>
           }
         </main>
