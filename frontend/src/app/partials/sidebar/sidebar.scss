@@ -1,76 +1,148 @@
+/* =========================================
+   RESETEO GLOBAL DE ANGULAR MATERIAL SIDENAV
+   ========================================= */
+mat-sidenav, mat-drawer {
+  top: 0 !important;
+  bottom: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+
+  /* Asegura que el contenedor interno de Material no agregue márgenes extra */
+  .mat-drawer-inner-container {
+    overflow-x: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+/* Elimina cualquier sombra o borde extraño que Material agrega al contenedor principal */
+mat-sidenav-container, mat-drawer-container {
+  background-color: transparent !important;
+}
+
+
+/* =========================================
+   ELIMINAR EL HUECO SUPERIOR
+   ========================================= */
 :host {
   display: block;
-  height: 100%;
+  height: 100%; /* Cambiado a 100% para que se adapte exacto a su contenedor padre */
+  margin: 0;
+  padding: 0;
 }
 
 .left-sidebar {
-  height: 100%;
-  min-height: 100%;
+  height: 100% !important;
+  min-height: 100% !important; /* Eliminado el 100vh que causaba el desfase */
   display: flex;
   flex-direction: column;
-  padding: 18px 16px;
-  background: #ffffff;
+  padding: 20px 16px;
+  margin: 0 !important;
+
+  /* Fondo Degradado Pastel */
+  background: linear-gradient(135deg, #f3e8ff 0%, #e0f2fe 50%, #fef3c7 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 0 !important; /* Asegura que se pegue perfectamente a los bordes */
   box-sizing: border-box;
 }
 
 .left-sidebar__nav {
   flex: 1 1 auto;
-  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
-.left-sidebar__nav button[mat-button] {
+/* =========================================
+   ESTILOS GENERALES DEL BOTÓN
+   ========================================= */
+::ng-deep .left-sidebar__nav button.nav-btn {
   width: 100%;
-  min-height: 48px;
+  min-height: 52px;
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
-  padding: 0 14px;
-  border-radius: 14px;
-  color: #0b5cc6 !important;
+  gap: 14px;
+  padding: 0 16px;
+  border-radius: 16px !important;
+  color: #555555 !important;
+  background: rgba(255, 255, 255, 0.5) !important;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   text-align: left;
-  border: 1px solid transparent;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.18s ease;
+  border: 1px solid transparent !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  box-shadow: none !important;
 }
 
-.left-sidebar__nav button[mat-button]:hover {
-  background: #f4f7fb;
-  border-color: #e3eaf5;
-  box-shadow: 0 6px 14px rgba(11, 92, 198, 0.06);
-  transform: translateY(-1px);
-}
-
-.left-sidebar__nav button[mat-button] mat-icon {
+::ng-deep .left-sidebar__nav button.nav-btn mat-icon {
   margin-right: 0;
-  color: #0b5cc6;
+  color: #777777 !important;
+  transition: all 0.3s ease !important;
 }
 
-.left-sidebar__bottom {
-  margin-top: auto;
-  padding-top: 14px;
-  border-top: 1px solid #e5e7eb;
-  flex-shrink: 0;
+/* =========================================
+   COLORES PASTELES (AL PASAR EL MOUSE O SELECCIONAR)
+   ========================================= */
+
+/* 1. Dashboard -> Lila Pastel */
+/* Añadimos :focus y :active para que el color se quede al darle clic */
+::ng-deep .left-sidebar__nav button.color-lila:hover,
+::ng-deep .left-sidebar__nav button.color-lila:focus,
+::ng-deep .left-sidebar__nav button.color-lila:active {
+  background: #f3e8ff !important; /* Fondo lila pastel sólido */
+  color: #9333ea !important;
+  transform: translateX(8px) !important;
+  box-shadow: 0 4px 12px rgba(192, 132, 252, 0.15) !important;
+}
+::ng-deep .left-sidebar__nav button.color-lila:hover mat-icon,
+::ng-deep .left-sidebar__nav button.color-lila:focus mat-icon {
+  color: #9333ea !important;
+  transform: scale(1.1) rotate(-8deg) !important;
 }
 
-.left-sidebar__bottom button[mat-stroked-button] {
-  width: 100%;
-  min-height: 46px;
-  border-radius: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+/* 2. Publicaciones -> Cian Pastel */
+::ng-deep .left-sidebar__nav button.color-cian:hover,
+::ng-deep .left-sidebar__nav button.color-cian:focus,
+::ng-deep .left-sidebar__nav button.color-cian:active {
+  background: #e0f2fe !important; /* Fondo cian pastel sólido */
+  color: #0284c7 !important;
+  transform: translateX(8px) !important;
+  box-shadow: 0 4px 12px rgba(0, 243, 255, 0.15) !important;
+}
+::ng-deep .left-sidebar__nav button.color-cian:hover mat-icon,
+::ng-deep .left-sidebar__nav button.color-cian:focus mat-icon {
+  color: #0284c7 !important;
+  transform: scale(1.1) rotate(8deg) !important;
 }
 
-.left-sidebar__bottom button[mat-stroked-button] mat-icon {
-  margin-right: 0;
+/* 3. Categorías -> Naranja Pastel */
+::ng-deep .left-sidebar__nav button.color-naranja:hover,
+::ng-deep .left-sidebar__nav button.color-naranja:focus,
+::ng-deep .left-sidebar__nav button.color-naranja:active {
+  background: #ffedd5 !important; /* Fondo naranja pastel sólido */
+  color: #ea580c !important;
+  transform: translateX(8px) !important;
+  box-shadow: 0 4px 12px rgba(251, 146, 60, 0.15) !important;
+}
+::ng-deep .left-sidebar__nav button.color-naranja:hover mat-icon,
+::ng-deep .left-sidebar__nav button.color-naranja:focus mat-icon {
+  color: #ea580c !important;
+  transform: scale(1.1) rotate(-8deg) !important;
+}
+
+/* 4. Reportes -> Rosa Pastel */
+::ng-deep .left-sidebar__nav button.color-magenta:hover,
+::ng-deep .left-sidebar__nav button.color-magenta:focus,
+::ng-deep .left-sidebar__nav button.color-magenta:active {
+  background: #fce7f3 !important; /* Fondo rosa pastel sólido */
+  color: #e11d48 !important;
+  transform: translateX(8px) !important;
+  box-shadow: 0 4px 12px rgba(255, 0, 127, 0.15) !important;
+}
+::ng-deep .left-sidebar__nav button.color-magenta:hover mat-icon,
+::ng-deep .left-sidebar__nav button.color-magenta:focus mat-icon {
+  color: #e11d48 !important;
+  transform: scale(1.1) rotate(8deg) !important;
 }

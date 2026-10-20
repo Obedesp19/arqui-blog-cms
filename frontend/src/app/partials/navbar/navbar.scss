@@ -1,265 +1,170 @@
+/* =========================================
+   FIJAR LA BARRA (STICKY)
+   ========================================= */
 :host {
   display: block;
   position: sticky;
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: 1200;
 }
 
+/* =========================================
+   FONDO CRISTAL
+   ========================================= */
 .navbar {
-  background-color: var(--primary-color);
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  position: sticky;
-  top: 0;
-  z-index: 1200;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  /* Cristal más transparente para que los círculos destaquen */
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
 }
 
+/* =========================================
+   CÍRCULOS DE COLORES FLOTANTES
+   ========================================= */
+.navbar::before {
+  content: '';
+  position: absolute;
+  top: -50px; left: 0; width: 100%; height: 200px;
+  /* Dibujamos 5 círculos sólidos y definidos */
+  background-image:
+    radial-gradient(circle at 50% 50%, #c084fc 0%, #c084fc 35px, transparent 37px), /* Lila */
+    radial-gradient(circle at 50% 50%, #fb923c 0%, #fb923c 45px, transparent 47px), /* Naranja */
+    radial-gradient(circle at 50% 50%, #facc15 0%, #facc15 25px, transparent 27px), /* Amarillo */
+    radial-gradient(circle at 50% 50%, #00f3ff 0%, #00f3ff 30px, transparent 32px), /* Cian */
+    radial-gradient(circle at 50% 50%, #ff007f 0%, #ff007f 40px, transparent 42px); /* Magenta */
+  background-repeat: no-repeat;
+  /* Tamaño exacto de cada contenedor de círculo */
+  background-size: 100px 100px, 120px 120px, 80px 80px, 90px 90px, 110px 110px;
+  /* Posición inicial de cada círculo */
+  background-position: 10% 30%, 85% 60%, 50% 70%, 30% 10%, 70% 20%;
+  opacity: 0.9;
+  filter: blur(2px); /* Suaviza apenitas los bordes para que luzcan como esferas de pintura */
+  z-index: 0;
+  pointer-events: none;
+  animation: moveCircles 10s ease-in-out infinite alternate;
+}
+
+/* Animación: movemos las coordenadas de los círculos para que floten */
+@keyframes moveCircles {
+  0% { background-position: 10% 30%, 85% 60%, 50% 70%, 30% 10%, 70% 20%; }
+  50% { background-position: 15% 40%, 80% 50%, 55% 60%, 25% 15%, 75% 30%; }
+  100% { background-position: 5% 20%, 90% 70%, 45% 80%, 35% 5%, 65% 10%; }
+}
+
+/* =========================================
+   ESTRUCTURA DE 3 COLUMNAS
+   ========================================= */
 .mat-toolbar {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center;
   height: 85px;
-  min-height: 85px;
+  padding: 0 1.5rem !important;
+  position: relative;
+  z-index: 10; /* Asegura que la barra esté sobre los círculos */
 }
 
-.brand-container {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 0;
-  flex-shrink: 1;
-}
+.nav-section { display: flex; align-items: center; gap: 0.8rem; }
+.nav-section mat-icon, .nav-section i { margin-right: 6px !important; font-size: 1.25rem; }
 
-.brand-logo-link {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 0.4rem;
-  flex-shrink: 0;
-}
-
+/* =========================================
+   MARCA Y LOGO
+   ========================================= */
+.menu-btn { display: none !important; color: #000000 !important; }
+.brand-logo-link { cursor: pointer; display: flex; align-items: center; }
 .brand-logo {
-  width: 65px;
-  height: 65px;
-  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   object-fit: contain;
+  /* IMPORTANTE: Quitamos filter: invert(1) para mantener tus colores originales */
+
+  /* Agregamos una suave sombra de luz lila/rosa que lo resalta sobre el fondo claro */
+  box-shadow: 0 4px 10px rgba(192, 132, 252, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.8); /* Borde blanco sutil */
+}
+.brand-text { display: inline-flex; gap: 0.2rem; font-size: 1.3rem; text-decoration: none; cursor: pointer; }
+.brand-campus { color: #000000; font-weight: 900; }
+.brand-forum { color: #555555; font-weight: 300; }
+
+/* =========================================
+   ENLACES CENTRALES (Animación de salto)
+   ========================================= */
+.nav-center button, .nav-center a {
+  color: #222222 !important;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: transparent !important;
 }
 
-.brand-text {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.15rem;
-  min-width: 0;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #fff;
-  text-decoration: none;
-  white-space: nowrap;
+.nav-center button:hover, .nav-center a:hover {
+  color: #c084fc !important; /* Cambia a Lila */
+  transform: translateY(-4px) scale(1.05);
 }
 
-.brand-text:hover {
-  opacity: 0.95;
+/* =========================================
+   BOTONES DERECHOS (Negros a Multicolor)
+   ========================================= */
+.login-btn, .navbar-profile-btn {
+  color: #000000 !important;
+  font-weight: 800;
+  transition: all 0.3s ease;
 }
 
-.brand-campus,
-.brand-forum {
-  text-transform: uppercase;
+.login-btn:hover, .navbar-profile-btn:hover {
+  color: #fb923c !important; /* Cambia a Naranja */
+  transform: translateY(-2px);
 }
 
-.brand-campus {
-  color: var(--background-color);
-  font: 1.2rem 'Montserrat', sans-serif;
-  font-weight: bold;
-}
-
-.brand-forum {
-  color: var(--background-color);
-  font: 1.2rem 'Montserrat', sans-serif;
-  font-weight: 100;
-}
-
-.navbar__links {
-  align-items: center;
-}
-
-.navbar__actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.register-btn {
-  background-color: var(--secondary-color);
-  color: white;
-  border-radius: 20px;
-}
-
-.register-btn:hover {
-  background-color: var(--secondary-dark);
-  color: white;
-}
-
-.login-btn {
-  color: white !important;
-  border-radius: var(--border-radius);
-}
-
-.login-btn:hover {
-  color: black !important;
-}
-
-.login-btn:hover i {
-  color: black !important;
-}
-
-a[mat-button],
-button[mat-button] {
-  color: white !important;
-  font-weight: 500;
-}
-
-.menu-btn {
-  color: white !important;
-  margin-right: 0.5rem;
-  flex-shrink: 0;
-}
-
-.navbar-profile-btn {
-  color: white !important;
-  font-weight: 500;
-}
-
-.logout-btn {
-  min-height: 40px;
-  padding-inline: 14px !important;
-  border-radius: 999px !important;
-  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+.register-btn, .logout-btn {
+  padding: 0 1.5rem !important;
+  height: 44px;
+  border-radius: 25px !important;
+  background-color: #000000 !important;
+  background-image: none !important;
+  border: none !important;
   color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  font-weight: 600 !important;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.18s ease,
-    box-shadow 0.2s ease;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-.logout-btn:hover {
-  background: rgba(255, 255, 255, 0.18) !important;
-  border-color: rgba(255, 255, 255, 0.6) !important;
-  color: #ffffff !important;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+/* El botón estalla en degradado animado al pasar el mouse */
+.register-btn:hover, .logout-btn:hover {
+  background-image: linear-gradient(135deg, #c084fc, #ff007f, #fb923c, #facc15) !important;
+  background-size: 300% 300% !important;
+  animation: buttonGradient 3s ease infinite;
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 20px rgba(192, 132, 252, 0.5);
 }
 
-.logout-btn i {
-  font-size: 0.95rem;
+@keyframes buttonGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* TABLET */
-@media (max-width: 991.98px) {
-  .navbar {
-    padding-inline: 1rem !important;
-  }
-
-  .brand-logo {
-    width: 56px;
-    height: 56px;
-  }
-
-  .brand-campus,
-  .brand-forum {
-    font-size: 1.05rem;
-  }
-
-  .navbar__actions--private,
-  .navbar__actions--public {
-    margin-left: auto !important;
-  }
+/* RESPONSIVIDAD */
+@media (max-width: 1024px) {
+  .menu-btn { display: inline-flex !important; }
+  .nav-center { display: none !important; }
 }
 
-/* MÓVIL */
 @media (max-width: 767.98px) {
-  .mat-toolbar {
-    height: auto;
-    min-height: 72px;
-    padding-top: 0.65rem;
-    padding-bottom: 0.65rem;
+  .mat-toolbar { padding: 0 0.8rem !important; height: 75px; }
+  .brand-text { display: none !important; }
+  .nav-right span { display: none !important; }
+  .nav-right button {
+    min-width: 44px !important; width: 44px; height: 44px;
+    padding: 0 !important; border-radius: 50% !important;
+    display: flex; justify-content: center; align-items: center;
   }
-
-  .navbar {
-    gap: 0.75rem;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-  }
-
-  .brand-container {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .brand-logo {
-    width: 46px;
-    height: 46px;
-  }
-
-  .brand-logo-link {
-    margin-right: 0.15rem;
-  }
-
-  .brand-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .brand-campus,
-  .brand-forum {
-    font-size: 0.95rem;
-  }
-
-  .navbar__actions {
-    flex: 0 0 auto;
-    margin-left: auto !important;
-    gap: 0.4rem !important;
-  }
-
-  .navbar__actions--public .register-btn,
-  .navbar__actions--public .login-btn,
-  .navbar__actions--private .login-btn,
-  .logout-btn {
-    min-width: 42px;
-    height: 42px;
-    padding-inline: 10px !important;
-    border-radius: 12px !important;
-    justify-content: center;
-  }
-
-  .navbar__actions--public .login-btn span,
-  .navbar__actions--public .register-btn span,
-  .navbar__actions--private .login-btn span,
-  .logout-btn__text {
-    display: none;
-  }
-
-  .navbar__actions--public .login-btn i,
-  .navbar__actions--public .register-btn i,
-  .navbar__actions--private .login-btn i,
-  .logout-btn i {
-    margin: 0 !important;
-    font-size: 1rem;
-  }
-
-  .menu-btn {
-    margin-right: 0.2rem;
-  }
-}
-
-/* MÓVIL PEQUEÑO */
-@media (max-width: 420px) {
-  .navbar {
-    padding-inline: 0.75rem !important;
-  }
+  .nav-right i { margin-right: 0 !important; font-size: 1.3rem;}
 }

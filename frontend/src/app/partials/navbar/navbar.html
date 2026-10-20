@@ -1,102 +1,54 @@
-<mat-toolbar color="primary" class="navbar px-4">
-  <section class="brand-container" aria-label="Barra principal">
+<mat-toolbar class="navbar">
+
+  <!-- 1. IZQUIERDA: Logo y Menú -->
+  <div class="nav-section nav-left">
     @if (isPrivate) {
-      <button
-        mat-icon-button
-        type="button"
-        class="menu-btn"
-        (click)="onToggleSidebar()"
-        aria-label="Abrir menú"
-      >
+      <button mat-icon-button class="menu-btn" (click)="onToggleSidebar()">
         <mat-icon>menu</mat-icon>
       </button>
     }
-
-    @if (isPublic) {
-      <a
-        type="button"
-        (click)="goToInicio()"
-        class="brand-logo-link"
-        aria-label="Ir a inicio"
-      >
-        <img
-          src="assets/images/logo-blanco.png"
-          alt="Logo CampusForum"
-          class="brand-logo"
-        />
-      </a>
-    }
-
-    <a
-      [routerLink]="isPrivate ? '/dashboard' : '/landing'"
-      class="brand-text"
-    >
+    <a type="button" (click)="goToInicio()" class="brand-logo-link">
+  <!-- Apuntamos a la imagen original del búho, sin tocar el HTML del sidebar -->
+  <img src="assets/images/logo-blanco.png" alt="Logo CampusForum" class="brand-logo" />
+  </a>
+    <a [routerLink]="isPrivate ? '/dashboard' : '/landing'" class="brand-text">
       <span class="brand-campus">CAMPUS</span>
       <span class="brand-forum">FORUM</span>
     </a>
-  </section>
+  </div>
 
-  @if (isPublic) {
-    <section class="navbar__links">
-      <a mat-button type="button" (click)="goToInicio()">Inicio</a>
+  <!-- 2. CENTRO: Enlaces de navegación -->
+  <div class="nav-section nav-center">
+    @if (isPublic) {
+      <a mat-button (click)="goToInicio()">Inicio</a>
+      <button mat-button (click)="goToProposito()">Propósito</button>
+    }
+    @if (isPrivate) {
+      <button mat-button routerLink="/dashboard"><mat-icon>dashboard</mat-icon> Dashboard</button>
+      <button mat-button routerLink="/posts"><mat-icon>article</mat-icon> Publicaciones</button>
+      <button mat-button routerLink="/categories"><mat-icon>category</mat-icon> Categorías</button>
+      <button mat-button routerLink="/reports"><mat-icon>report</mat-icon> Reportes</button>
+    }
+  </div>
 
-      <button
-        mat-button
-        type="button"
-        (click)="goToProposito()"
-        class="nav-link-btn"
-      >
-        Propósito
+  <!-- 3. DERECHA: Botones de Acción -->
+  <div class="nav-section nav-right">
+    @if (isPublic) {
+      <button mat-button (click)="goToLogin()" class="login-btn">
+        <i class="bi bi-box-arrow-in-right"></i><span>Login</span>
       </button>
-    </section>
-  }
-
-  @if (isPublic) {
-    <section class="navbar__actions navbar__actions--public">
-      <button
-        mat-button
-        type="button"
-        (click)="goToLogin()"
-        class="login-btn"
-      >
-        <i class="bi bi-box-arrow-in-right"></i>
-        <span>Login</span>
+      <button mat-raised-button (click)="goToRegistro()" class="register-btn">
+        <i class="bi bi-person-plus"></i><span>Registro</span>
       </button>
-
-      <button
-        mat-raised-button
-        type="button"
-        (click)="goToRegistro()"
-        class="register-btn"
-      >
-        <i class="bi bi-person-plus"></i>
-        <span>Registro</span>
+    }
+    @if (isPrivate) {
+      <button mat-button class="navbar-profile-btn" (click)="goToProfile()">
+        <mat-icon>person_outlined</mat-icon><span>Perfil</span>
       </button>
-    </section>
-  }
-
-  @if (isPrivate) {
-    <section class="navbar__actions navbar__actions--private">
-      <button
-        mat-button
-        type="button"
-        class="navbar-profile-btn"
-        (click)="goToProfile()"
-      >
-      <mat-icon>person_outlined</mat-icon>
-        Perfil
+      <button mat-stroked-button class="logout-btn" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i><span class="logout-btn__text">Cerrar sesión</span>
       </button>
+    }
+  </div>
 
-      <button
-        mat-stroked-button
-        type="button"
-        class="logout-btn"
-        (click)="logout()"
-        aria-label="Cerrar sesión"
-      >
-        <i class="bi bi-box-arrow-right"></i>
-        <span class="logout-btn__text">Cerrar sesión</span>
-      </button>
-    </section>
-  }
 </mat-toolbar>
