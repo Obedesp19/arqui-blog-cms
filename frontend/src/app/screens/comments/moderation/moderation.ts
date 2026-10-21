@@ -33,6 +33,7 @@ import {
     Footer,
   ],
   templateUrl: './moderation.html',
+  styleUrl: './moderation.scss',
 })
 export class CommentsModeration implements OnInit {
   readonly auth = inject(AuthService);

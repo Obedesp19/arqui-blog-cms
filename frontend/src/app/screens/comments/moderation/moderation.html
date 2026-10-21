@@ -1,13 +1,14 @@
-<section>
+<section class="moderation">
   <app-navbar
     mode="private"
     [isLogin]="auth.isAuthenticated()"
     [userRole]="auth.getUserRole() ?? 'LECTOR'"
     (toggleSidebar)="drawerOpen = !drawerOpen"
   ></app-navbar>
-
-  <mat-drawer-container autosize>
+ 
+  <mat-drawer-container autosize class="moderation__drawer-container">
     <mat-drawer
+      class="moderation__drawer"
       mode="over"
       [opened]="drawerOpen"
       (closedStart)="drawerOpen = false"
@@ -18,153 +19,182 @@
         (closeSidebar)="drawerOpen = false"
       ></app-sidebar>
     </mat-drawer>
-
-    <mat-drawer-content>
-      <main style="padding: 1.5rem;">
-        <h1>Moderación de comentarios</h1>
-
-        <p>
-          Revisa los comentarios pendientes antes de publicarlos.
-        </p>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Estado</mat-label>
-
-          <mat-select
-            name="estado"
-            [(ngModel)]="estado"
-            (selectionChange)="loadPage(1)"
-            [disabled]="busy"
-          >
-            <mat-option value="PENDIENTE">Pendientes</mat-option>
-            <mat-option value="APROBADO">Aprobados</mat-option>
-            <mat-option value="RECHAZADO">Rechazados</mat-option>
-            <mat-option value="TODOS">Todos</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <button
-          mat-stroked-button
-          type="button"
-          (click)="loadPage(1)"
-          [disabled]="busy"
-        >
-          Actualizar lista
-        </button>
-
-        @if (loading) {
-          <p role="status">Cargando comentarios...</p>
-        }
-
-        @if (error) {
-          <p role="alert">{{ error }}</p>
-        }
-
-        @if (success) {
-          <p role="status">{{ success }}</p>
-        }
-
-        @if (result; as data) {
-          <p>
-            {{ data.count }} comentario(s) · Página {{ page }}
-          </p>
-
-          @for (comment of data.results; track comment.id) {
-            <mat-card style="margin-bottom: 1rem;">
-              <mat-card-content>
-                <h2>{{ comment.post.title }}</h2>
-
-                <p>
-                  Artículo: {{ comment.post.estado }}
-                  · Comentario: {{ comment.estado }}
-                </p>
-
-                <p>
-                  <strong>
-                    {{ comment.author.first_name }}
-                    {{ comment.author.last_name }}
-                  </strong>
-                  · {{ comment.creation | date:'short' }}
-                </p>
-
-                <p style="white-space: pre-wrap; overflow-wrap: anywhere;">{{ comment.content }}</p>
-
-                <a
-                  mat-button
-                  [routerLink]="['/workspace/posts', comment.post.id]"
-                >
-                  Abrir artículo
-                </a>
-
-                @if (comment.estado === 'PENDIENTE' && canManage) {
-                  <button
-                    mat-stroked-button
-                    type="button"
-                    (click)="moderate(comment, 'APROBAR')"
-                    [disabled]="busy || comment.post.estado !== 'PUBLICADO'"
-                  >
-                    Aprobar
-                  </button>
-
-                  <button
-                    mat-stroked-button
-                    type="button"
-                    (click)="moderate(comment, 'RECHAZAR')"
-                    [disabled]="busy"
-                  >
-                    Rechazar
-                  </button>
-
-                  @if (comment.post.estado !== 'PUBLICADO') {
-                    <p>
-                      La aprobación requiere que el artículo esté publicado.
-                    </p>
-                  }
-                }
-
-                @if (savingId === comment.id) {
-                  <p role="status">Guardando decisión...</p>
-                }
-
-                @if (comment.moderated_by; as moderator) {
-                  <p>
-                    Moderado por:
-                    {{ moderator.first_name }}
-                    {{ moderator.last_name }}
-                    · {{ comment.moderated_at | date:'short' }}
-                  </p>
-                }
-              </mat-card-content>
-            </mat-card>
-          } @empty {
-            <p>No hay comentarios para este filtro.</p>
-          }
-
-          <div>
+ 
+    <mat-drawer-content class="moderation__content">
+      <div class="moderation__main">
+        <main class="moderation__body">
+          <header class="moderation__hero">
+            <div>
+              <span class="moderation__eyebrow">Panel de moderación</span>
+              <h1 class="moderation__title">Moderación de comentarios</h1>
+              <p class="moderation__subtitle">
+                Revisa los comentarios pendientes antes de publicarlos.
+              </p>
+            </div>
+          </header>
+ 
+          <div class="moderation__toolbar">
+            <mat-form-field appearance="outline">
+              <mat-label>Estado</mat-label>
+ 
+              <mat-select
+                name="estado"
+                [(ngModel)]="estado"
+                (selectionChange)="loadPage(1)"
+                [disabled]="busy"
+              >
+                <mat-option value="PENDIENTE">Pendientes</mat-option>
+                <mat-option value="APROBADO">Aprobados</mat-option>
+                <mat-option value="RECHAZADO">Rechazados</mat-option>
+                <mat-option value="TODOS">Todos</mat-option>
+              </mat-select>
+            </mat-form-field>
+ 
             <button
               mat-stroked-button
+              class="moderation__btn moderation__btn--primary"
               type="button"
-              (click)="loadPage(page - 1)"
-              [disabled]="busy || !data.previous"
+              (click)="loadPage(1)"
+              [disabled]="busy"
             >
-              Anterior
-            </button>
-
-            <span>Página {{ page }}</span>
-
-            <button
-              mat-stroked-button
-              type="button"
-              (click)="loadPage(page + 1)"
-              [disabled]="busy || !data.next"
-            >
-              Siguiente
+              Actualizar lista
             </button>
           </div>
-        }
-      </main>
-
-      <app-footer></app-footer>
+ 
+          @if (loading) {
+            <p class="moderation__msg" role="status">Cargando comentarios...</p>
+          }
+ 
+          @if (error) {
+            <p class="moderation__msg moderation__msg--error" role="alert">{{ error }}</p>
+          }
+ 
+          @if (success) {
+            <p class="moderation__msg moderation__msg--success" role="status">{{ success }}</p>
+          }
+ 
+          @if (result; as data) {
+            <p class="moderation__summary">
+              {{ data.count }} comentario(s) · Página {{ page }}
+            </p>
+ 
+            <div class="moderation__list">
+              @for (comment of data.results; track comment.id) {
+                <mat-card class="moderation__card" [attr.data-estado]="comment.estado">
+                  <mat-card-content>
+                    <h2 class="moderation__card-title">{{ comment.post.title }}</h2>
+ 
+                    <div class="moderation__chips">
+                      <span class="moderation__chip" [attr.data-estado]="comment.post.estado">
+                        Artículo: {{ comment.post.estado }}
+                      </span>
+                      <span class="moderation__chip" [attr.data-estado]="comment.estado">
+                        Comentario: {{ comment.estado }}
+                      </span>
+                    </div>
+ 
+                    <div class="moderation__author">
+                      <div class="moderation__avatar">
+                        {{ comment.author.first_name?.charAt(0) }}
+                      </div>
+                      <div>
+                        <strong>
+                          {{ comment.author.first_name }}
+                          {{ comment.author.last_name }}
+                        </strong>
+                        <br />
+                        <span>{{ comment.creation | date:'short' }}</span>
+                      </div>
+                    </div>
+ 
+                    <p class="moderation__text">{{ comment.content }}</p>
+ 
+                    <div class="moderation__actions">
+                      <a
+                        mat-button
+                        class="moderation__btn moderation__btn--ghost"
+                        [routerLink]="['/workspace/posts', comment.post.id]"
+                      >
+                        Abrir artículo
+                      </a>
+ 
+                      @if (comment.estado === 'PENDIENTE' && canManage) {
+                        <button
+                          mat-stroked-button
+                          class="moderation__btn moderation__btn--approve"
+                          type="button"
+                          (click)="moderate(comment, 'APROBAR')"
+                          [disabled]="busy || comment.post.estado !== 'PUBLICADO'"
+                        >
+                          Aprobar
+                        </button>
+ 
+                        <button
+                          mat-stroked-button
+                          class="moderation__btn moderation__btn--reject"
+                          type="button"
+                          (click)="moderate(comment, 'RECHAZAR')"
+                          [disabled]="busy"
+                        >
+                          Rechazar
+                        </button>
+                      }
+                    </div>
+ 
+                    @if (comment.estado === 'PENDIENTE' && canManage && comment.post.estado !== 'PUBLICADO') {
+                      <p class="moderation__note">
+                        La aprobación requiere que el artículo esté publicado.
+                      </p>
+                    }
+ 
+                    @if (savingId === comment.id) {
+                      <p class="moderation__saving" role="status">Guardando decisión...</p>
+                    }
+ 
+                    @if (comment.moderated_by; as moderator) {
+                      <p class="moderation__moderator">
+                        Moderado por:
+                        {{ moderator.first_name }}
+                        {{ moderator.last_name }}
+                        · {{ comment.moderated_at | date:'short' }}
+                      </p>
+                    }
+                  </mat-card-content>
+                </mat-card>
+              } @empty {
+                <p class="moderation__empty">No hay comentarios para este filtro.</p>
+              }
+            </div>
+ 
+            <div class="moderation__pager">
+              <button
+                mat-stroked-button
+                class="moderation__btn moderation__btn--ghost"
+                type="button"
+                (click)="loadPage(page - 1)"
+                [disabled]="busy || !data.previous"
+              >
+                Anterior
+              </button>
+ 
+              <span>Página {{ page }}</span>
+ 
+              <button
+                mat-stroked-button
+                class="moderation__btn moderation__btn--ghost"
+                type="button"
+                (click)="loadPage(page + 1)"
+                [disabled]="busy || !data.next"
+              >
+                Siguiente
+              </button>
+            </div>
+          }
+        </main>
+ 
+        <app-footer></app-footer>
+      </div>
     </mat-drawer-content>
   </mat-drawer-container>
 </section>
+ 

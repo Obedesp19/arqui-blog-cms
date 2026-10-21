@@ -15,7 +15,7 @@ class Profiles(models.Model):
     update = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return "Perfil del usuario "+self.usuario.first_name+" "+self.usuario.last_name
+        return "Perfil del usuario " + self.user.first_name + " " + self.user.last_name
     
 #Creamos un modelo para representar las publicaciones en el foro
 
