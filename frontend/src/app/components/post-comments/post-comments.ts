@@ -22,6 +22,7 @@ import { articleError } from '../../services/articles.service';
   standalone: true,
   imports: [...SHARED_IMPORTS, RouterLink],
   templateUrl: './post-comments.html',
+  styleUrl: './post-comments.scss',
 })
 export class PostComments implements OnChanges {
   @Input({ required: true }) postId!: number;
