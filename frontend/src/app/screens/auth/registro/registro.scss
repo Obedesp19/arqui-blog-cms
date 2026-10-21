@@ -1,39 +1,109 @@
+/* =========================================
+   CONTENEDOR Y FONDO CON CÍRCULOS PASTEL
+   ========================================= */
 .registro-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background: linear-gradient(to bottom, #dfe6ee, #cfd8e3);
+  overflow: hidden;
+  background: linear-gradient(135deg, #faf5ff 0%, #f0f9ff 50%, #fffbeb 100%);
 }
 
+.registro-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(192, 132, 252, 0.45) 0%, rgba(192, 132, 252, 0.45) 150px, transparent 155px),
+    radial-gradient(circle at 50% 50%, rgba(251, 146, 60, 0.4) 0%, rgba(251, 146, 60, 0.4) 200px, transparent 205px),
+    radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.4) 0%, rgba(0, 243, 255, 0.4) 180px, transparent 185px),
+    radial-gradient(circle at 50% 50%, rgba(255, 0, 127, 0.3) 0%, rgba(255, 0, 127, 0.3) 220px, transparent 225px);
+  background-repeat: no-repeat;
+  background-size: 350px 350px, 450px 450px, 400px 400px, 500px 500px;
+  filter: blur(8px);
+  z-index: 0;
+  pointer-events: none;
+  will-change: background-position;
+  animation: stepCirclesRegistro 15s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes stepCirclesRegistro {
+  0%, 20%   { background-position: -10% -10%, 110% 110%, 110% -10%, -10% 110%; }
+  30%, 50%  { background-position: 20% 30%, 80% 70%, 70% 20%, 30% 80%; }
+  60%, 80%  { background-position: 50% 50%, 20% 80%, 80% 30%, 60% 10%; }
+  90%, 100% { background-position: -10% -10%, 110% 110%, 110% -10%, -10% 110%; }
+}
+
+/* =========================================
+   TARJETA CRISTAL
+   ========================================= */
 .registro-card {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 520px;
-  padding: 2rem;
-  border-radius: 20px;
-  background: #f2f4f7;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem 2.2rem 2rem;
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 20px 45px rgba(147, 51, 234, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
-/* TITULO igual login */
+/* Pestañita de colores en el borde superior */
+.registro-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 5px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(90deg, #c084fc, #ff007f, #fb923c, #facc15);
+}
+
+/* =========================================
+   TÍTULO Y LABELS
+   ========================================= */
 .titulo {
   text-align: center;
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-  color: #1a2535;
+  font-size: 2.1rem;
+  margin-bottom: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #000000;
 }
 
-/* LABELS igual login */
+.titulo::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 4px;
+  margin: 0.5rem auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #c084fc, #ff007f, #fb923c);
+}
+
 .label {
   display: block;
   margin-bottom: 6px;
-  color: #1a2535;
-  font-weight: 600;
+  color: #000000;
+  font-weight: 700;
   font-size: 14px;
 }
 
+/* =========================================
+   FORMULARIO
+   ========================================= */
 .input-full {
   width: 100%;
   margin-bottom: 14px;
@@ -46,29 +116,127 @@
 
 .col {
   flex: 1;
+  min-width: 0;
 }
 
-/* Inputs Angular Material */
-::ng-deep .registro-card .mat-mdc-input-element {
-  color: #1a2535 !important;
+/* Inputs de Angular Material */
+:host ::ng-deep .registro-card .mat-mdc-form-field {
+  --mat-form-field-outlined-container-shape: 16px;
 }
 
-::ng-deep .registro-card .mdc-floating-label {
-  color: #6b7280 !important;
+:host ::ng-deep .registro-card .mat-mdc-text-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+  border-radius: 16px !important;
+  transition: all 0.3s ease;
 }
 
-/* ERRORES */
+:host ::ng-deep .registro-card .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+  box-shadow: 0 6px 18px rgba(192, 132, 252, 0.22);
+}
+
+:host ::ng-deep .registro-card .mdc-notched-outline__leading {
+  border-radius: 16px 0 0 16px !important;
+}
+:host ::ng-deep .registro-card .mdc-notched-outline__trailing {
+  border-radius: 0 16px 16px 0 !important;
+}
+
+/* Borde inactivo */
+:host ::ng-deep .registro-card .mdc-notched-outline__leading,
+:host ::ng-deep .registro-card .mdc-notched-outline__notch,
+:host ::ng-deep .registro-card .mdc-notched-outline__trailing {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  border-width: 1px !important;
+}
+
+/* Borde en foco (lila) */
+:host ::ng-deep .registro-card .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+:host ::ng-deep .registro-card .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+:host ::ng-deep .registro-card .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #c084fc !important;
+  border-width: 2px !important;
+}
+
+:host ::ng-deep .registro-card .mat-mdc-input-element {
+  color: #000000 !important;
+  caret-color: #c084fc;
+}
+
+:host ::ng-deep .registro-card .mdc-floating-label {
+  color: #555555 !important;
+}
+
+:host ::ng-deep .registro-card .mat-mdc-form-field.mat-focused .mdc-floating-label {
+  color: #9333ea !important;
+  font-weight: 600;
+}
+
+/* Ojito de mostrar/ocultar contraseña (si lo usas) */
+:host ::ng-deep .registro-card .mat-mdc-form-field-icon-suffix .mat-icon {
+  color: #555555;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+:host ::ng-deep .registro-card .mat-mdc-form-field-icon-suffix .mat-icon:hover {
+  color: #9333ea;
+  transform: scale(1.15);
+}
+
+/* =========================================
+   ERRORES (chip rosa que "tiembla")
+   ========================================= */
 .error,
 .invalid-feedback {
-  color: #b32623;
+  margin-top: 2px;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgba(255, 0, 127, 0.1);
+  color: #e11d48;
   font-size: 0.85rem;
-  margin-top: 4px;
-  margin-bottom: 8px;
+  font-weight: 600;
   text-align: left;
-  padding-left: 4px;
+  animation: shakeRegistro 0.4s ease;
 }
 
-/* ROLES */
+.error { display: block; }
+
+.error-general {
+  text-align: center;
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+@keyframes shakeRegistro {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-5px); }
+  40%      { transform: translateX(5px); }
+  60%      { transform: translateX(-3px); }
+  80%      { transform: translateX(3px); }
+}
+
+/* Aviso del correo (naranja suave) */
+.email-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: -6px 0 10px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgba(251, 146, 60, 0.12);
+  color: #ea580c;
+  font-size: 0.82rem;
+  font-weight: 600;
+
+  .hint-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+  }
+}
+
+/* =========================================
+   ROLES (TARJETAS SELECCIONABLES)
+   ========================================= */
 .roles {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -82,146 +250,212 @@
 
 .rol-card {
   flex: 1;
-  border: 2px solid #d3d9e3;
-  border-radius: 14px;
-  padding: 16px;
-  background: white;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #1a2535;
-  font-weight: 600;
+  padding: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.75);
+  color: #000000;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.rol-card:has(.mat-mdc-radio-checked) {
-  border-color: #4caf50;
-  background: #eef8ef;
+.rol-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(192, 132, 252, 0.6);
+  box-shadow: 0 8px 18px rgba(192, 132, 252, 0.18);
 }
 
-/* CHECKBOX */
+/* Rol seleccionado: borde lila, fondo pastel y brillo suave */
+:host ::ng-deep .rol-card:has(.mat-mdc-radio-checked) {
+  border-color: #c084fc;
+  background: linear-gradient(135deg, rgba(192, 132, 252, 0.18), rgba(0, 243, 255, 0.12));
+  box-shadow: 0 8px 20px rgba(192, 132, 252, 0.25);
+  transform: translateY(-3px);
+}
+
+/* Color del radio y del checkbox (lila en vez del primario de Material) */
+:host ::ng-deep .registro-card .mat-mdc-radio-button,
+:host ::ng-deep .registro-card .mat-mdc-checkbox {
+  --mdc-radio-selected-icon-color: #9333ea;
+  --mdc-radio-selected-hover-icon-color: #9333ea;
+  --mdc-radio-selected-focus-icon-color: #9333ea;
+  --mdc-radio-selected-pressed-icon-color: #9333ea;
+  --mat-radio-checked-ripple-color: #c084fc;
+
+  --mdc-checkbox-selected-icon-color: #9333ea;
+  --mdc-checkbox-selected-hover-icon-color: #9333ea;
+  --mdc-checkbox-selected-focus-icon-color: #9333ea;
+  --mdc-checkbox-selected-pressed-icon-color: #9333ea;
+  --mat-checkbox-selected-icon-color: #9333ea;
+}
+
+/* =========================================
+   CHECKBOX (mostrar contraseña)
+   ========================================= */
 .example-margin {
   margin-top: 8px;
-  color: #6b7280;
+  color: #555555;
   font-size: 14px;
 }
 
 .label-pwd {
-  color: #4caf50;
-  font-weight: 500;
+  color: #0284c7;
+  font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .label-pwd:hover {
-  color: #388e3c;
+  color: #ff007f;
 }
 
-/* BOTON igual login */
+/* =========================================
+   BOTÓN PRINCIPAL (NEGRO → DEGRADADO ANIMADO)
+   ========================================= */
 .btn-registro {
   width: 100%;
-  padding: 15px;
-  border-radius: 12px;
-  background: #4caf50;
-  color: white;
-  border: none;
-  font-size: 16px;
-  font-weight: 700;
+  height: 54px;
   margin-top: 20px;
   margin-bottom: 15px;
-  transition: all 0.2s ease;
+  border: none;
+  border-radius: 27px;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.btn-registro:hover {
-  background: #388e3c;
+.btn-registro:hover:not(:disabled) {
+  background-image: linear-gradient(135deg, #c084fc, #ff007f, #fb923c, #facc15);
+  background-size: 300% 300%;
+  animation: buttonGradientRegistro 3s ease infinite;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(192, 132, 252, 0.4);
+}
+
+.btn-registro:active:not(:disabled) {
+  transform: translateY(-1px) scale(0.99);
 }
 
 .btn-registro:disabled {
-  background: #9e9e9e;
+  background-color: #9e9e9e;
+  box-shadow: none;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
-.error-general {
-  text-align: center;
-  margin-top: 8px;
-  font-weight: 600;
+@keyframes buttonGradientRegistro {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.email-hint {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: #e67e22;
-  font-size: 0.82rem;
-  margin-top: -8px;
-  margin-bottom: 8px;
-  padding-left: 4px;
-
-  .hint-icon {
-    font-size: 15px;
-    height: 15px;
-    width: 15px;
-  }
-}
-
-/* LINKS */
+/* =========================================
+   ENLACES
+   ========================================= */
 .bottom-link,
 .txt-registro {
   text-align: center;
   margin-top: 15px;
-  color: #6b7280;
+  color: #555555;
   font-size: 14px;
+  font-weight: 500;
 }
 
 .red,
 .link {
-  color: #4caf50;
+  color: #0284c7;
   cursor: pointer;
-  font-weight: 500;
-  transition: color 0.2s ease;
+  font-weight: 600;
+  background-image: linear-gradient(90deg, #ff007f, #fb923c);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  padding-bottom: 2px;
+  transition: color 0.3s ease, background-size 0.3s ease;
 }
 
 .red:hover,
 .link:hover {
-  color: #388e3c;
+  color: #ff007f;
+  background-size: 100% 2px;
 }
 
-/* HOME */
+/* =========================================
+   SEPARADOR Y LINK A INICIO
+   ========================================= */
 hr {
+  height: 1px;
   margin: 20px 0;
-  opacity: 0.3;
+  border: none;
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.15), transparent);
 }
 
 .home-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  color: #4caf50;
-  font-weight: 500;
+  gap: 8px;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 8px 18px;
+  border-radius: 999px;
+  color: #000000;
+  font-weight: 700;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+}
+
+.home-link i {
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .home-link:hover {
-  color: #388e3c;
-  transform: scale(1.05);
+  color: #ea580c;
+  background: rgba(251, 146, 60, 0.15);
+  transform: translateY(-2px);
 }
 
-/* Responsive */
+.home-link:hover i {
+  color: #facc15;
+  transform: scale(1.2) translateY(-2px);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
 @media (max-width: 600px) {
   .registro-card {
-    padding: 1.5rem;
+    padding: 2.2rem 1.4rem 1.5rem;
+    border-radius: 22px;
   }
 
-  .titulo {
-    font-size: 1.5rem;
-  }
+  .titulo { font-size: 1.6rem; }
 
   .row {
     flex-direction: column;
     gap: 0;
   }
 
-  .roles-group {
-    flex-direction: column;
+  .roles-group { flex-direction: column; }
+
+  .btn-registro { height: 48px; font-size: 1rem; }
+}
+
+/* Accesibilidad: sin animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+  .registro-container::before,
+  .btn-registro:hover:not(:disabled),
+  .error,
+  .invalid-feedback {
+    animation: none !important;
   }
 }

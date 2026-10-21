@@ -75,4 +75,17 @@ public logout(): void {
   public get isPrivate(): boolean {
     return this.mode === 'private';
   }
+
+  // --- AGREGADO PARA EL MENÚ HORIZONTAL ---
+  public get isAutorOrAbove(): boolean {
+    return this.userRole === 'AUTOR' || this.userRole === 'EDITOR' || this.userRole === 'ADMINISTRADOR';
+  }
+
+  public get isEditorOrAdmin(): boolean {
+    return this.userRole === 'EDITOR' || this.userRole === 'ADMINISTRADOR';
+  }
+
+  public get isAdmin(): boolean {
+    return this.userRole === 'ADMINISTRADOR';
+  }
 }

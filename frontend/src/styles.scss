@@ -20,7 +20,7 @@ html {
    Fuentes principales
    ========================================================= */
 
-// ============ Cuerpo de texto y títulos ============ 
+// ============ Cuerpo de texto y títulos ============
 @font-face {
   font-family: 'Montserrat';
   src: url('assets/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
@@ -91,6 +91,7 @@ html {
 
 html, body {
   height: 100%;
+  overflow-x: clip;
 }
 
 body {

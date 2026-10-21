@@ -6,16 +6,28 @@
         <span class="brand-forum">FORUM</span>
     </section>
 
-    <!-- Mapa de sitio -->
-    <section class="footer-map">
-        <h4 class="title-map">Mapa de Sitio</h4>
-        <section class="footer-links">
-            <a class="map-link" href="#"><i class="bi bi-house-door-fill"></i>Inicio</a>
-            <a class="map-link" href="#"><i class="bi bi-bullseye"></i>Propósito</a>
-            <a class="map-link" href="#"><i class="bi bi-grid"></i>Categorías</a>
-            <a class="map-link" href="#"><i class="bi bi-postcard-fill"></i>Publicaciones Recientes</a>
-        </section>
+<!-- Mapa de sitio -->
+<section class="footer-map">
+    <h4 class="title-map">Mapa de Sitio</h4>
+    <section class="footer-links">
+        <!-- Puedes mantener routerLink para el inicio si te lleva a la parte más alta -->
+        <a class="map-link" (click)="scrollToSection('inicio')" style="cursor: pointer;">
+            <i class="bi bi-house-door-fill"></i>Inicio
+        </a>
+
+        <a class="map-link" (click)="scrollToSection('proposito')" style="cursor: pointer;">
+            <i class="bi bi-bullseye"></i>Propósito
+        </a>
+
+        <a class="map-link" (click)="scrollToSection('categorias')" style="cursor: pointer;">
+            <i class="bi bi-grid"></i>Categorías
+        </a>
+
+        <a class="map-link" (click)="scrollToSection('posts-recientes')" style="cursor: pointer;">
+            <i class="bi bi-postcard-fill"></i>Publicaciones Recientes
+        </a>
     </section>
+</section>
 
     <hr class="divider">
 

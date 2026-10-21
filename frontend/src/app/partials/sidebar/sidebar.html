@@ -1,59 +1,61 @@
 <aside class="left-sidebar">
   <nav class="left-sidebar__nav">
     @if (canSeeDashboard) {
-      <button mat-button type="button" (click)="goTo('/dashboard')">
+      <button mat-button type="button" class="nav-btn color-lila" (click)="goTo('/dashboard')">
         <mat-icon>dashboard</mat-icon>
         <span>Dashboard</span>
       </button>
     }
 
-    <button mat-button type="button" (click)="goTo('/posts')">
+    <button mat-button type="button" class="nav-btn color-cian" (click)="goTo('/posts')">
       <mat-icon>article</mat-icon>
       <span>Publicaciones</span>
     </button>
 
     @if (
-  isLogin &&
-  (
-    userRole === 'AUTOR' ||
-    userRole === 'EDITOR' ||
-    userRole === 'ADMINISTRADOR'
-  )
-) {
-  <button
-    mat-button
-    type="button"
-    (click)="goTo('/workspace/posts')"
-  >
-    <mat-icon>edit_note</mat-icon>
-    <span>Espacio de trabajo</span>
-  </button>
-}
+      isLogin &&
+      (
+        userRole === 'AUTOR' ||
+        userRole === 'EDITOR' ||
+        userRole === 'ADMINISTRADOR'
+      )
+    ) {
+      <button
+        mat-button
+        type="button"
+        class="nav-btn color-amarillo"
+        (click)="goTo('/workspace/posts')"
+      >
+        <mat-icon>edit_note</mat-icon>
+        <span>Espacio de trabajo</span>
+      </button>
+    }
 
     @if (canSeeCategories) {
-      <button mat-button type="button" (click)="goTo('/categories')">
+      <button mat-button type="button" class="nav-btn color-naranja" (click)="goTo('/categories')">
         <mat-icon>category</mat-icon>
         <span>Categorías</span>
       </button>
     }
 
     @if (canSeeReports) {
-      <button mat-button type="button" (click)="goTo('/reports')">
+      <button mat-button type="button" class="nav-btn color-magenta" (click)="goTo('/reports')">
         <mat-icon>report</mat-icon>
         <span>Reportes</span>
       </button>
     }
 
     @if (isLogin && userRole === 'ADMINISTRADOR') {
-  <button
-    mat-button
-    type="button"
-    (click)="goTo('/admin/users')"
-  >
-    <mat-icon>manage_accounts</mat-icon>
-    <span>Administrar usuarios</span>
-  </button>
-}
+      <button
+        mat-button
+        type="button"
+        class="nav-btn color-indigo"
+        (click)="goTo('/admin/users')"
+      >
+        <mat-icon>manage_accounts</mat-icon>
+        <span>Administrar usuarios</span>
+      </button>
+    }
 
     @if (
       isLogin &&
@@ -62,6 +64,7 @@
       <button
         mat-button
         type="button"
+        class="nav-btn color-verde"
         (click)="goTo('/workspace/comments')"
       >
         <mat-icon>forum</mat-icon>

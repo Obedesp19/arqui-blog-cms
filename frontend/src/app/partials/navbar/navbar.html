@@ -4,7 +4,7 @@
       <button
         mat-icon-button
         type="button"
-        class="menu-btn"
+        class="menu-btn mobile-only"
         (click)="onToggleSidebar()"
         aria-label="Abrir menú"
       >
@@ -20,7 +20,7 @@
         aria-label="Ir a inicio"
       >
         <img
-          src="assets/images/logo-blanco.png"
+          src="assets/images/2.jpg"
           alt="Logo CampusForum"
           class="brand-logo"
         />
@@ -48,6 +48,28 @@
       >
         Propósito
       </button>
+    </section>
+  }
+
+  <!-- NUEVO: Enlaces Privados (Solo escritorio) -->
+  @if (isPrivate) {
+    <section class="navbar__links navbar__links--private desktop-only">
+      <a mat-button routerLink="/dashboard">Dashboard</a>
+      <a mat-button routerLink="/posts">Publicaciones</a>
+
+      @if (isAutorOrAbove) {
+        <a mat-button routerLink="/workspace/posts">Espacio de trabajo</a>
+      }
+
+      @if (isEditorOrAdmin) {
+        <a mat-button routerLink="/categories">Categorías</a>
+        <a mat-button routerLink="/reports">Reportes</a>
+        <a mat-button routerLink="/workspace/comments">Comentarios</a>
+      }
+
+      @if (isAdmin) {
+        <a mat-button routerLink="/admin/users">Admin Usuarios</a>
+      }
     </section>
   }
 

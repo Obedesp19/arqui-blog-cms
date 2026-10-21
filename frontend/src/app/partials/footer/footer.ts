@@ -11,4 +11,10 @@ import { SHARED_IMPORTS } from '../../shared/shared_imports';
 })
 export class Footer {
 
+  public scrollToSection(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+}
 }

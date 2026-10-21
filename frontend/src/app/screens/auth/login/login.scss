@@ -1,146 +1,385 @@
+/* =========================================
+   CONTENEDOR Y FONDO CON CÍRCULOS PASTEL
+   ========================================= */
 .login-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background: linear-gradient(to bottom, #dfe6ee, #cfd8e3);
+  overflow: hidden;
+  background: linear-gradient(135deg, #faf5ff 0%, #f0f9ff 50%, #fffbeb 100%);
 }
 
+.login-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(192, 132, 252, 0.45) 0%, rgba(192, 132, 252, 0.45) 150px, transparent 155px),
+    radial-gradient(circle at 50% 50%, rgba(251, 146, 60, 0.4) 0%, rgba(251, 146, 60, 0.4) 200px, transparent 205px),
+    radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.4) 0%, rgba(0, 243, 255, 0.4) 180px, transparent 185px),
+    radial-gradient(circle at 50% 50%, rgba(255, 0, 127, 0.3) 0%, rgba(255, 0, 127, 0.3) 220px, transparent 225px);
+  background-repeat: no-repeat;
+  background-size: 350px 350px, 450px 450px, 400px 400px, 500px 500px;
+  filter: blur(8px);
+  z-index: 0;
+  pointer-events: none;
+  will-change: background-position;
+  animation: stepCirclesLogin 15s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes stepCirclesLogin {
+  0%, 20%   { background-position: -10% -10%, 110% 110%, 110% -10%, -10% 110%; }
+  30%, 50%  { background-position: 20% 30%, 80% 70%, 70% 20%, 30% 80%; }
+  60%, 80%  { background-position: 50% 50%, 20% 80%, 80% 30%, 60% 10%; }
+  90%, 100% { background-position: -10% -10%, 110% 110%, 110% -10%, -10% 110%; }
+}
+
+/* =========================================
+   ENVOLTORIO Y TARJETA CRISTAL
+   ========================================= */
 .login-card-wrapper {
   position: relative;
+  z-index: 1;
   width: 100%;
   display: flex;
   justify-content: center;
+  margin-top: 90px;            /* espacio para que el búho no se corte */
 }
 
 .login-card {
+  position: relative;
   width: 100%;
-  max-width: 380px;
-  padding: 2rem;
-  border-radius: 20px;
-  background: #f2f4f7;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 420px;
+  padding: 3rem 2.5rem 2rem;
+  border-radius: 28px;
   text-align: center;
-  margin-top: 60px;
+
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 20px 45px rgba(147, 51, 234, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
+/* Pestañita de colores en el borde superior */
+.login-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 5px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(90deg, #c084fc, #ff007f, #fb923c, #facc15);
+}
+
+/* =========================================
+   TIPOGRAFÍA
+   ========================================= */
 .login-title {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-  color: #1a2535;
+  position: relative;
+  font-size: 2.2rem;
+  margin-bottom: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #000000;
+}
+
+/* Subrayado degradado debajo del título */
+.login-title::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 4px;
+  margin: 0.5rem auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #c084fc, #ff007f, #fb923c);
 }
 
 .login-subtitle {
-  color: #6b7280;
-  margin-bottom: 1.5rem;
-}
-
-.input-full {
-  width: 100%;
-}
-
-.error {
-  color: #b32623;
-  font-size: 0.85rem;
-  margin-top: 4px;
-  margin-bottom: 8px;
-  text-align: left;
-  padding-left: 4px;
-}
-
-.login-extra {
-  margin: 10px 0;
-}
-
-.link {
-  color: #4CAF50;
-  cursor: pointer;
+  margin-bottom: 1.8rem;
+  color: #555555;
+  font-size: 1rem;
   font-weight: 500;
-  transition: color 0.2s ease;
 }
 
-.link:hover {
-  color: #388e3c;
-}
-
-.login-footer {
-  margin-top: 15px;
-}
-
+/* =========================================
+   BÚHO (MASCOTA) QUE REACCIONA AL FORMULARIO
+   ========================================= */
 .mascota-login {
   position: absolute;
-  top: -60px;
+  top: -55px;
   left: 50%;
   transform: translateX(-50%);
-  width: 110px;
+  width: 95px;
   z-index: 10;
+  overflow: visible;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.12));
 }
 
 .mascota-svg {
+  display: block;
   width: 100%;
+  height: auto;
+  overflow: visible;
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+/* Pupilas: se mueven según el campo activo */
+.mascota-svg .ojo {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Correo: el búho mira hacia abajo, hacia el campo */
+.mascota-login.email .ojo {
+  transform: translate(0, 5px);
+}
+
+/* Contraseña: mira hacia arriba y encoge las pupilas ("no estoy viendo") */
+.mascota-login.password .ojo {
+  transform: translate(0, -5px) scale(0.55);
+}
+
+/* =========================================
+   INPUTS DE ANGULAR MATERIAL
+   ========================================= */
+.input-full {
+  width: 100%;
+  margin-bottom: 0.4rem;
+}
+
+:host ::ng-deep .login-card .mat-mdc-form-field {
+  --mat-form-field-outlined-container-shape: 16px;
+}
+
+:host ::ng-deep .login-card .mat-mdc-text-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+  border-radius: 16px !important;
   transition: all 0.3s ease;
-  animation: float 3s ease-in-out infinite;
+}
+
+:host ::ng-deep .login-card .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+  box-shadow: 0 6px 18px rgba(192, 132, 252, 0.22);
+}
+
+/* Bordes redondeados reales del contorno */
+:host ::ng-deep .login-card .mdc-notched-outline__leading {
+  border-radius: 16px 0 0 16px !important;
+}
+:host ::ng-deep .login-card .mdc-notched-outline__trailing {
+  border-radius: 0 16px 16px 0 !important;
+}
+
+/* Borde inactivo */
+:host ::ng-deep .login-card .mdc-notched-outline__leading,
+:host ::ng-deep .login-card .mdc-notched-outline__notch,
+:host ::ng-deep .login-card .mdc-notched-outline__trailing {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  border-width: 1px !important;
+}
+
+/* Borde en foco (lila) */
+:host ::ng-deep .login-card .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+:host ::ng-deep .login-card .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+:host ::ng-deep .login-card .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #c084fc !important;
+  border-width: 2px !important;
+}
+
+/* Label y cursor */
+:host ::ng-deep .login-card .mat-mdc-form-field.mat-focused .mdc-floating-label {
+  color: #9333ea !important;
+  font-weight: 600;
+}
+:host ::ng-deep .login-card .mat-mdc-input-element {
+  caret-color: #c084fc;
+  color: #000000;
+}
+
+/* Ojito de mostrar/ocultar contraseña */
+:host ::ng-deep .login-card .mat-mdc-form-field-icon-suffix .mat-icon {
+  color: #555555;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+:host ::ng-deep .login-card .mat-mdc-form-field-icon-suffix .mat-icon:hover {
+  color: #9333ea;
+  transform: scale(1.15);
+}
+
+/* =========================================
+   MENSAJES DE ERROR (chip rosa que "tiembla")
+   ========================================= */
+.error {
+  display: block;
+  margin: 2px 0 12px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgba(255, 0, 127, 0.1);
+  color: #e11d48;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-5px); }
+  40%      { transform: translateX(5px); }
+  60%      { transform: translateX(-3px); }
+  80%      { transform: translateX(3px); }
+}
+
+/* =========================================
+   BOTÓN PRINCIPAL (NEGRO → DEGRADADO ANIMADO)
+   ========================================= */
+.btn--primario {
+  width: 100%;
+  height: 54px;
+  margin-top: 10px;
+  border: none !important;
+  border-radius: 27px !important;
+  background-color: #000000 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  font-size: 1.1rem;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn--primario:hover {
+  background-image: linear-gradient(135deg, #c084fc, #ff007f, #fb923c, #facc15) !important;
+  background-size: 300% 300% !important;
+  animation: buttonGradientLogin 3s ease infinite;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(192, 132, 252, 0.4);
+}
+
+.btn--primario:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+@keyframes buttonGradientLogin {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* =========================================
+   ENLACES
+   ========================================= */
+.login-extra {
+  margin: 4px 0 18px;
+  text-align: right;
+}
+
+.link {
+  color: #0284c7;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background-image: linear-gradient(90deg, #ff007f, #fb923c);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  padding-bottom: 2px;
+  transition: color 0.3s ease, background-size 0.3s ease;
+}
+
+.link:hover {
+  color: #ff007f;
+  background-size: 100% 2px;
+}
+
+.login-footer {
+  margin-top: 24px;
+  color: #555555;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .back-home {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
   width: 100%;
+  margin-top: 20px;
 }
 
 .home-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  color: #4CAF50;
-  font-weight: 500;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  color: #000000;
+  font-weight: 700;
+  font-size: 1rem;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+}
+
+.home-link i {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .home-link:hover {
-  color: #388e3c;
-  transform: scale(1.05);
+  color: #ea580c;
+  background: rgba(251, 146, 60, 0.15);
+  transform: translateY(-2px);
 }
 
-@keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0); }
+.home-link:hover i {
+  color: #facc15;
+  transform: scale(1.2) translateY(-2px);
 }
 
-//UX PENDIENTE
-
-//Responsivo
-
+/* =========================================
+   RESPONSIVIDAD
+   ========================================= */
 @media (max-width: 600px) {
-
   .login-card {
-    padding: 1.5rem;
+    padding: 2.5rem 1.5rem 1.5rem;
+    border-radius: 22px;
   }
-
-  .login-title {
-    font-size: 1.5rem;
-  }
-
-  .login-subtitle {
-    font-size: 0.9rem;
-  }
-
-  .mascota-login {
-    width: 85px;
-    top: -70px;
-  }
-
+  .login-title { font-size: 1.8rem; }
+  .login-subtitle { font-size: 0.9rem; }
+  .mascota-login { width: 85px; top: -50px; }
+  .btn--primario { height: 48px; font-size: 1rem; }
 }
 
 @media (max-height: 700px) {
-  .mascota-login {
-    top: -40px;
-    width: 90px;
+  .login-card-wrapper { margin-top: 60px; }
+  .login-card { padding-top: 2.6rem; }
+  .mascota-login { top: -45px; width: 80px; }
+}
+
+/* Accesibilidad: sin animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+  .login-container::before,
+  .mascota-svg,
+  .btn--primario:hover,
+  .error {
+    animation: none !important;
   }
 }
