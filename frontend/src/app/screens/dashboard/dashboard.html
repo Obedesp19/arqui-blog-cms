@@ -24,7 +24,6 @@
     <mat-drawer-content class="dashboard__content">
       <div class="dashboard__main">
         <main class="dashboard__body">
-
           <section class="dashboard__hero">
             <div>
               <span class="dashboard__eyebrow">Panel principal</span>
@@ -43,6 +42,15 @@
             </div>
           </section>
 
+          <div class="dashboard__refresh">
+            <p>Artículos publicados y comentarios aprobados de toda la comunidad.</p>
+            <button mat-stroked-button type="button" (click)="refresh()" [disabled]="loading">
+              <mat-icon>refresh</mat-icon> Actualizar actividad
+            </button>
+          </div>
+          @if (loading) { <p role="status">Consultando la actividad de la comunidad…</p> }
+          @if (error) { <p role="alert">{{ error }}</p> }
+          @if (data; as stats) {
           <section class="dashboard__kpis">
             <mat-card class="dashboard__kpi">
               <mat-card-content>
@@ -50,8 +58,8 @@
                   <mat-icon>article</mat-icon>
                 </div>
                 <span class="dashboard__kpi-label">Publicaciones</span>
-                <strong>{{ totalPosts }}</strong>
-                <p>{{ totalPublishedPosts }} publicadas</p>
+                <strong>{{ stats.published_posts }}</strong>
+                <p>Disponibles para leer</p>
               </mat-card-content>
             </mat-card>
 
@@ -61,7 +69,7 @@
                   <mat-icon>category</mat-icon>
                 </div>
                 <span class="dashboard__kpi-label">Categorías activas</span>
-                <strong>{{ totalCategories }}</strong>
+                <strong>{{ stats.active_categories }}</strong>
                 <p>Organización académica</p>
               </mat-card-content>
             </mat-card>
@@ -72,19 +80,19 @@
                   <mat-icon>chat_bubble</mat-icon>
                 </div>
                 <span class="dashboard__kpi-label">Comentarios</span>
-                <strong>{{ totalComments }}</strong>
-                <p>Participación total</p>
+                <strong>{{ stats.approved_comments }}</strong>
+                <p>Aprobados en artículos publicados</p>
               </mat-card-content>
             </mat-card>
 
-            @if (isModerator) {
+            @if (stats.editorial; as editorial) {
               <mat-card class="dashboard__kpi dashboard__kpi--warning">
                 <mat-card-content>
                   <div class="dashboard__kpi-icon">
                     <mat-icon>flag</mat-icon>
                   </div>
-                  <span class="dashboard__kpi-label">Reportes pendientes</span>
-                  <strong>{{ pendingReports }}</strong>
+                  <span class="dashboard__kpi-label">Comentarios por moderar</span>
+                  <strong>{{ editorial.pending_comments }}</strong>
                   <p>Requieren moderación</p>
                 </mat-card-content>
               </mat-card>
@@ -101,17 +109,19 @@
                   </div>
                 </div>
 
-                @if (postsByCategory.length > 0) {
+                @if (stats.posts_by_category.length > 0) {
                   <div class="dashboard__list">
-                    @for (item of postsByCategory; track item.categoria) {
+                    @for (item of stats.posts_by_category; track item.id) {
                       <div class="dashboard__row">
                         <div>
-                          <strong>{{ item.categoria }}</strong>
-                          <span>{{ item.total }} publicación{{ item.total === 1 ? '' : 'es' }}</span>
+                          <strong>{{ item.nombre }}</strong>
+                          <span
+                            >{{ item.total }} publicación{{ item.total === 1 ? '' : 'es' }}</span
+                          >
                         </div>
 
                         <div class="dashboard__bar">
-                          <span [style.width.%]="(item.total / totalPosts) * 100"></span>
+                          <span [style.width.%]="stats.published_posts ? (item.total / stats.published_posts) * 100 : 0"></span>
                         </div>
                       </div>
                     }
@@ -131,13 +141,17 @@
                   </div>
                 </div>
 
-                @if (trendingCategories.length > 0) {
+                @if (stats.comments_by_category.length > 0) {
                   <div class="dashboard__list">
-                    @for (item of trendingCategories; track item.categoria) {
+                    @for (item of stats.comments_by_category; track item.id) {
                       <div class="dashboard__row dashboard__row--compact">
                         <div>
-                          <strong>{{ item.categoria }}</strong>
-                          <span>{{ item.totalComentarios }} comentario{{ item.totalComentarios === 1 ? '' : 's' }}</span>
+                          <strong>{{ item.nombre }}</strong>
+                          <span
+                            >{{ item.total }} comentario{{
+                              item.total === 1 ? '' : 's'
+                            }}</span
+                          >
                         </div>
 
                         <mat-icon>trending_up</mat-icon>
@@ -155,21 +169,21 @@
                 <mat-card-content>
                   <div class="dashboard__panel-head">
                     <div>
-                      <h2>Top posters</h2>
-                      <p>Usuarios con mayor actividad.</p>
+                      <h2>Autores destacados</h2>
+                      <p>Autores con más artículos publicados.</p>
                     </div>
                   </div>
 
-                  @if (topPosters.length > 0) {
+                  @if (stats.top_authors.length > 0) {
                     <div class="dashboard__list">
-                      @for (item of topPosters; track item.autor) {
+                      @for (item of stats.top_authors; track item.id) {
                         <div class="dashboard__row dashboard__row--compact">
                           <div class="dashboard__user">
-                            <span class="dashboard__avatar">{{ item.autor.charAt(0) }}</span>
+                            <span class="dashboard__avatar">{{ item.nombre.charAt(0) }}</span>
 
                             <div>
-                              <strong>{{ item.autor }}</strong>
-                              <span>{{ item.total }} post{{ item.total === 1 ? '' : 's' }}</span>
+                              <strong>{{ item.nombre }}</strong>
+                              <span>{{ item.total }} artículo{{ item.total === 1 ? '' : 's' }}</span>
                             </div>
                           </div>
 
@@ -199,22 +213,30 @@
                     Ver publicaciones
                   </button>
 
+                  @if (auth.hasRole(['AUTOR', 'EDITOR', 'ADMINISTRADOR'])) {
+                    <button mat-stroked-button type="button" (click)="goWorkspace()">
+                      <mat-icon>edit_note</mat-icon> Espacio de trabajo
+                    </button>
+                  }
+                  @if (stats.editorial; as editorial) {
+                    <p>{{ editorial.pending_posts }} artículo(s) pendientes de revisión.</p>
+                  }
                   @if (isModerator) {
                     <button mat-stroked-button type="button" (click)="goCategories()">
                       <mat-icon>category</mat-icon>
                       Gestionar categorías
                     </button>
 
-                    <button mat-stroked-button type="button" (click)="goReports()">
+                    <button mat-stroked-button type="button" (click)="goComments()">
                       <mat-icon>flag</mat-icon>
-                      Revisar reportes
+                      Moderar comentarios
                     </button>
                   }
                 </div>
               </mat-card-content>
             </mat-card>
           </section>
-
+          }
         </main>
 
         <app-footer></app-footer>

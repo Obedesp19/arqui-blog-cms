@@ -1,95 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 import { SHARED_IMPORTS } from '../../shared/shared_imports';
 import { Navbar } from '../../partials/navbar/navbar';
 import { Sidebar } from '../../partials/sidebar/sidebar';
 import { Footer } from '../../partials/footer/footer';
 import { AuthService } from '../../services/auth.service';
-import { PostsService } from '../../services/posts-service';
-import { CategoriesService } from '../../services/categorias-service';
-import { ReportsService } from '../../services/reports-service';
-import { UserRole } from '../../models/auth-user.model';
-
+import { DashboardApiService, DashboardData } from '../../services/dashboard-api.service';
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [
-    ...SHARED_IMPORTS,
-    Navbar,
-    Sidebar,
-    Footer,
-  ],
-  templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.scss'],
+  selector: 'app-dashboard', standalone: true,
+  imports: [...SHARED_IMPORTS, Navbar, Sidebar, Footer],
+  templateUrl: './dashboard.html', styleUrls: ['./dashboard.scss'],
 })
 export class Dashboard implements OnInit {
-  public drawerOpen: boolean = false;
-  public isLogin: boolean = false;
-  public userRole: UserRole = 'LECTOR';
-  public currentUserName: string = '';
-
-  public totalPosts: number = 0;
-  public totalPublishedPosts: number = 0;
-  public totalCategories: number = 0;
-  public totalComments: number = 0;
-  public pendingReports: number = 0;
-
-  public postsByCategory: { categoria: string; total: number }[] = [];
-  public topPosters: { autor: string; total: number }[] = [];
-  public trendingCategories: { categoria: string; totalComentarios: number }[] = [];
-
-  constructor(
-    private readonly router: Router,
-    private readonly authService: AuthService,
-    private readonly postsService: PostsService,
-    private readonly categoriesService: CategoriesService,
-    private readonly reportsService: ReportsService,
-  ) {}
-
-  ngOnInit(): void {
-    this.syncAuthState();
-    this.loadDashboardData();
-  }
-
-  public toggleSidebar(): void {
-    this.drawerOpen = !this.drawerOpen;
-  }
-
-  public closeSidebar(): void {
-    this.drawerOpen = false;
-  }
-
-  public goPosts(): void {
-    this.router.navigate(['/posts']);
-  }
-
-  public goCategories(): void {
-    this.router.navigate(['/categories']);
-  }
-
-  public goReports(): void {
-    this.router.navigate(['/reports']);
-  }
-
-  public get isModerator(): boolean {
-    return this.userRole === 'EDITOR' || this.userRole === 'ADMINISTRADOR';
-  }
-
-  private syncAuthState(): void {
-    this.isLogin = this.authService.isAuthenticated();
-    this.userRole = this.authService.getUserRole() ?? 'LECTOR';
-    this.currentUserName = this.authService.getUserName();
-  }
-
-  private loadDashboardData(): void {
-    this.totalPosts = this.postsService.getTotalPosts();
-    this.totalPublishedPosts = this.postsService.getTotalPublishedPosts();
-    this.totalCategories = this.categoriesService.getAllCategories(false).length;
-    this.totalComments = this.postsService.getTotalComments();
-    this.pendingReports = this.reportsService.getPendingReportsCount();
-
-    this.postsByCategory = this.postsService.getPostsByCategory();
-    this.topPosters = this.postsService.getTopPosters();
-    this.trendingCategories = this.postsService.getTrendingCategories();
+  readonly auth = inject(AuthService);
+  private readonly api = inject(DashboardApiService);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  drawerOpen = false;
+  loading = false;
+  error = '';
+  data: DashboardData | null = null;
+  get isLogin() { return this.auth.isAuthenticated(); }
+  get userRole() { return this.auth.getUserRole() ?? 'LECTOR'; }
+  get currentUserName() { return this.auth.getUserFirstName(); }
+  get isModerator() { return this.auth.hasRole(['EDITOR', 'ADMINISTRADOR']); }
+  ngOnInit(): void { this.refresh(); }
+  toggleSidebar(): void { this.drawerOpen = !this.drawerOpen; }
+  closeSidebar(): void { this.drawerOpen = false; }
+  goPosts(): void { this.router.navigate(['/posts']); }
+  goCategories(): void { this.router.navigate(['/categories']); }
+  goComments(): void { this.router.navigate(['/workspace/comments']); }
+  goWorkspace(): void { this.router.navigate(['/workspace/posts']); }
+  refresh(): void {
+    if (this.loading) return;
+    this.loading = true;
+    this.error = '';
+    this.data = null;
+    this.api.get().pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => { this.loading = false; }),
+    ).subscribe({
+      next: data => { this.data = data; },
+      error: () => { this.error = 'No se pudo cargar la actividad. Revisa tu conexión y vuelve a intentar.'; },
+    });
   }
 }

@@ -1,102 +1,40 @@
-<mat-toolbar color="primary" class="navbar px-4">
-  <section class="brand-container" aria-label="Barra principal">
-    @if (isPrivate) {
-      <button
-        mat-icon-button
-        type="button"
-        class="menu-btn"
-        (click)="onToggleSidebar()"
-        aria-label="Abrir menú"
-      >
-        <mat-icon>menu</mat-icon>
-      </button>
-    }
-
-    @if (isPublic) {
+<mat-toolbar class="navbar"
+  ><div class="navbar__inner">
+    <div class="brand-container">
+      @if (isPrivate) {
+        <button mat-icon-button type="button" (click)="onToggleSidebar()" aria-label="Abrir menú">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
       <a
-        type="button"
-        (click)="goToInicio()"
-        class="brand-logo-link"
-        aria-label="Ir a inicio"
+        [routerLink]="isPrivate ? '/dashboard' : '/landing'"
+        class="brand-text"
+        aria-label="CampusForum, inicio"
+        ><span class="brand-mark" aria-hidden="true">c<span>f</span></span
+        ><span
+          >Campus<span class="brand-forum">Forum</span><small>IDEAS QUE NOS CONECTAN</small></span
+        ></a
       >
-        <img
-          src="assets/images/logo-blanco.png"
-          alt="Logo CampusForum"
-          class="brand-logo"
-        />
-      </a>
-    }
-
-    <a
-      [routerLink]="isPrivate ? '/dashboard' : '/landing'"
-      class="brand-text"
-    >
-      <span class="brand-campus">CAMPUS</span>
-      <span class="brand-forum">FORUM</span>
-    </a>
-  </section>
-
-  @if (isPublic) {
-    <section class="navbar__links">
-      <a mat-button type="button" (click)="goToInicio()">Inicio</a>
-
-      <button
-        mat-button
-        type="button"
-        (click)="goToProposito()"
-        class="nav-link-btn"
-      >
-        Propósito
-      </button>
-    </section>
-  }
-
-  @if (isPublic) {
-    <section class="navbar__actions navbar__actions--public">
-      <button
-        mat-button
-        type="button"
-        (click)="goToLogin()"
-        class="login-btn"
-      >
-        <i class="bi bi-box-arrow-in-right"></i>
-        <span>Login</span>
-      </button>
-
-      <button
-        mat-raised-button
-        type="button"
-        (click)="goToRegistro()"
-        class="register-btn"
-      >
-        <i class="bi bi-person-plus"></i>
-        <span>Registro</span>
-      </button>
-    </section>
-  }
-
-  @if (isPrivate) {
-    <section class="navbar__actions navbar__actions--private">
-      <button
-        mat-button
-        type="button"
-        class="navbar-profile-btn"
-        (click)="goToProfile()"
-      >
-      <mat-icon>person_outlined</mat-icon>
-        Perfil
-      </button>
-
-      <button
-        mat-stroked-button
-        type="button"
-        class="logout-btn"
-        (click)="logout()"
-        aria-label="Cerrar sesión"
-      >
-        <i class="bi bi-box-arrow-right"></i>
-        <span class="logout-btn__text">Cerrar sesión</span>
-      </button>
-    </section>
-  }
-</mat-toolbar>
+    </div>
+    <nav class="navbar__links" aria-label="Navegación principal">
+      <a mat-stroked-button class="nav-explore" routerLink="/posts"><i class="bi bi-compass" aria-hidden="true"></i> Explorar artículos</a>
+      @if (isPublic) {
+        <button mat-button type="button" (click)="goToProposito()">La comunidad</button>
+      }
+    </nav>
+    <div class="navbar__actions">
+      @if (isPublic) {
+        <button mat-button type="button" (click)="goToLogin()">Iniciar sesión</button
+        ><button mat-flat-button type="button" (click)="goToRegistro()">
+          Crear cuenta <span aria-hidden="true">↗</span>
+        </button>
+      } @else {
+        <button mat-button type="button" (click)="goToProfile()">
+          <mat-icon>person_outline</mat-icon>Perfil</button
+        ><button mat-stroked-button type="button" (click)="logout()" aria-label="Cerrar sesión">
+          <mat-icon>logout</mat-icon><span class="logout-label">Salir</span>
+        </button>
+      }
+    </div>
+  </div></mat-toolbar
+>

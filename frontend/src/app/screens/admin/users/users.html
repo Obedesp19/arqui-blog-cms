@@ -30,12 +30,7 @@
         <p class="message error" role="alert">{{ error }}</p>
 
         @if (!auth.isAuthenticated()) {
-          <a
-            routerLink="/login"
-            [queryParams]="{ redirectTo: '/admin/users' }"
-          >
-            Iniciar sesión
-          </a>
+          <a routerLink="/login" [queryParams]="{ redirectTo: '/admin/users' }"> Iniciar sesión </a>
         }
       }
 
@@ -45,28 +40,30 @@
 
       @if (auth.isAdmin()) {
         <div class="toolbar">
-          <button
-            type="button"
-            (click)="loadPage(page)"
-            [disabled]="busy"
-          >
-            Recargar lista
-          </button>
+          <button type="button" (click)="loadPage(page)" [disabled]="busy">Recargar lista</button>
 
           <span>{{ count }} usuario(s) · Página {{ page }}</span>
         </div>
 
         <p>
-          Los cambios se aplican al pulsar Guardar cambios.
-          La cuenta modificada deberá iniciar sesión nuevamente.
+          Los cambios se aplican al pulsar Guardar cambios. La cuenta modificada deberá iniciar
+          sesión nuevamente.
         </p>
 
         @if (loading) {
           <p role="status">Cargando usuarios...</p>
         } @else {
-          <div class="table-container">
+          <p class="table-hint">En pantallas pequeñas, desliza la tabla para ver las acciones.</p>
+          <div
+            class="table-container"
+            tabindex="0"
+            role="region"
+            aria-label="Tabla de usuarios, desplazamiento horizontal"
+          >
             <table>
-              <caption>Usuarios del CMS</caption>
+              <caption>
+                Usuarios del CMS
+              </caption>
               <thead>
                 <tr>
                   <th scope="col">Usuario</th>
@@ -81,9 +78,7 @@
                 @for (user of rows; track user.id) {
                   <tr>
                     <td>
-                      <strong>
-                        {{ user.first_name }} {{ user.last_name }}
-                      </strong>
+                      <strong> {{ user.first_name }} {{ user.last_name }} </strong>
                       <div>{{ user.email }}</div>
                       <small>ID: {{ user.id }}</small>
                     </td>
@@ -98,9 +93,7 @@
                         [disabled]="busy || isProtected(user)"
                         [attr.aria-label]="'Rol de ' + user.email"
                       >
-                        <option value="" disabled>
-                          Selecciona un rol
-                        </option>
+                        <option value="" disabled>Selecciona un rol</option>
 
                         @for (role of roles; track role) {
                           <option [value]="role">{{ role }}</option>
@@ -135,20 +128,14 @@
                           (click)="save(user)"
                           [disabled]="busy || !hasChanges(user)"
                         >
-                          {{
-                            savingId === user.id
-                              ? 'Guardando...'
-                              : 'Guardar cambios'
-                          }}
+                          {{ savingId === user.id ? 'Guardando...' : 'Guardar cambios' }}
                         </button>
                       }
                     </td>
                   </tr>
                 } @empty {
                   <tr>
-                    <td colspan="5">
-                      No hay usuarios para mostrar.
-                    </td>
+                    <td colspan="5">No hay usuarios para mostrar.</td>
                   </tr>
                 }
               </tbody>
@@ -157,21 +144,13 @@
         }
 
         <nav class="pagination" aria-label="Páginas de usuarios">
-          <button
-            type="button"
-            (click)="loadPage(page - 1)"
-            [disabled]="busy || !hasPrevious"
-          >
+          <button type="button" (click)="loadPage(page - 1)" [disabled]="busy || !hasPrevious">
             Anterior
           </button>
 
           <span>Página {{ page }}</span>
 
-          <button
-            type="button"
-            (click)="loadPage(page + 1)"
-            [disabled]="busy || !hasNext"
-          >
+          <button type="button" (click)="loadPage(page + 1)" [disabled]="busy || !hasNext">
             Siguiente
           </button>
         </nav>

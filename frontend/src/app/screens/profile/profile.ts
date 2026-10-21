@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared_imports';
 import { Navbar } from '../../partials/navbar/navbar';
 import { Sidebar } from '../../partials/sidebar/sidebar';
@@ -9,7 +11,6 @@ import { UserRole } from '../../models/auth-user.model';
 interface ProfileForm {
   firstName: string;
   lastName: string;
-  lastNameMother: string;
   email: string;
   role: UserRole;
   avatar: string;
@@ -18,8 +19,8 @@ interface ProfileForm {
 interface ProfileErrors {
   firstName?: string;
   lastName?: string;
-  lastNameMother?: string;
   email?: string;
+  general?: string;
 }
 
 @Component({
@@ -35,6 +36,8 @@ interface ProfileErrors {
   styleUrls: ['./profile.scss'],
 })
 export class Profile implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+  saving = false;
   public drawerOpen: boolean = false;
   public isLogin: boolean = false;
   public userRole: UserRole = 'LECTOR';
@@ -42,7 +45,6 @@ export class Profile implements OnInit {
   public form: ProfileForm = {
     firstName: '',
     lastName: '',
-    lastNameMother: '',
     email: '',
     role: 'LECTOR',
     avatar: 'assets/images/avatares/avatar-gorra-lentes.png',
@@ -71,7 +73,6 @@ export class Profile implements OnInit {
     this.form = {
       firstName: this.authService.getUserFirstName(),
       lastName: this.authService.getUserLastName(),
-      lastNameMother: this.authService.getUserLastNameMother(),
       email: this.authService.getUserEmail(),
       role: this.userRole,
       avatar: this.authService.getUserAvatar() || 'assets/images/avatares/avatar-gorra-lentes.png',
@@ -87,6 +88,7 @@ export class Profile implements OnInit {
   }
 
   public selectAvatar(avatar: string): void {
+    if (this.saving) return;
     this.form.avatar = avatar;
     this.successMessage = '';
   }
@@ -96,6 +98,7 @@ export class Profile implements OnInit {
   }
 
   public saveProfile(): void {
+    if (this.saving) return;
     this.errors = {};
     this.successMessage = '';
 
@@ -104,11 +107,7 @@ export class Profile implements OnInit {
     }
 
     if (!this.form.lastName.trim()) {
-      this.errors.lastName = 'El apellido paterno es obligatorio.';
-    }
-
-    if (!this.form.lastNameMother.trim()) {
-      this.errors.lastNameMother = 'El apellido materno es obligatorio.';
+      this.errors.lastName = 'Los apellidos son obligatorios.';
     }
 
     if (!this.form.email.trim()) {
@@ -121,19 +120,24 @@ export class Profile implements OnInit {
       return;
     }
 
-    const result = this.authService.updateProfile({
-      firstName: this.form.firstName.trim(),
-      lastName: this.form.lastName.trim(),
-      lastNameMother: this.form.lastNameMother.trim(),
-      email: this.form.email.trim(),
+    this.saving = true;
+    this.authService.updateProfile({
+      firstName: this.form.firstName,
+      lastName: this.form.lastName,
+      email: this.form.email,
       avatar: this.form.avatar,
+    }).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => { this.saving = false; }),
+    ).subscribe(result => {
+      if (!result.ok) {
+        this.errors.general = result.error;
+        return;
+      }
+      this.form.firstName = this.authService.getUserFirstName();
+      this.form.lastName = this.authService.getUserLastName();
+      this.form.email = this.authService.getUserEmail();
+      this.successMessage = 'Perfil actualizado. Para iniciar sesión, utiliza el correo que aparece aquí.';
     });
-
-    if (!result.ok) {
-      this.errors.email = result.error;
-      return;
-    }
-
-    this.successMessage = 'Perfil actualizado correctamente.';
   }
 }

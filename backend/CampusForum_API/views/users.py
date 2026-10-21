@@ -31,3 +31,8 @@ class Userme(APIView):
         return Response(
             AuthService().current_user(request.user)
         )
+
+    def patch(self, request):
+        from CampusForum_API.services.profile_service import ProfileService
+        user = ProfileService().update(request.user, request.data)
+        return Response(AuthService().current_user(user))

@@ -1,0 +1,9 @@
+SECRET_KEY = "isolated-campusforum-tests-only"
+INSTALLED_APPS = ["django.contrib.auth", "django.contrib.contenttypes", "rest_framework", "rest_framework.authtoken", "CampusForum_API"]
+DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+ROOT_URLCONF = "CampusForum_API.test_urls"
+USE_TZ = True
+ALLOWED_HOSTS = ["testserver", "localhost"]
+PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
+REST_FRAMEWORK = {"DEFAULT_AUTHENTICATION_CLASSES": ["CampusForum_API.models.BearerTokenAuthentication"]}

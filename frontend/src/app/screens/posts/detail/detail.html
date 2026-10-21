@@ -27,26 +27,19 @@
               {{ post?.title ?? 'Artículo' }}
             </h1>
 
-            <a
-              mat-stroked-button
-              [routerLink]="workspace ? '/workspace/posts' : '/posts'"
-            >
+            <a mat-stroked-button [routerLink]="workspace ? '/workspace/posts' : '/posts'">
               Volver
             </a>
           </section>
 
           @if (loading) {
-            <p role="status">Cargando artículo...</p>}
+            <p role="status">Cargando artículo...</p>
+          }
 
           @if (error) {
             <p role="alert">{{ error }}</p>
 
-            <button
-              mat-stroked-button
-              type="button"
-              (click)="recargar()"
-              [disabled]="busy"
-            >
+            <button mat-stroked-button type="button" (click)="recargar()" [disabled]="busy">
               Recargar artículo
             </button>
           }
@@ -56,11 +49,7 @@
           }
 
           @if (!auth.isAuthenticated() && workspace) {
-            <a
-              mat-button
-              routerLink="/login"
-              [queryParams]="{ redirectTo: '/workspace/posts' }"
-            >
+            <a mat-button routerLink="/login" [queryParams]="{ redirectTo: '/workspace/posts' }">
               Iniciar sesión
             </a>
           }
@@ -78,46 +67,33 @@
                 <p>
                   {{ article.author.first_name }}
                   {{ article.author.last_name }}
-                  · {{ article.creation | date:'short' }}
+                  · {{ article.creation | date: 'short' }}
                 </p>
 
                 <div class="posts-detail__head-actions">
                   @if (api.canEdit(article) && !busy) {
-                    <a
-                      mat-stroked-button
-                      [routerLink]="['/posts/form', article.id]"
-                    >
+                    <a mat-stroked-button [routerLink]="['/posts/form', article.id]">
                       Editar borrador
                     </a>
                   }
 
                   @if (api.canDelete(article)) {
-                    <button
-                      mat-stroked-button
-                      type="button"
-                      (click)="eliminar()"
-                      [disabled]="busy"
-                    >
+                    <button mat-stroked-button type="button" (click)="eliminar()" [disabled]="busy">
                       {{ deleting ? 'Eliminando...' : 'Eliminar artículo' }}
                     </button>
                   }
                 </div>
 
                 @if (workspace) {
-                  <section aria-label="Acciones editoriales">
-                    <h2 class="posts-detail__tags-title">
-                      Flujo editorial
-                    </h2>
+                  <section class="posts-detail__editorial" aria-label="Acciones editoriales">
+                    <h2 class="posts-detail__tags-title">Flujo editorial</h2>
 
                     @if (transitioning) {
                       <p role="status">Procesando acción editorial...</p>
                     }
 
                     <div class="posts-detail__head-actions">
-                      @for (
-                        option of api.editorialActions(article);
-                        track option.action
-                      ) {
+                      @for (option of api.editorialActions(article); track option.action) {
                         <button
                           mat-stroked-button
                           type="button"
@@ -131,45 +107,33 @@
 
                     @if (article.estado === 'PENDIENTE_REVISION') {
                       <p>
-                        El artículo está pendiente de revisión.
-                        Un editor o administrador puede publicarlo
-                        o devolverlo a borrador.
+                        El artículo está pendiente de revisión. Un editor o administrador puede
+                        publicarlo o devolverlo a borrador.
                       </p>
                     }
 
                     @if (article.estado === 'PUBLICADO') {
-                      <a
-                        mat-button
-                        [routerLink]="['/posts', article.id]"
-                      >
+                      <a mat-button [routerLink]="['/posts', article.id]">
                         Ver publicación pública
                       </a>
                     }
 
                     @if (article.estado === 'ARCHIVADO') {
-                      <p>
-                        El artículo está archivado y no aparece
-                        en la consulta pública.
-                      </p>
+                      <p>El artículo está archivado y no aparece en la consulta pública.</p>
                     }
                   </section>
                 }
 
-<div class="posts-detail__content-block">
-  <app-markdown-content
-    [content]="article.content"
-  ></app-markdown-content>
-</div>
+                <div class="posts-detail__content-block">
+                  <app-markdown-content [content]="article.content"></app-markdown-content>
+                </div>
 
                 @if (article.etiquetas.trim()) {
                   <section aria-label="Etiquetas del artículo">
                     <h2 class="posts-detail__tags-title">Etiquetas</h2>
 
                     <ul class="posts-detail__tags">
-                      @for (
-                        tag of article.etiquetas.split(',');
-                        track $index
-                      ) {
+                      @for (tag of article.etiquetas.split(','); track $index) {
                         @if (tag.trim()) {
                           <li class="posts-detail__tag">
                             {{ tag.trim() }}
@@ -180,12 +144,10 @@
                   </section>
                 }
               </mat-card-content>
-                        </mat-card>
+            </mat-card>
 
             @if (article.estado === 'PUBLICADO') {
-              <app-post-comments
-                [postId]="article.id"
-              ></app-post-comments>
+              <app-post-comments [postId]="article.id"></app-post-comments>
             }
           }
         </main>

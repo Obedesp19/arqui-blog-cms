@@ -156,3 +156,12 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comentario {self.pk} del artículo {self.post_id}"
     
+
+
+class UserPreferences(models.Model):
+    """Preferencias visuales del usuario, independientes del perfil heredado."""
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name="cms_preferences",
+    )
+    avatar = models.CharField(max_length=150, default="assets/images/avatares/avatar-gorra-lentes.png")

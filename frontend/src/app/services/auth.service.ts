@@ -12,6 +12,7 @@ interface SessionResponse {
   last_name: string;
   email: string;
   roles: string[];
+  avatar?: string;
 }
 
 interface LoginResponse extends SessionResponse {
@@ -33,7 +34,6 @@ interface RegisterInput {
 interface ProfileUpdateInput {
   firstName: string;
   lastName: string;
-  lastNameMother: string;
   email: string;
   avatar: string;
 }
@@ -108,9 +108,11 @@ export class AuthService {
     return {
       id: response.id,
       nombre: `${response.first_name} ${response.last_name}`.trim(),
+      firstName: response.first_name,
+      lastName: response.last_name,
       email: response.email,
       role: role as UserRole,
-      avatar: 'assets/images/avatares/avatar-gorra-lentes.png',
+      avatar: response.avatar || 'assets/images/avatares/avatar-gorra-lentes.png',
     };
   }
 
@@ -301,15 +303,15 @@ export class AuthService {
   }
 
   public getUserFirstName(): string {
-    return this.getUserName().split(' ')[0] ?? '';
+    return this.getCurrentUser()?.firstName ?? '';
   }
 
   public getUserLastName(): string {
-    return this.getUserName().split(' ')[1] ?? '';
+    return this.getCurrentUser()?.lastName ?? '';
   }
 
   public getUserLastNameMother(): string {
-    return this.getUserName().split(' ').slice(2).join(' ');
+    return ''; // Los apellidos completos se conservan en lastName.
   }
 
   public getUserEmail(): string {
@@ -349,11 +351,27 @@ export class AuthService {
     return this.hasRole(['LECTOR']);
   }
 
-  public updateProfile(_input: ProfileUpdateInput): ActionResult {
-    return {
-      ok: false,
-      error:
-        'La edición del perfil todavía no está conectada al servidor.',
-    };
+  public updateProfile(input: ProfileUpdateInput): Observable<ActionResult> {
+    const token = this.getToken();
+    if (!token) return of({ ok: false, error: 'Inicia sesión para guardar tu perfil.' });
+    return this.http.patch<SessionResponse>(`${this.apiUrl}/me/`, {
+      first_name: input.firstName.trim(),
+      last_name: input.lastName.trim(),
+      email: input.email.trim().toLowerCase(),
+      avatar: input.avatar,
+    }).pipe(
+      timeout(10000),
+      map(response => {
+        if (this.getToken() !== token) {
+          return { ok: false as const, error: 'La sesión cambió. Vuelve a abrir tu perfil.' };
+        }
+        this.saveSession(this.toUser(response), token);
+        return { ok: true as const };
+      }),
+      catchError(error => of({
+        ok: false as const,
+        error: this.errorMessage(error, 'No se pudo guardar el perfil. Intenta nuevamente.'),
+      })),
+    );
   }
 }

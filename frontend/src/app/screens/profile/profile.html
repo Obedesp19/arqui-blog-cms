@@ -30,7 +30,7 @@
               <span class="profile__eyebrow">Cuenta</span>
               <h1 class="profile__title">Mi perfil</h1>
               <p class="profile__subtitle">
-                Administra tus datos, avatar e insignias dentro de CampusForum.
+                Actualiza tus datos y elige cómo te ve la comunidad.
               </p>
             </div>
 
@@ -45,7 +45,7 @@
               <mat-card-content>
                 <div class="profile__avatar-preview">
                   <img
-                    [src]="form.avatar || 'assets/avatares/avatar-original.png'"
+                    [src]="form.avatar || 'assets/images/avatares/avatar-original.png'"
                     (error)="onAvatarError()"
                     alt="Avatar del usuario"
                   >
@@ -70,14 +70,17 @@
                   @if (userRole === 'EDITOR') {
                     <span class="profile__badge profile__badge--profesor">
                       <mat-icon>school</mat-icon>
-                      Docente
+                      Editor
                     </span>
                   }
 
+                  @if (userRole === 'AUTOR') {
+                    <span class="profile__badge"><mat-icon>edit_note</mat-icon>Autor</span>
+                  }
                   @if (userRole === 'LECTOR') {
                     <span class="profile__badge profile__badge--estudiante">
                       <mat-icon>menu_book</mat-icon>
-                      Alumno
+                      Lector
                     </span>
                   }
 
@@ -99,7 +102,7 @@
                       <mat-label>Nombre/s</mat-label>
                       <input
                         matInput
-                        [(ngModel)]="form.firstName"
+                        [(ngModel)]="form.firstName" maxlength="150" [disabled]="saving" autocomplete="given-name"
                         name="firstName"
                       >
                     </mat-form-field>
@@ -111,10 +114,10 @@
 
                   <div>
                     <mat-form-field appearance="outline" class="full">
-                      <mat-label>Apellido paterno</mat-label>
+                      <mat-label>Apellidos</mat-label>
                       <input
                         matInput
-                        [(ngModel)]="form.lastName"
+                        [(ngModel)]="form.lastName" maxlength="150" [disabled]="saving" autocomplete="family-name"
                         name="lastName"
                       >
                     </mat-form-field>
@@ -126,25 +129,10 @@
 
                   <div>
                     <mat-form-field appearance="outline" class="full">
-                      <mat-label>Apellido materno</mat-label>
-                      <input
-                        matInput
-                        [(ngModel)]="form.lastNameMother"
-                        name="lastNameMother"
-                      >
-                    </mat-form-field>
-
-                    @if (errors.lastNameMother) {
-                      <div class="error">{{ errors.lastNameMother }}</div>
-                    }
-                  </div>
-
-                  <div>
-                    <mat-form-field appearance="outline" class="full">
                       <mat-label>Correo institucional</mat-label>
                       <input
                         matInput
-                        [(ngModel)]="form.email"
+                        [(ngModel)]="form.email" type="email" maxlength="150" [disabled]="saving" autocomplete="email"
                         name="email"
                       >
                     </mat-form-field>
@@ -175,15 +163,17 @@
                       class="profile__avatar-btn"
                       [class.is-active]="form.avatar === avatar"
                       (click)="selectAvatar(avatar)"
-                      aria-label="Seleccionar avatar"
+                      [attr.aria-label]="'Seleccionar avatar ' + ($index + 1)"
+                      [attr.aria-pressed]="form.avatar === avatar" [disabled]="saving"
                     >
                       <img [src]="avatar" alt="">
                     </button>
                   }
                 </div>
 
+                @if (errors.general) { <p role="alert" class="error">{{ errors.general }}</p> }
                 @if (successMessage) {
-                  <div class="profile__success">
+                  <div class="profile__success" role="status">
                     <mat-icon>check_circle</mat-icon>
                     {{ successMessage }}
                   </div>
@@ -194,9 +184,9 @@
                     mat-flat-button
                     color="primary"
                     type="button"
-                    (click)="saveProfile()"
+                    (click)="saveProfile()" [disabled]="saving"
                   >
-                    Guardar cambios
+                    {{ saving ? 'Guardando…' : 'Guardar cambios' }}
                   </button>
                 </div>
               </mat-card-content>

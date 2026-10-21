@@ -1,146 +1,130 @@
 .login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  padding: 20px;
-  background: linear-gradient(to bottom, #dfe6ee, #cfd8e3);
+  display: grid;
+  place-items: center;
+  padding: 35px;
+  background: #f3f3eb;
 }
-
 .login-card-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1000px;
+  width: 100%;
+  border: 1px solid #dce1d7;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fffefb;
+  box-shadow: 0 20px 70px #193e3210;
+}
+.login-intro {
+  background: #244e42;
+  color: #eef1de;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  overflow: hidden;
 }
-
-.login-card {
-  width: 100%;
-  max-width: 380px;
-  padding: 2rem;
-  border-radius: 20px;
-  background: #f2f4f7;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  margin-top: 60px;
-}
-
-.login-title {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-  color: #1a2535;
-}
-
-.login-subtitle {
-  color: #6b7280;
-  margin-bottom: 1.5rem;
-}
-
-.input-full {
-  width: 100%;
-}
-
-.error {
-  color: #b32623;
-  font-size: 0.85rem;
-  margin-top: 4px;
-  margin-bottom: 8px;
-  text-align: left;
-  padding-left: 4px;
-}
-
-.login-extra {
-  margin: 10px 0;
-}
-
-.link {
-  color: #4CAF50;
-  cursor: pointer;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.link:hover {
-  color: #388e3c;
-}
-
-.login-footer {
-  margin-top: 15px;
-}
-
-.mascota-login {
-  position: absolute;
-  top: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 110px;
-  z-index: 10;
-}
-
-.mascota-svg {
-  width: 100%;
-  transition: all 0.3s ease;
-  animation: float 3s ease-in-out infinite;
-}
-
-.back-home {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  width: 100%;
-}
-
-.home-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  color: #4CAF50;
-  font-weight: 500;
+.auth-brand {
+  color: #eef1de;
+  font-size: 23px;
+  font-weight: 600;
   text-decoration: none;
-  transition: all 0.2s ease;
+  letter-spacing: -1px;
 }
-
-.home-link:hover {
-  color: #388e3c;
-  transform: scale(1.05);
+.login-intro > span {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  margin-top: 70px;
+  color: #bed0b8;
 }
-
-@keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0); }
+.login-intro h2 {
+  font: 45px/1.1 'Manrope';
+  letter-spacing: -0.03em;
+  margin: 22px 0;
 }
-
-//UX PENDIENTE
-
-//Responsivo
-
-@media (max-width: 600px) {
-
+.login-intro p {
+  font-size: 13px;
+  color: #c5d5c4;
+  line-height: 1.8;
+}
+.auth-art {
+  font-size: 160px;
+  color: #d9bf83;
+  line-height: 1.4;
+  text-align: center;
+}
+.login-intro small {
+  font-size: 8px;
+  letter-spacing: 0.13em;
+  margin-top: auto;
+}
+.login-card {
+  padding: 65px 45px;
+  align-self: center;
+}
+.login-title {
+  font: 36px 'Manrope';
+  color: #254539;
+  margin-bottom: 12px;
+}
+.login-subtitle {
+  color: #748177;
+  font-size: 12px;
+  margin-bottom: 32px;
+}
+.login-extra {
+  text-align: right;
+  margin: 0 0 24px;
+}
+.link {
+  color: #205e53;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  font-size: 11px;
+  padding: 0;
+  text-decoration: underline;
+}
+.btn--primario {
+  background: #205e53;
+  color: white;
+  min-height: 48px;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+}
+.login-footer {
+  font-size: 11px;
+  text-align: center;
+  margin-top: 26px;
+}
+.home-link {
+  font-size: 11px;
+  display: block;
+  text-align: center;
+  margin-top: 28px;
+}
+@media (max-width: 700px) {
+  .login-container {
+    padding: 20px;
+  }
+  .login-card-wrapper {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+  }
+  .login-intro {
+    padding: 25px;
+  }
+  .login-intro > span,
+  .login-intro h2,
+  .login-intro p,
+  .auth-art,
+  .login-intro small {
+    display: none;
+  }
   .login-card {
-    padding: 1.5rem;
-  }
-
-  .login-title {
-    font-size: 1.5rem;
-  }
-
-  .login-subtitle {
-    font-size: 0.9rem;
-  }
-
-  .mascota-login {
-    width: 85px;
-    top: -70px;
-  }
-
-}
-
-@media (max-height: 700px) {
-  .mascota-login {
-    top: -40px;
-    width: 90px;
+    padding: 35px 25px;
   }
 }

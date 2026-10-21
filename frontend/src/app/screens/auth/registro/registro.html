@@ -1,17 +1,20 @@
 <section class="registro-container">
-
   <div class="registro-card">
-
     <div class="registro-icono"></div>
 
     <h1 class="titulo">Registro de Usuario</h1>
 
     <label class="label">Nombre *</label>
     <mat-form-field appearance="outline" class="input-full">
-      <input matInput [(ngModel)]="user.nombre"
+      <input
+        matInput
+        [(ngModel)]="user.nombre"
         (keydown)="onNombreKeydown($event)"
         (paste)="onNombrePaste($event, 'nombre')"
-        placeholder="Ej: Luis Yael" name="nombre" autocomplete="given-name">
+        placeholder="Ej: Luis Yael"
+        name="nombre"
+        autocomplete="given-name"
+      />
     </mat-form-field>
     @if (errors.nombre) {
       <div class="error">{{ errors.nombre }}</div>
@@ -19,10 +22,15 @@
 
     <label class="label">Apellidos *</label>
     <mat-form-field appearance="outline" class="input-full">
-      <input matInput [(ngModel)]="user.apellidos"
+      <input
+        matInput
+        [(ngModel)]="user.apellidos"
         (keydown)="onNombreKeydown($event)"
         (paste)="onNombrePaste($event, 'apellidos')"
-        placeholder="Ej: Carro García" name="apellidos" autocomplete="family-name">
+        placeholder="Ej: Carro García"
+        name="apellidos"
+        autocomplete="family-name"
+      />
     </mat-form-field>
     @if (errors.apellidos) {
       <div class="error">{{ errors.apellidos }}</div>
@@ -30,10 +38,17 @@
 
     <label class="label">Correo Institucional *</label>
     <mat-form-field appearance="outline" class="input-full">
-      <input matInput [(ngModel)]="user.email" (ngModelChange)="onEmailChange()"
-        placeholder="correo@dominio.com" name="email" autocomplete="email" inputmode="email">
+      <input
+        matInput
+        [(ngModel)]="user.email"
+        (ngModelChange)="onEmailChange()"
+        placeholder="correo@dominio.com"
+        name="email"
+        autocomplete="email"
+        inputmode="email"
+      />
     </mat-form-field>
-        @if (emailHint) {
+    @if (emailHint) {
       <div class="email-hint">
         <mat-icon class="hint-icon">info</mat-icon>
         Formato esperado: correo&#64;dominio.com
@@ -45,25 +60,53 @@
 
     <label class="label">Contraseña *</label>
     <mat-form-field appearance="outline" class="input-full">
-      <input matInput [(ngModel)]="user.password" [type]="inputType_1"
+      <input
+        matInput
+        [(ngModel)]="user.password"
+        [type]="inputType_1"
         (ngModelChange)="onPasswordChange()"
-        placeholder="Mínimo 8 caracteres" name="password" autocomplete="new-password">
-      <mat-icon matSuffix (click)="showPassword()" style="cursor: pointer;">
-        {{ hide_1 ? 'visibility_off' : 'visibility' }}
-      </mat-icon>
+        placeholder="Mínimo 8 caracteres"
+        name="password"
+        autocomplete="new-password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="showPassword()"
+        aria-label="Mostrar u ocultar contraseña"
+      >
+        <mat-icon>
+          {{ hide_1 ? 'visibility_off' : 'visibility' }}
+        </mat-icon>
+      </button>
     </mat-form-field>
     @if (errors.password) {
       <div class="error">{{ errors.password }}</div>
     }
 
-        <label class="label">Confirmar contraseña *</label>
+    <label class="label">Confirmar contraseña *</label>
     <mat-form-field appearance="outline" class="input-full">
-      <input matInput [(ngModel)]="user.confirmPassword" [type]="inputType_2"
+      <input
+        matInput
+        [(ngModel)]="user.confirmPassword"
+        [type]="inputType_2"
         (ngModelChange)="onPasswordChange()"
-        placeholder="Repite tu contraseña" name="confirmPassword" autocomplete="new-password">
-      <mat-icon matSuffix (click)="showConfirmPassword()" style="cursor: pointer;">
-        {{ hide_2 ? 'visibility_off' : 'visibility' }}
-      </mat-icon>
+        placeholder="Repite tu contraseña"
+        name="confirmPassword"
+        autocomplete="new-password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="showConfirmPassword()"
+        aria-label="Mostrar u ocultar contraseña"
+      >
+        <mat-icon>
+          {{ hide_2 ? 'visibility_off' : 'visibility' }}
+        </mat-icon>
+      </button>
     </mat-form-field>
     @if (passwordMismatchHint) {
       <div class="email-hint">
@@ -77,27 +120,21 @@
 
     <p>Tu cuenta se creará con el rol LECTOR.</p>
 
-@if (errors.general) {
-  <div class="error">{{ errors.general }}</div>
-}
+    @if (errors.general) {
+      <div class="error">{{ errors.general }}</div>
+    }
 
-    <button class="btn-registro" (click)="registrar()">
-      Registrarse
-    </button>
+    <button class="btn-registro" (click)="registrar()">Registrarse</button>
 
     <div class="bottom-link">
       <span class="txt-registro">
         ¿Ya tienes una cuenta?
-        <span class="red" (click)="goLogin()"> Inicia sesión</span>
+        <button type="button" class="auth-text-button" (click)="goLogin()">Inicia sesión</button>
       </span>
     </div>
 
-    <hr>
+    <hr />
 
-    <a routerLink="/landing" class="home-link">
-      <i class="bi bi-house-door-fill"></i> Inicio
-    </a>
-
+    <a routerLink="/landing" class="home-link"> <i class="bi bi-house-door-fill"></i> Inicio </a>
   </div>
-
 </section>

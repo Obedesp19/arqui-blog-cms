@@ -7,6 +7,7 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 
 from CampusForum_API.repositories.user_repository import UserRepository
 from CampusForum_API.roles import Roles, get_user_role
+from CampusForum_API.repositories.profile_repository import ProfileRepository
 
 
 class AuthService:
@@ -69,6 +70,7 @@ class AuthService:
             "last_name": user.last_name,
             "email": user.email,
             "roles": [role],
+            "avatar": ProfileRepository().avatar(user),
         }
 
     def login(self, request, data):

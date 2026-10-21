@@ -28,7 +28,10 @@ from CampusForum_API.views.posts import (
     WorkspacePostDetailView,
 )
 
+from CampusForum_API.views.dashboard import DashboardView
+
 urlpatterns = [
+    path("dashboard/", DashboardView.as_view(), name="dashboard"),
     #Version
         path('bootstrap/version', bootstrap.VersionView.as_view()),
     #Create User

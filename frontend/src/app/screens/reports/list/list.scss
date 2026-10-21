@@ -32,7 +32,7 @@
   padding: 24px;
   border-radius: 24px;
   background: #fff;
-  border: 1px solid #e6edf6;
+  border: 1px solid #dce1d7;
 }
 
 .reports-list__eyebrow {
@@ -41,7 +41,7 @@
   padding: 7px 12px;
   border-radius: 999px;
   background: rgba(79, 103, 138, 0.1);
-  color: #324764;
+  color: #375c45;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -49,12 +49,12 @@
 
 .reports-list__title {
   margin: 0 0 8px;
-  color: #111827;
+  color: #203a3b;
 }
 
 .reports-list__subtitle {
   margin: 0;
-  color: #6b7280;
+  color: #66736f;
 }
 
 .reports-list__grid {
@@ -78,15 +78,15 @@
   display: inline-flex;
   padding: 6px 12px;
   border-radius: 999px;
-  background: #eef3fb;
-  color: #355070;
+  background: #e8eee1;
+  color: #375c45;
   font-size: 12px;
   font-weight: 700;
 }
 
 .reports-list__summary {
   margin: 0 0 12px;
-  color: #111827;
+  color: #203a3b;
 }
 
 .reports-list__meta {
@@ -115,4 +115,28 @@
   .reports-list__body {
     padding: 16px;
   }
+}
+
+[class$='__title'] {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+}
+[class$='__hero'] {
+  box-shadow: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #dce1d7;
+  border-radius: 0;
+  padding: 20px 0 30px;
+}
+[class$='__body'] {
+  padding-top: 40px;
+}
+.demo-note {
+  font-size: 11px;
+  color: #66736f;
+  border-left: 2px solid #a9b799;
+  padding: 12px 18px;
+  background: #edf1e5;
 }
